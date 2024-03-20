@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34714.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dyspobelo", "Dyspobelo\Dyspobelo.csproj", "{4A7DC85F-6F7E-4466-9DC4-1559E066A28F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A7DC85F-6F7E-4466-9DC4-1559E066A28F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A7DC85F-6F7E-4466-9DC4-1559E066A28F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A7DC85F-6F7E-4466-9DC4-1559E066A28F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A7DC85F-6F7E-4466-9DC4-1559E066A28F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {83F72FBC-7BBE-49F5-B38F-D07BCD5035FA}
+	EndGlobalSection
+EndGlobal

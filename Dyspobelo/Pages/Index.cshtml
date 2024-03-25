@@ -1,10 +1,10 @@
 ﻿@page
-@model IEnumerable<Dyspobelo.Models.TestModel>
+@model Dyspobelo.Pages.Index
 
 <h1>Dane z tabeli Test</h1>
 <ul>
-@foreach (var item in Model)
-{
-    <li>@item.FirstName</li>
-}
+    @foreach (var item in Model.TestModels)
+    {
+        <li>@item.FirstName</li>
+    }
 </ul>

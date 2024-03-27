@@ -9,7 +9,8 @@ builder.Services.AddRazorPages();
 var connectionString = Environment.GetEnvironmentVariable("AZURE_MYSQL_CONNECTIONSTRING");
 
 builder.Services.AddDbContext<MyDbContext>(options =>
-    options.UseMySql(Environment.GetEnvironmentVariable("AZURE_MYSQL_CONNECTIONSTRING"), new MySqlServerVersion(new Version(8, 0, 21))));
+    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 21))));
+
 
 Console.WriteLine(connectionString);
 

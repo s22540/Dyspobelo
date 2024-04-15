@@ -2,9 +2,9 @@ import React from "react";
 import { Routes, Route, NavLink } from "react-router-dom";
 
 const Home = () => <div>Ekran główny</div>;
-const AddAnnouncement = () => <div>Dodaj ogłoszenie</div>;
-const EditAnnouncement = () => <div>Edycja ogłoszenia</div>;
-const ShowAnnouncements = () => <div>Wyświetl ogłoszenia</div>;
+const AddAnnouncement = () => <div>Dodaj zgłoszenie</div>;
+const EditAnnouncement = () => <div>Edycja zgłoszenia</div>;
+const ShowAnnouncements = () => <div>Wyświetl zgłoszenia</div>;
 const Settings = () => <div>Ustawienia</div>;
 
 const Menu = () => {
@@ -52,7 +52,7 @@ const Menu = () => {
 								isActive ? { ...linkStyle, ...activeStyle } : linkStyle
 							}
 						>
-							Dodaj ogłoszenie
+							Dodaj zgłoszenie
 						</NavLink>
 					</li>
 					<li>
@@ -62,7 +62,7 @@ const Menu = () => {
 								isActive ? { ...linkStyle, ...activeStyle } : linkStyle
 							}
 						>
-							Edycja ogłoszenia
+							Edycja zgłoszenia
 						</NavLink>
 					</li>
 					<li>
@@ -72,7 +72,7 @@ const Menu = () => {
 								isActive ? { ...linkStyle, ...activeStyle } : linkStyle
 							}
 						>
-							Wyświetl ogłoszenia
+							Wyświetl zgłoszenia
 						</NavLink>
 					</li>
 					<li>

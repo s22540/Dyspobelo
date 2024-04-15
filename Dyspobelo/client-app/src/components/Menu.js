@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, NavLink, BrowserRouter } from "react-router-dom";
+import { Routes, Route, NavLink } from "react-router-dom";
 
 const Home = () => <div>Ekran główny</div>;
 const AddAnnouncement = () => <div>Dodaj ogłoszenie</div>;
@@ -8,14 +8,39 @@ const ShowAnnouncements = () => <div>Wyświetl ogłoszenia</div>;
 const Settings = () => <div>Ustawienia</div>;
 
 const Menu = () => {
+	const linkStyle = {
+		display: "block",
+		padding: "10px",
+		margin: "5px",
+		textDecoration: "none",
+		color: "black",
+	};
+
+	const navStyle = {
+		display: "flex",
+		justifyContent: "space-evenly",
+		listStyle: "none",
+		padding: "10px",
+		border: "1px solid #ddd",
+		borderRadius: "4px",
+		margin: "45px",
+	};
+
+	const activeStyle = {
+		fontWeight: "bold",
+		backgroundColor: "#eee",
+	};
+
 	return (
 		<div>
 			<nav>
-				<ul>
+				<ul style={navStyle}>
 					<li>
 						<NavLink
-							to="/"
-							className={({ isActive }) => (isActive ? "active" : undefined)}
+							to="/main"
+							style={({ isActive }) =>
+								isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+							}
 						>
 							Ekran główny
 						</NavLink>
@@ -23,7 +48,9 @@ const Menu = () => {
 					<li>
 						<NavLink
 							to="/add-announcement"
-							className={({ isActive }) => (isActive ? "active" : undefined)}
+							style={({ isActive }) =>
+								isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+							}
 						>
 							Dodaj ogłoszenie
 						</NavLink>
@@ -31,7 +58,9 @@ const Menu = () => {
 					<li>
 						<NavLink
 							to="/edit-announcement"
-							className={({ isActive }) => (isActive ? "active" : undefined)}
+							style={({ isActive }) =>
+								isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+							}
 						>
 							Edycja ogłoszenia
 						</NavLink>
@@ -39,7 +68,9 @@ const Menu = () => {
 					<li>
 						<NavLink
 							to="/show-announcements"
-							className={({ isActive }) => (isActive ? "active" : undefined)}
+							style={({ isActive }) =>
+								isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+							}
 						>
 							Wyświetl ogłoszenia
 						</NavLink>
@@ -47,7 +78,9 @@ const Menu = () => {
 					<li>
 						<NavLink
 							to="/settings"
-							className={({ isActive }) => (isActive ? "active" : undefined)}
+							style={({ isActive }) =>
+								isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+							}
 						>
 							Ustawienia
 						</NavLink>
@@ -56,7 +89,7 @@ const Menu = () => {
 			</nav>
 
 			<Routes>
-				<Route path="/" element={<Home />} />
+				<Route path="/main" element={<Home />} />
 				<Route path="/add-announcement" element={<AddAnnouncement />} />
 				<Route path="/edit-announcement" element={<EditAnnouncement />} />
 				<Route path="/show-announcements" element={<ShowAnnouncements />} />

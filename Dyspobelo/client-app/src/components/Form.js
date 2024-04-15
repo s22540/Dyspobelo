@@ -24,7 +24,7 @@ function Form() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('Form Data:', formData);
-        // Dodaj logikę przetwarzania formularza tutaj
+        // Tu bedzie przetwarzanie forma pozniej
     };
 
     const styles = {
@@ -45,6 +45,11 @@ function Form() {
             padding: '10px',
             borderRadius: '5px',
             border: '1px solid #ccc'
+        },
+        buttonContainer: {
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: '10px'
         },
         button: {
             padding: '10px 15px',
@@ -134,8 +139,10 @@ function Form() {
                     placeholder="Opis zdarzenia"
                     style={{ ...styles.input, height: '100px' }}
                 />
-                <button type="submit" style={{ ...styles.button, ...styles.submitButton }}>Zatwierdź</button>
-                <button type="button" onClick={() => setFormData({})} style={{ ...styles.button, ...styles.cancelButton }}>Anuluj</button>
+                <div style={styles.buttonContainer}>
+                    <button type="button" onClick={() => setFormData({})} style={{ ...styles.button, ...styles.cancelButton }}>Anuluj</button>
+                    <button type="submit" style={{ ...styles.button, ...styles.submitButton }}>Zatwierdź</button>
+                </div>
             </form>
         </div>
     );

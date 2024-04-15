@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import LoginScreen from "./screens/login";
 import MainScreen from "./screens/mainScreen";
+import 'leaflet/dist/leaflet.css';
 
 function App() {
 	return (

@@ -3,7 +3,7 @@ import EditForm from "../components/EditForm";
 import Menu from "../components/Menu";
 import List from "../components/List";
 
-const AddAnnouncement = () => {
+const EditAnnouncement = () => {
     const styles = {
         layout: {
             display: 'flex',
@@ -35,4 +35,4 @@ const AddAnnouncement = () => {
     );
 };
 
-export default AddAnnouncement;
+export default EditAnnouncement;

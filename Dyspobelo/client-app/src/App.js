@@ -6,6 +6,7 @@ import AddAnnouncement from "./screens/AddAnnouncement";
 import EditAnnouncement from "./screens/EditAnnouncement";
 // import ShowAnnouncement from "./screens/ShowAnnouncement";
 import Settings from "./screens/Settings";
+import 'leaflet/dist/leaflet.css';
 
 function App() {
 	return (

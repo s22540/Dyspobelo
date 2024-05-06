@@ -1,13 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, useMap, Popup } from 'react-leaflet';
+import React, { useContext, useEffect } from 'react';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
-
-const getRandomCoordinates = (center, range = 0.02) => {
-    return [
-        center[0] + (Math.random() - 0.5) * range,
-        center[1] + (Math.random() - 0.5) * range
-    ];
-};
+import { MarkersContext } from '../context/MarkersContext';
 
 const interpolatePosition = (start, end, ratio) => {
     return [
@@ -16,75 +10,72 @@ const interpolatePosition = (start, end, ratio) => {
     ];
 };
 
-const MovingMarker = ({ initialPosition, iconUrl, vehicleType }) => {
+const getRandomCoordinates = (center, range = 0.02) => {
+    return [
+        center[0] + (Math.random() - 0.5) * range,
+        center[1] + (Math.random() - 0.5) * range
+    ];
+};
+
+const MovingMarkerLogic = ({ marker }) => {
     const map = useMap();
-    const [position, setPosition] = useState(initialPosition);
+    const { updateMarkerPosition } = useContext(MarkersContext);
 
     useEffect(() => {
         const icon = L.icon({
-            iconUrl: iconUrl,
+            iconUrl: marker.iconUrl,
             iconSize: [40, 40],
             iconAnchor: [20, 20]
         });
 
-        const marker = L.marker(initialPosition, { icon }).addTo(map);
+        const leafletMarker = L.marker(marker.position, { icon }).addTo(map);
+        leafletMarker.bindPopup(`<strong>Type:</strong> ${marker.vehicleType}`);
 
-        marker.bindPopup(`<strong>Type:</strong> ${vehicleType}`);
-
-        let step = 0;
-        let currentSegment = initialPosition;
+        let currentSegment = marker.position;
         let nextSegment = getRandomCoordinates(currentSegment);
+        let startTime = performance.now();
 
         const updatePosition = () => {
-            const numSteps = 200;
-            const ratio = step / numSteps;
-            const newPos = interpolatePosition(currentSegment, nextSegment, ratio);
-            marker.setLatLng(new L.LatLng(newPos[0], newPos[1]));
-            setPosition(newPos);
+            let currentTime = performance.now();
+            let progress = (currentTime - startTime) / 1000; 
+            let duration = 5; 
+            let ratio = progress / duration;
 
-            if (step === numSteps) {
-                currentSegment = newPos;
-                nextSegment = getRandomCoordinates(currentSegment);
-                step = 0;
-                map.flyTo(new L.LatLng(newPos[0], newPos[1]), map.getZoom());
+            if (ratio < 1) {
+                const newPos = interpolatePosition(currentSegment, nextSegment, ratio);
+                leafletMarker.setLatLng(newPos);
+                updateMarkerPosition(marker.id, newPos);
+                requestAnimationFrame(updatePosition);
             } else {
-                step++;
+                currentSegment = nextSegment;
+                nextSegment = getRandomCoordinates(currentSegment);
+                startTime = currentTime; 
+                requestAnimationFrame(updatePosition);
             }
         };
 
-        const interval = setInterval(updatePosition, 25);
+        requestAnimationFrame(updatePosition);
 
         return () => {
-            clearInterval(interval);
-            marker.remove();
+            leafletMarker.remove();
         };
-    }, [map, iconUrl, vehicleType]);
+    }, [map, marker, updateMarkerPosition]);
 
     return null;
 };
 
 const MapComponent = () => {
-    const initialPositions = [
-        [50.06143, 19.93658],  // ambulans
-        [50.06500, 19.94000],  // ambulans
-        [50.06200, 19.93000],  // radiowoz
-        [50.06200, 19.93650],  // radiowoz
-        [50.06200, 19.97000],  // straz
-        [50.06200, 19.92000]   // straz
-    ];
+    const { markers } = useContext(MarkersContext);
 
     return (
-        <MapContainer center={initialPositions[0]} zoom={13} style={{ height: '65vh', width: '100%' }}>
+        <MapContainer center={markers[0]?.position || [0, 0]} zoom={13} style={{ height: '65vh', width: '100%' }}>
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
-            <MovingMarker initialPosition={initialPositions[0]} iconUrl={process.env.PUBLIC_URL + '/karetka.png'} vehicleType="Ambulans" />
-            <MovingMarker initialPosition={initialPositions[1]} iconUrl={process.env.PUBLIC_URL + '/karetka.png'} vehicleType="Ambulans" />
-            <MovingMarker initialPosition={initialPositions[2]} iconUrl={process.env.PUBLIC_URL + '/radiowoz.png'} vehicleType="Radiowóz" />
-            <MovingMarker initialPosition={initialPositions[3]} iconUrl={process.env.PUBLIC_URL + '/radiowoz.png'} vehicleType="Radiowóz" />
-            <MovingMarker initialPosition={initialPositions[4]} iconUrl={process.env.PUBLIC_URL + '/wozstraz.png'} vehicleType="Wóz Stra¿acki" />
-            <MovingMarker initialPosition={initialPositions[5]} iconUrl={process.env.PUBLIC_URL + '/wozstraz.png'} vehicleType="Wóz Stra¿acki" />
+            {markers.map(marker => (
+                <MovingMarkerLogic key={marker.id} marker={marker} />
+            ))}
         </MapContainer>
     );
 };

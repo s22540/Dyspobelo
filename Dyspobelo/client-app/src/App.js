@@ -7,19 +7,22 @@ import EditAnnouncement from "./screens/EditAnnouncement";
 // import ShowAnnouncement from "./screens/ShowAnnouncement";
 import Settings from "./screens/Settings";
 import "leaflet/dist/leaflet.css";
+import { MarkersProvider } from "./context/MarkersContext";
 
 function App() {
 	return (
 		<BrowserRouter>
-			<Routes>
-				<Route path="/login" element={<LoginScreen />} />
-				<Route path="/main" element={<MainScreen />} />
-				<Route path="/add-announcement" element={<AddAnnouncement />} />
-				<Route path="/edit-announcement" element={<EditAnnouncement />} />
-				{/*<Route path="/show-announcement" element={<ShowAnnouncement />} />*/}
-				<Route path="/settings" element={<Settings />} />
-				<Route path="/" element={<Navigate to="/login" replace />} />
-			</Routes>
+			<MarkersProvider>
+				<Routes>
+					<Route path="/login" element={<LoginScreen />} />
+					<Route path="/main" element={<MainScreen />} />
+					<Route path="/add-announcement" element={<AddAnnouncement />} />
+					<Route path="/edit-announcement" element={<EditAnnouncement />} />
+					{/*<Route path="/show-announcement" element={<ShowAnnouncement />} />*/}
+					<Route path="/settings" element={<Settings />} />
+					<Route path="/" element={<Navigate to="/login" replace />} />
+				</Routes>
+			</MarkersProvider>
 		</BrowserRouter>
 	);
 }

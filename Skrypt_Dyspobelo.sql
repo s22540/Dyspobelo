@@ -1,17 +1,16 @@
---Skrypt tworzący podstawową strukturę bazy danych Dyspobelo
+/*Skrypt tworzący podstawową strukturę bazy danych Dyspobelo*/
 
---Tworzenie bazy danych
+/*Tworzenie bazy danych*/
 CREATE DATABASE dyspobelo;
-
---Tabele techniczne
+USE dyspobelo;
+/*Tabele techniczne*/
 CREATE TABLE zdarzenia_systemowe (
-id_data_zdarzenia DATE,
-id_uzytkownika INT,
-opis_bledu VARCHAR(100),
+nazwa_procedury VARCHAR(100),
+opis VARCHAR(100),
 rekordy_insertowane INT,
-CONSTRAINT PK_zdarzenia_systemowe PRIMARY KEY (id_data_zdarzenia)
+czas_wykonania TIMESTAMP
 );
-
+/*Czy potrzebne?*/
 CREATE TABLE log_aktywnosci (
 id_uzytkownika INT,
 typ_aktywnosci VARCHAR(20) NOT NULL,
@@ -36,7 +35,7 @@ data_historyzacji DATE,
 CONSTRAINT PK_zgloszenie_historia PRIMARY KEY (id)
 );
 
---Osoby
+/*Osoby*/
 CREATE TABLE dyzur(
 id_harmonogramu INT,
 data_rozpoczecia_dyzuru DATE,
@@ -68,7 +67,7 @@ numer_kontaktowy VARCHAR(20),
 CONSTRAINT PK_zglaszajacy PRIMARY KEY (id)
 );
 
---Tabele około zgłoszenia
+/*Tabele około zgłoszenia*/
 CREATE TABLE klasa_zgloszenia(
 id INT,
 klasa_zgloszenia VARCHAR(20) NOT NULL,
@@ -82,7 +81,7 @@ czy_powraca CHAR(1) NOT NULL,
 CONSTRAINT PK_typ_zgloszenia PRIMARY KEY (id)
 );
 
---Jednostki 
+/*Jednostki*/
 CREATE TABLE komisariat(
 id INT,
 nazwa_komisariatu VARCHAR(50) NOT NULL,
@@ -140,7 +139,7 @@ CONSTRAINT PK_pogotowie PRIMARY KEY (id),
 CONSTRAINT FK_szpital_id FOREIGN KEY (szpital_id) REFERENCES szpital (id)
 );
 
---Zgloszenie
+/*Zgloszenie*/
 CREATE TABLE zgloszenie_jednostka(
 id_zgloszenia INT,
 policja_id INT,
@@ -172,11 +171,11 @@ CONSTRAINT FK_id_klasa_zgloszenia FOREIGN KEY (id_klasa_zgloszenia) REFERENCES k
 CONSTRAINT FK_id_zgloszenie_jednostka FOREIGN KEY (id_zgloszenie_jednostka) REFERENCES zgloszenie_jednostka (id_zgloszenia)
 );
 
-ALTER TABLE zgloszenie_jednostka
+/*ALTER TABLE zgloszenie_jednostka
 ADD CONSTRAINT FK_id_zgloszenia
-FOREIGN KEY (id_zgloszenia) REFERENCES zgloszenie(id);
+FOREIGN KEY (id_zgloszenia) REFERENCES zgloszenie(id);*/
 
---Indexy
+/*Indexy*/
 
 CREATE INDEX zgloszenie_idx ON zgloszenie (id);
 CREATE INDEX zgloszenie_historia_idx ON zgloszenie_historia (id);

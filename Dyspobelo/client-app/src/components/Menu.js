@@ -4,7 +4,7 @@ import { Routes, Route, NavLink } from "react-router-dom";
 const Home = () => <div>Ekran główny</div>;
 const AddAnnouncement = () => <div>Dodaj zgłoszenie</div>;
 const EditAnnouncement = () => <div>Edycja zgłoszenia</div>;
-const ShowAnnouncements = () => <div>Wyświetl zgłoszenia</div>;
+const ShowAnnouncement = () => <div>Wyświetl zgłoszenia</div>;
 const Settings = () => <div>Ustawienia</div>;
 
 const Menu = () => {
@@ -67,7 +67,7 @@ const Menu = () => {
 					</li>
 					<li>
 						<NavLink
-							to="/show-announcements"
+							to="/show-announcement"
 							style={({ isActive }) =>
 								isActive ? { ...linkStyle, ...activeStyle } : linkStyle
 							}
@@ -92,7 +92,7 @@ const Menu = () => {
 				<Route path="/main" element={<Home />} />
 				<Route path="/add-announcement" element={<AddAnnouncement />} />
 				<Route path="/edit-announcement" element={<EditAnnouncement />} />
-				<Route path="/show-announcements" element={<ShowAnnouncements />} />
+				<Route path="/show-announcement" element={<ShowAnnouncement />} />
 				<Route path="/settings" element={<Settings />} />
 			</Routes>
 		</div>

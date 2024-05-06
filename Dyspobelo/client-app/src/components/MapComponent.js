@@ -10,7 +10,7 @@ const interpolatePosition = (start, end, ratio) => {
     ];
 };
 
-const getRandomCoordinates = (center, range = 0.01) => {
+const getRandomCoordinates = (center, range = 0.02) => {
     return [
         center[0] + (Math.random() - 0.5) * range,
         center[1] + (Math.random() - 0.5) * range
@@ -35,11 +35,11 @@ const MovingMarkerLogic = ({ marker }) => {
         let nextSegment = getRandomCoordinates(currentSegment);
         let startTime = performance.now();
 
-        
-        const updatePosition = (timestamp) => {
-            const progress = timestamp - startTime;
-            const duration = 1000; 
-            const ratio = progress / duration;
+        const updatePosition = () => {
+            let currentTime = performance.now();
+            let progress = (currentTime - startTime) / 1000; 
+            let duration = 5; 
+            let ratio = progress / duration;
 
             if (ratio < 1) {
                 const newPos = interpolatePosition(currentSegment, nextSegment, ratio);
@@ -49,7 +49,7 @@ const MovingMarkerLogic = ({ marker }) => {
             } else {
                 currentSegment = nextSegment;
                 nextSegment = getRandomCoordinates(currentSegment);
-                startTime = timestamp;
+                startTime = currentTime; 
                 requestAnimationFrame(updatePosition);
             }
         };

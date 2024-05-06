@@ -7,6 +7,8 @@ export const MarkersProvider = ({ children }) => {
     const initialPositions = [
         [50.06143, 19.93658],
         [50.06500, 19.94000],
+        [50.06500, 19.94000],
+        [50.06500, 19.94000],
     ];
 
     const createInitialMarkersState = () => initialPositions.map((position, index) => ({

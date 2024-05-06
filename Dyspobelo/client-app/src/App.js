@@ -6,7 +6,7 @@ import AddAnnouncement from "./screens/AddAnnouncement";
 import EditAnnouncement from "./screens/EditAnnouncement";
 // import ShowAnnouncement from "./screens/ShowAnnouncement";
 import Settings from "./screens/Settings";
-import 'leaflet/dist/leaflet.css';
+import "leaflet/dist/leaflet.css";
 
 function App() {
 	return (
@@ -17,7 +17,7 @@ function App() {
 				<Route path="/add-announcement" element={<AddAnnouncement />} />
 				<Route path="/edit-announcement" element={<EditAnnouncement />} />
 				{/*<Route path="/show-announcement" element={<ShowAnnouncement />} />*/}
-				<Route path="/settings" element={<Settings />} /> 
+				<Route path="/settings" element={<Settings />} />
 				<Route path="/" element={<Navigate to="/login" replace />} />
 			</Routes>
 		</BrowserRouter>

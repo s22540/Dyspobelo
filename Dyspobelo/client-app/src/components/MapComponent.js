@@ -10,7 +10,7 @@ const interpolatePosition = (start, end, ratio) => {
     ];
 };
 
-const getRandomCoordinates = (center, range = 0.02) => {
+const getRandomCoordinates = (center, range = 50) => {
     return [
         center[0] + (Math.random() - 0.5) * range,
         center[1] + (Math.random() - 0.5) * range
@@ -32,24 +32,27 @@ const MovingMarkerLogic = ({ marker }) => {
         leafletMarker.bindPopup(`<strong>Type:</strong> ${marker.vehicleType}`);
 
         let currentSegment = marker.position;
-        let nextSegment = getRandomCoordinates(currentSegment);
+        let nextSegment = getRandomCoordinates(currentSegment, 5); 
         let startTime = performance.now();
+        let travelDistance = L.latLng(currentSegment).distanceTo(nextSegment);
+        let duration = travelDistance / 100;
 
         const updatePosition = () => {
             let currentTime = performance.now();
-            let progress = (currentTime - startTime) / 1000; 
-            let duration = 5; 
-            let ratio = progress / duration;
+            let elapsed = currentTime - startTime;
+            let progress = elapsed / (duration * 1000); 
 
-            if (ratio < 1) {
-                const newPos = interpolatePosition(currentSegment, nextSegment, ratio);
+            if (progress < 1) {
+                const newPos = interpolatePosition(currentSegment, nextSegment, progress);
                 leafletMarker.setLatLng(newPos);
                 updateMarkerPosition(marker.id, newPos);
                 requestAnimationFrame(updatePosition);
             } else {
                 currentSegment = nextSegment;
-                nextSegment = getRandomCoordinates(currentSegment);
-                startTime = currentTime; 
+                nextSegment = getRandomCoordinates(currentSegment, 5); 
+                startTime = performance.now();
+                travelDistance = L.latLng(currentSegment).distanceTo(nextSegment);
+                duration = travelDistance / 100; 
                 requestAnimationFrame(updatePosition);
             }
         };

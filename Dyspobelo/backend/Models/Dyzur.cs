@@ -8,4 +8,6 @@ public class Dyzur
     public int IdHarmonogramu { get; set; }
     public DateTime DataRozpoczeciaDyzuru { get; set; }
     public DateTime DataZakonczeniaDyzuru { get; set; }
+
+    public ICollection<DyspozytorDyzur> DyspozytorDyzury { get; set; }
 }

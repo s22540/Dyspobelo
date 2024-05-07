@@ -14,4 +14,5 @@ public class Pogotowie
     public int SzpitalId { get; set; }
     [ForeignKey("SzpitalId")]
     public required Szpital Szpital { get; set; }
+    public ICollection<ZgloszenieJednostka> ZgloszenieJednostkas { get; set; }
 }

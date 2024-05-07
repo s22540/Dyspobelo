@@ -1,17 +1,33 @@
-﻿import React, { useState } from "react";
+﻿import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function List() {
+	const [zgloszenia, setZgloszenia] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
+	const [loading, setLoading] = useState(true);
+
+	const fetchZgloszenia = async () => {
+		try {
+			const response = await axios.get('http://localhost:5000/api/Zgloszenia');
+			setZgloszenia(response.data);
+			setLoading(false);
+		} catch (error) {
+			console.error("Error fetching data: ", error);
+			setLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		fetchZgloszenia();
+	}, []);
 
 	const handleSearchChange = (e) => {
 		setSearchTerm(e.target.value);
 	};
 
-	// Function template for handling button clicks
-	const handleButtonClick = (element) => {
-		console.log(`Clicked on element: ${element}`);
-		// You can add your logic here or expand this function
-	};
+	const filteredZgloszenia = zgloszenia.filter(zgloszenie =>
+		zgloszenie.ulica.toLowerCase().includes(searchTerm.toLowerCase())
+	);
 
 	const styles = {
 		container: {
@@ -47,33 +63,34 @@ function List() {
 			cursor: "pointer",
 			backgroundColor: "grey",
 			color: "white",
-			width: "50%",
+			width: "100%",
 		},
 	};
 
 	return (
-		//search bar
 		<div>
-			{/* <div style={styles.searchContainer}>
+			<div style={styles.searchContainer}>
 				<input
 					type="text"
-					placeholder="Szukaj..."
+					placeholder="Szukaj po ulicy..."
 					value={searchTerm}
 					onChange={handleSearchChange}
 					style={styles.searchInput}
 				/>
-			</div> */}
+			</div>
 			<div style={styles.container}>
-				{Array.from({ length: 20 }, (_, i) => `Element ${i + 1}`).map(
-					(element) => (
+				{loading ? (
+					<p>Loading...</p>
+				) : (
+					filteredZgloszenia.map(zgloszenie => (
 						<button
-							key={element}
-							onClick={() => handleButtonClick(element)}
+							key={zgloszenie.id}
+							onClick={() => console.log(`Clicked on: ${zgloszenie.id}`)}
 							style={styles.button}
 						>
-							{element}
+							{`Zgłoszenie ID: ${zgloszenie.id}, Ulica: ${zgloszenie.ulica}`}
 						</button>
-					)
+					))
 				)}
 			</div>
 		</div>

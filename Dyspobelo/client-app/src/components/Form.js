@@ -1,6 +1,8 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function Form() {
+    
     const [formData, setFormData] = useState({
         imie: '',
         nazwisko: '',
@@ -12,6 +14,22 @@ function Form() {
         typZgloszenia: '',
         opisZdarzenia: ''
     });
+    const [typyZgloszen, setTypyZgloszen] = useState([]);
+    const [klasyZgloszen, setKlasyZgloszen] = useState([]);
+    useEffect(() => {
+        const fetchTypyIKlasy = async () => {
+            try {
+                const typyRes = await axios.get('http://localhost:5000/api/TypyZgloszen');
+                const klasyRes = await axios.get('http://localhost:5000/api/KlasyZgloszen');
+                setTypyZgloszen(typyRes.data);
+                setKlasyZgloszen(klasyRes.data);
+            } catch (error) {
+                console.error('Error loading types and classes:', error);
+            }
+        };
+
+        fetchTypyIKlasy();
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -21,11 +39,26 @@ function Form() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Form Data:', formData);
-        // Tu bedzie przetwarzanie forma pozniej
+        try {
+            const response = await axios.post('http://localhost:5000/api/Zgloszenia', {
+                ...formData,
+                idTypZgloszenia: parseInt(formData.idTypZgloszenia),
+                idKlasaZgloszenia: parseInt(formData.idKlasaZgloszenia),
+                numerBudynku: parseInt(formData.numerBudynku),
+                numerMieszkania: parseInt(formData.numerMieszkania)
+            });
+            console.log('Submit successful:', response.data);
+            // Resetowanie formularza lub inne działania po zatwierdzeniu
+        } catch (error) {
+            console.error('Error submitting form:', error.response ? error.response.data : error.message);
+            // Dodano obsługę sytuacji, gdy response jest undefined
+        }
     };
+
+
 
     const styles = {
         formContainer: {
@@ -113,24 +146,26 @@ function Form() {
                     style={styles.input}
                 />
                 <select
-                    name="klasaZgloszenia"
-                    value={formData.klasaZgloszenia}
-                    onChange={handleInputChange}
-                    style={styles.input}
-                >
-                    <option value="">Wybierz klasę zgłoszenia</option>
-                    <option value="klasa1">Klasa 1</option>
-                    <option value="klasa2">Klasa 2</option>
-                </select>
-                <select
-                    name="typZgloszenia"
-                    value={formData.typZgloszenia}
+                    name="idTypZgloszenia"
+                    value={formData.idTypZgloszenia}
                     onChange={handleInputChange}
                     style={styles.input}
                 >
                     <option value="">Wybierz typ zgłoszenia</option>
-                    <option value="typ1">Typ 1</option>
-                    <option value="typ2">Typ 2</option>
+                    {typyZgloszen.map(typ => (
+                        <option key={typ.id} value={typ.id}>{typ.nazwaTypu}</option>
+                    ))}
+                </select>
+                <select
+                    name="idKlasaZgloszenia"
+                    value={formData.idKlasaZgloszenia}
+                    onChange={handleInputChange}
+                    style={styles.input}
+                >
+                    <option value="">Wybierz klasę zgłoszenia</option>
+                    {klasyZgloszen.map(klasa => (
+                        <option key={klasa.id} value={klasa.id}>{klasa.klasa_zgloszenia}</option>
+                    ))}
                 </select>
                 <textarea
                     name="opisZdarzenia"

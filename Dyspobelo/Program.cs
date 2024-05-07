@@ -1,28 +1,40 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql;
-using Dyspobelo.Data; // Assuming this namespace contains your DbContext
+using backend.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DB CONTEXT CONFIGURATION
-// Connection string from environment variable
-var connectionString = Environment.GetEnvironmentVariable("AZURE_MYSQL_CONNECTIONSTRING");
-builder.Services.AddDbContext<MyDbContext>(options =>
-    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 21))));
+builder.Services.AddControllers();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+        builder.WithOrigins("http://localhost:3000")
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials());
+});
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    app.UseHsts();  // HSTS is optional and can be commented out if not needed
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseRouting();
-app.UseAuthorization();
-app.MapRazorPages();
 
-app.Run();
+app.UseRouting();
+app.UseCors("CorsPolicy");
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run("http://localhost:5000");

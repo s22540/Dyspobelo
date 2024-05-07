@@ -1,8 +1,22 @@
-using Microsoft.EntityFrameworkCore;
+﻿using backend.Controllers;
 
-public class ApplicationDbContext : DbContext
-{
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-    public DbSet<Zgloszenie> Zgloszenia { get; set; }
-}
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+        }
+
+        public DbSet<Zgloszenie> Zgloszenia { get; set; }
+        public DbSet<Zglaszajacy> Zglaszajacy { get; set; }
+        public DbSet<TypZgloszenia> TypyZgloszenia { get; set; }
+        public DbSet<KlasaZgloszenia> KlasyZgloszenia { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            
+        }
+    }
+

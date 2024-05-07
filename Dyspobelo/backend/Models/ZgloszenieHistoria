@@ -1,8 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
-public class Zgloszenie
+public class ZgloszenieHistoria
 {
     [Key]
     public int Id { get; set; }
@@ -12,13 +11,12 @@ public class Zgloszenie
     public int IdKlasaZgloszenia { get; set; }
     public int IdZgloszenieJednostka { get; set; }
     [Required]
-    public required string Ulica { get; set; }
+    public string Ulica { get; set; }
     [Required]
     public int NumerBudynku { get; set; }
     [Required]
     public int NumerMieszkania { get; set; }
     public DateTime DataZgloszenia { get; set; }
-    [Required]
-    public required string OpisZdarzenia { get; set; }
+    public string OpisZdarzenia { get; set; }
+    public DateTime? DataHistoryzacji { get; set; }
 }
-

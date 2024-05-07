@@ -14,4 +14,6 @@ public class StrazPozarna
     public int RemizaId { get; set; }
     [ForeignKey("RemizaId")]
     public required Remiza Remiza { get; set; }
+
+    public ICollection<ZgloszenieJednostka> ZgloszenieJednostkas { get; set; }
 }

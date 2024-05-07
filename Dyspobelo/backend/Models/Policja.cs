@@ -15,4 +15,6 @@ public class Policja
     public int KomisariatId { get; set; }
     [ForeignKey("KomisariatId")]
     public required Komisariat Komisariat { get; set; }
+
+    public ICollection<ZgloszenieJednostka> ZgloszenieJednostkas { get; set; }
 }

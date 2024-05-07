@@ -11,4 +11,6 @@ public class Dyspozytor
     public required string Imie { get; set; }
     [Required]
     public required string Nazwisko { get; set; }
+
+    public ICollection<DyspozytorDyzur> DyspozytorDyzury { get; set; }
 }

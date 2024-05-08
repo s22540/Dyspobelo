@@ -22,6 +22,10 @@ function Form() {
                 const typyResponse = await fetch('http://localhost:5126/api/TypyZgloszenia');
                 const typyData = await typyResponse.json();
                 setTypyZgloszen(typyData);
+
+                const klasyResponse = await fetch('http://localhost:5126/api/KlasyZgloszenia');
+                const klasyData = await klasyResponse.json();
+                setKlasyZgloszen(klasyData);
             } catch (error) {
                 console.error('Error loading types and classes:', error);
             }
@@ -145,14 +149,14 @@ function Form() {
                     style={styles.input}
                 />
                 <select
-                    name="idTypZgloszenia"
-                    value={formData.idTypZgloszenia}
+                    name="typZgloszenia"
+                    value={formData.typZgloszenia}
                     onChange={handleInputChange}
                     style={styles.input}
                 >
                     <option value="">Wybierz typ zgłoszenia</option>
                     {typyZgloszen.map(typ => (
-                        <option key={typ.id} value={typ.id}>{typ.nazwaTypu}</option>
+                        <option key={typ.id} value={typ.nazwa_Typu}>{typ.nazwa_Typu}</option>
                     ))}
                 </select>
                 <select

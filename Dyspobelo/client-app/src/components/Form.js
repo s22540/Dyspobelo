@@ -19,10 +19,9 @@ function Form() {
     useEffect(() => {
         const fetchTypyIKlasy = async () => {
             try {
-                const typyRes = await axios.get('http://localhost:5000/api/TypyZgloszen');
-                const klasyRes = await axios.get('http://localhost:5000/api/KlasyZgloszen');
-                setTypyZgloszen(typyRes.data);
-                setKlasyZgloszen(klasyRes.data);
+                const typyResponse = await fetch('http://localhost:5126/api/TypyZgloszenia');
+                const typyData = await typyResponse.json();
+                setTypyZgloszen(typyData);
             } catch (error) {
                 console.error('Error loading types and classes:', error);
             }

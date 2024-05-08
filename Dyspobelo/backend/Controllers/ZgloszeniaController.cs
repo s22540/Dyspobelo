@@ -1,13 +1,14 @@
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using backend.Models;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [EnableCors("CorsPolicy")]
     public class ZgloszeniaController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

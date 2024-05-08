@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
         public DbSet<Zgloszenie> Zgloszenia { get; set; }
         public DbSet<Zglaszajacy> Zglaszajacy { get; set; }
         public DbSet<TypZgloszenia> Typ_Zgloszenia { get; set; }
-        public DbSet<KlasaZgloszenia> KlasyZgloszenia { get; set; }
+        public DbSet<Klasa_Zgloszenia> Klasa_Zgloszenia { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

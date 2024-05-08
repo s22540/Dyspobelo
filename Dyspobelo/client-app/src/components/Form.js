@@ -44,23 +44,38 @@ function Form() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form Data:', formData);
+
+        const zgloszenieData = {
+            idDyspozytor: formData.idDyspozytor,
+            idZglaszajacy: formData.idZglaszajacy,
+            idTypZgloszenia: parseInt(formData.idTypZgloszenia),
+            idKlasaZgloszenia: parseInt(formData.idKlasaZgloszenia),
+            idZgloszenieJednostka: formData.idZgloszenieJednostka,
+            ulica: formData.ulica,
+            numerBudynku: parseInt(formData.numerBudynku),
+            numerMieszkania: parseInt(formData.numerMieszkania),
+            opisZdarzenia: formData.opisZdarzenia,
+            dataZgloszenia: new Date().toISOString()
+        };
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(zgloszenieData)
+        };
+
+        console.log('Sending Form Data:', JSON.stringify(zgloszenieData));
+
+
         try {
-            const response = await axios.post('http://localhost:5000/api/Zgloszenia', {
-                ...formData,
-                idTypZgloszenia: parseInt(formData.idTypZgloszenia),
-                idKlasaZgloszenia: parseInt(formData.idKlasaZgloszenia),
-                numerBudynku: parseInt(formData.numerBudynku),
-                numerMieszkania: parseInt(formData.numerMieszkania)
-            });
-            console.log('Submit successful:', response.data);
-            // Resetowanie formularza lub inne działania po zatwierdzeniu
+            const response = await fetch('http://localhost:5126/api/Zgloszenia', requestOptions);
+            if (!response.ok) throw new Error('Failed to submit the form');
+            const responseData = await response.json();
+            console.log('Submit successful:', responseData);
         } catch (error) {
-            console.error('Error submitting form:', error.response ? error.response.data : error.message);
-            // Dodano obsługę sytuacji, gdy response jest undefined
+            console.error('Error submitting form:', error);
         }
     };
-
 
 
     const styles = {
@@ -149,14 +164,14 @@ function Form() {
                     style={styles.input}
                 />
                 <select
-                    name="typZgloszenia"
-                    value={formData.typZgloszenia}
+                    name="idTypZgloszenia"
+                    value={formData.idTypZgloszenia}
                     onChange={handleInputChange}
                     style={styles.input}
                 >
                     <option value="">Wybierz typ zgłoszenia</option>
                     {typyZgloszen.map(typ => (
-                        <option key={typ.id} value={typ.nazwa_Typu}>{typ.nazwa_Typu}</option>
+                        <option key={typ.id} value={typ.id}>{typ.nazwa_Typu}</option>
                     ))}
                 </select>
                 <select

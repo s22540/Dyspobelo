@@ -5,18 +5,18 @@ public class ZgloszenieHistoria
 {
     [Key]
     public int Id { get; set; }
-    public int IdDyspozytor { get; set; }
-    public int IdZglaszajacy { get; set; }
-    public int IdTypZgloszenia { get; set; }
-    public int IdKlasaZgloszenia { get; set; }
-    public int IdZgloszenieJednostka { get; set; }
+    public int id_dyspozytor { get; set; }
+    public int id_zglaszajacy { get; set; }
+    public int id_typ_zgloszenia { get; set; }
+    public int id_klasa_zgloszenia { get; set; }
+    public int id_zgloszenie_jednostka { get; set; }
     [Required]
-    public string Ulica { get; set; }
+    public string ulica { get; set; }
     [Required]
-    public int NumerBudynku { get; set; }
+    public int numer_budynku { get; set; }
     [Required]
-    public int NumerMieszkania { get; set; }
-    public DateTime DataZgloszenia { get; set; }
-    public string OpisZdarzenia { get; set; }
+    public int numer_mieszkania { get; set; }
+    public DateTime data_zgloszenia { get; set; }
+    public string opis_zdarzenia { get; set; }
     public DateTime? DataHistoryzacji { get; set; }
 }

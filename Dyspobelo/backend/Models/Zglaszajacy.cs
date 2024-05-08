@@ -6,8 +6,9 @@ public class Zglaszajacy
     [Key]
     public int Id { get; set; }
     [Required]
-    public required string Imie { get; set; }
+    public string Imie { get; set; }
     [Required]
-    public required string Nazwisko { get; set; }
-    public required string NumerKontaktowy { get; set; }
+    public string Nazwisko { get; set; }
+    [Required]
+    public string NumerKontaktowy { get; set; }
 }

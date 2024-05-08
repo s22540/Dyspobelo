@@ -12,6 +12,7 @@ namespace backend.Controllers
     public class ZgloszeniaController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ZgloszeniaController> _logger;
 
         public ZgloszeniaController(ApplicationDbContext context)
         {
@@ -41,9 +42,18 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Zgloszenie>> PostZgloszenie(Zgloszenie zgloszenie)
         {
+            _logger.LogInformation("Received POST request with data: {@Zgloszenie}", zgloszenie);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Invalid data: {@ModelStateErrors}", ModelState);
+                return BadRequest(ModelState);
+            }
+
             _context.Zgloszenia.Add(zgloszenie);
             await _context.SaveChangesAsync();
             return CreatedAtAction("GetZgloszenie", new { id = zgloszenie.Id }, zgloszenie);
         }
+
+
     }
 }

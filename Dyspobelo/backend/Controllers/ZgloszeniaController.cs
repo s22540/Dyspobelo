@@ -11,12 +11,13 @@ namespace backend.Controllers
     [EnableCors("CorsPolicy")]
     public class ZgloszeniaController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private readonly ILogger<ZgloszeniaController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public ZgloszeniaController(ApplicationDbContext context)
+        public ZgloszeniaController(ApplicationDbContext context, ILogger<ZgloszeniaController> logger)
         {
             _context = context;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         // GET: api/Zgloszenia

@@ -19,6 +19,7 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod()
               .AllowAnyHeader());
 });
+builder.Logging.AddConsole();
 
 
 

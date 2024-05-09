@@ -54,7 +54,7 @@ function Form() {
             ulica: formData.ulica,
             numerBudynku: parseInt(formData.numerBudynku),
             numerMieszkania: parseInt(formData.numerMieszkania),
-            opisZdarzenia: formData.opisZdarzenia,
+            opis_zdarzenia: formData.opisZdarzenia,
             dataZgloszenia: new Date().toISOString()
         };
 

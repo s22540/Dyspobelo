@@ -1,14 +1,14 @@
 ﻿import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function List() {
+function List({ onSelectZgloszenie }) {
 	const [zgloszenia, setZgloszenia] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [loading, setLoading] = useState(true);
 
 	const fetchZgloszenia = async () => {
 		try {
-			const response = await axios.get('http://localhost:5126/api/Zgloszenia');
+			const response = await axios.get("http://localhost:5126/api/Zgloszenia");
 			setZgloszenia(response.data);
 			setLoading(false);
 		} catch (error) {
@@ -25,7 +25,7 @@ function List() {
 		setSearchTerm(e.target.value);
 	};
 
-	const filteredZgloszenia = zgloszenia.filter(zgloszenie =>
+	const filteredZgloszenia = zgloszenia.filter((zgloszenie) =>
 		zgloszenie.ulica.toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
@@ -82,14 +82,15 @@ function List() {
 				{loading ? (
 					<p>Loading...</p>
 				) : (
-					filteredZgloszenia.map(zgloszenie => (
+					filteredZgloszenia.map((zgloszenie) => (
 						<button
 							key={zgloszenie.id}
-							onClick={() => console.log(`Clicked on: ${zgloszenie.id}`)}
+							onClick={() => onSelectZgloszenie(zgloszenie)}
 							style={styles.button}
 						>
-							{`Zgłoszenie ID: ${zgloszenie.id}, Ulica: ${zgloszenie.ulica}`}
+							{`Zgłoszenie ID: ${zgloszenie.id}`}
 						</button>
+						//, Ulica: ${zgloszenie.ulica}
 					))
 				)}
 			</div>

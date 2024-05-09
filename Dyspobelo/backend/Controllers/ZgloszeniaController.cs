@@ -55,6 +55,33 @@ namespace backend.Controllers
             return CreatedAtAction("GetZgloszenie", new { id = zgloszenie.Id }, zgloszenie);
         }
 
+        // PUT: api/Zgloszenia
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutZgloszenie(int id, Zgloszenie zgloszenie)
+        {
+            if (id != zgloszenie.Id)
+            {
+                return BadRequest();
+            }
 
+            _context.Entry(zgloszenie).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ZgloszenieExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return NoContent();
+        }
+        private bool ZgloszenieExists(int id) => _context.Zgloszenia.Any(e => e.Id == id);
     }
 }

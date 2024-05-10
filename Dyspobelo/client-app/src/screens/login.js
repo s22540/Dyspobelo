@@ -76,13 +76,34 @@ const LoginScreen = () => {
 	const [password, setPassword] = useState("");
 	const navigate = useNavigate();
 
-	const handleLogin = (e) => {
+	const handleLogin = async (e) => {
 		e.preventDefault();
-		console.log(username, password);
-		if (username === "user" && password === "user") {
-			navigate("/main");
-		} else {
-			alert("Incorrect username or password!");
+
+		const loginDetails = {
+			numer_Dyspozytora: username,  
+			Zahashowane_Haslo: password  
+		};
+
+		try {
+			const response = await fetch('http://localhost:5126/api/auth/login', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(loginDetails)
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				console.log("Login successful, token received:", data);
+				navigate("/main");
+			} else {
+			
+				const errorText = await response.text();  
+				console.error("Login failed:", errorText);
+				alert("Login failed: " + errorText);
+			}
+		} catch (error) {
+			console.error("Login error:", error);
+			alert("Error logging in: " + error.message);
 		}
 	};
 
@@ -92,11 +113,11 @@ const LoginScreen = () => {
 				<StyledTitle>Login</StyledTitle>
 
 				<StyledInputContainer>
-					<StyledLabel htmlFor="username">Login</StyledLabel>
+					<StyledLabel htmlFor="numerDyspozytora">Login</StyledLabel>
 					<StyledInput
-						id="username"
-						name="username"
-						placeholder="Wartość"
+						id="numerDyspozytora"
+						name="numerDyspozytora"
+						placeholder="numerDyspozytora"
 						value={username}
 						onChange={(e) => setUsername(e.target.value)}
 					/>

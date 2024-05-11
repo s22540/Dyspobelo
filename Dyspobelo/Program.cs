@@ -23,7 +23,6 @@ builder.Logging.AddConsole();
 
 
 
-
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

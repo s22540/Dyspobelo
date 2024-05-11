@@ -19,19 +19,19 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] Dyspozytor model)
     {
-        Console.WriteLine($"Attempting to log in user {model.Numer_Dyspozytora}");
+        Console.WriteLine($"Próba logowania użytkownika {model.Numer_Dyspozytora}");
         var dyspozytor = await _context.Dyspozytors
             .SingleOrDefaultAsync(u => u.Numer_Dyspozytora == model.Numer_Dyspozytora);
 
         if (dyspozytor != null)
         {
-            Console.WriteLine($"User found in database. Expected PW: {dyspozytor.Zahashowane_Haslo}, Provided PW: {model.Zahashowane_Haslo}");
-            if (model.Zahashowane_Haslo == dyspozytor.Zahashowane_Haslo)
+            Console.WriteLine($"Znaleziono użytkownika. Oczekiwane hasło: {dyspozytor.Zahashowane_Haslo}, Podane hasło: {model.Zahashowane_Haslo}");
+            if (BCrypt.Net.BCrypt.Verify(model.Zahashowane_Haslo, dyspozytor.Zahashowane_Haslo))
             {
-                return Ok(new { message = "Login successful" });
+                return Ok(new { message = "Logowanie pomyślnie zakończone" });
             }
         }
-        Console.WriteLine("Username or password is incorrect");
-        return BadRequest(new { message = "Username or password is incorrect" });
+        Console.WriteLine("Numer dyspozytora lub hasło nieprawidłowe");
+        return BadRequest(new { message = "Numer dyspozytora lub hasło nieprawidłowe" });
     }
 }

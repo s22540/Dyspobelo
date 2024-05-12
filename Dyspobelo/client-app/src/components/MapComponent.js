@@ -70,8 +70,10 @@ const MovingMarkerLogic = ({ marker }) => {
 const MapComponent = () => {
     const { markers } = useContext(MarkersContext);
 
+    const defaultPosition = [52.237049, 21.017532];
+
     return (
-        <MapContainer center={markers[0]?.position || [0, 0]} zoom={13} style={{ height: '65vh', width: '100%' }}>
+        <MapContainer center={markers[0]?.position || defaultPosition} zoom={13} style={{ height: '65vh', width: '100%' }}>
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

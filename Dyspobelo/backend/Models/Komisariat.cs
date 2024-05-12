@@ -6,9 +6,9 @@ public class Komisariat
     [Key]
     public int Id { get; set; }
     [Required]
-    public required string NazwaKomisariatu { get; set; }
+    public required string Nazwa_Komisariatu { get; set; }
     [Required]
     public required string Adres { get; set; }
     [Required]
-    public required string NumerKontaktowy { get; set; }
+    public required string Numer_Kontaktowy { get; set; }
 }

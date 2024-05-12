@@ -1,24 +1,28 @@
-import React, { createContext, useState } from 'react';
-import { getRandomCoordinates } from '../components/MapComponent';
+import React, { createContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 export const MarkersContext = createContext();
 
 export const MarkersProvider = ({ children }) => {
-    const initialPositions = [
-        [50.06143, 19.93658],
-        [50.06500, 19.94000],
-        [50.06500, 19.94000],
-        [50.06500, 19.94000],
-    ];
+    const [markers, setMarkers] = useState([]);
 
-    const createInitialMarkersState = () => initialPositions.map((position, index) => ({
-        id: index,
-        position: position,
-        iconUrl: index % 2 === 0 ? process.env.PUBLIC_URL + '/karetka.png' : process.env.PUBLIC_URL + '/radiowoz.png', 
-        vehicleType: index % 2 === 0 ? "Ambulans" : "Radiowóz"
-    }));
-
-    const [markers, setMarkers] = useState(createInitialMarkersState);
+    useEffect(() => {
+        const fetchVehicles = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/vehicle/vehicles');
+                const fetchedMarkers = response.data.map((item, index) => ({
+                    id: index,
+                    position: [50.06143, 19.93658],
+                    iconUrl: item.Type === 'Pogotowie' ? process.env.PUBLIC_URL + '/karetka.png' : process.env.PUBLIC_URL + '/radiowoz.png',
+                    vehicleType: item.Type
+                }));
+                setMarkers(fetchedMarkers);
+            } catch (error) {
+                console.error('Failed to fetch vehicles:', error);
+            }
+        };
+        fetchVehicles();
+    }, []);
 
     const updateMarkerPosition = (id, newPosition) => {
         setMarkers(prevMarkers => prevMarkers.map(marker =>

@@ -19,7 +19,12 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Zgloszenie>().ToTable("zgloszenie");
+        modelBuilder.Entity<Zgloszenie>()
+            .ToTable("zgloszenie")
+            .HasOne(z => z.TypZgloszenia)
+            .WithMany(tz => tz.Zgloszenia)
+            .HasForeignKey(z => z.id_typ_zgloszenia);
+
         modelBuilder.Entity<Zglaszajacy>().ToTable("zglaszajacy");
         modelBuilder.Entity<TypZgloszenia>().ToTable("typ_zgloszenia");
         modelBuilder.Entity<Klasa_Zgloszenia>().ToTable("klasa_zgloszenia");

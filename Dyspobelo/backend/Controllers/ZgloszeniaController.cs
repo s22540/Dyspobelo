@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace backend.Controllers
@@ -22,20 +23,58 @@ namespace backend.Controllers
 
         // GET: api/Zgloszenia
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Zgloszenie>>> GetZgloszenia()
+        public async Task<ActionResult<IEnumerable<ZgloszenieDto>>> GetZgloszenia()
         {
-            return await _context.Zgloszenia.ToListAsync();
+            var zgloszenia = await _context.Zgloszenia
+                .Include(z => z.TypZgloszenia)
+                .Select(z => new ZgloszenieDto
+                {
+                    Id = z.Id,
+                    Id_dyspozytor = z.id_dyspozytor,
+                    Id_zglaszajacy = z.id_zglaszajacy,
+                    Id_typ_zgloszenia = z.id_typ_zgloszenia,
+                    TypZgloszenia = z.TypZgloszenia.nazwa_typu,
+                    Id_klasa_zgloszenia = z.id_klasa_zgloszenia,
+                    Id_zgloszenie_jednostka = z.id_zgloszenie_jednostka,
+                    Ulica = z.ulica,
+                    Numer_budynku = z.numer_budynku,
+                    Numer_mieszkania = z.numer_mieszkania,
+                    Data_zgloszenia = z.data_zgloszenia,
+                    Opis_zdarzenia = z.opis_zdarzenia
+                })
+                .ToListAsync();
+
+            return zgloszenia;
         }
 
         // GET: api/Zgloszenia/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Zgloszenie>> GetZgloszenie(int id)
+        public async Task<ActionResult<ZgloszenieDto>> GetZgloszenie(int id)
         {
-            var zgloszenie = await _context.Zgloszenia.FindAsync(id);
+            var zgloszenie = await _context.Zgloszenia
+                .Include(z => z.TypZgloszenia)
+                .Select(z => new ZgloszenieDto
+                {
+                    Id = z.Id,
+                    Id_dyspozytor = z.id_dyspozytor,
+                    Id_zglaszajacy = z.id_zglaszajacy,
+                    Id_typ_zgloszenia = z.id_typ_zgloszenia,
+                    TypZgloszenia = z.TypZgloszenia.nazwa_typu,
+                    Id_klasa_zgloszenia = z.id_klasa_zgloszenia,
+                    Id_zgloszenie_jednostka = z.id_zgloszenie_jednostka,
+                    Ulica = z.ulica,
+                    Numer_budynku = z.numer_budynku,
+                    Numer_mieszkania = z.numer_mieszkania,
+                    Data_zgloszenia = z.data_zgloszenia,
+                    Opis_zdarzenia = z.opis_zdarzenia
+                })
+                .FirstOrDefaultAsync(z => z.Id == id);
+
             if (zgloszenie == null)
             {
                 return NotFound();
             }
+
             return zgloszenie;
         }
 
@@ -55,7 +94,7 @@ namespace backend.Controllers
             return CreatedAtAction("GetZgloszenie", new { id = zgloszenie.Id }, zgloszenie);
         }
 
-        // PUT: api/Zgloszenia
+        // PUT: api/Zgloszenia/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> PutZgloszenie(int id, Zgloszenie zgloszenie)
         {
@@ -82,6 +121,7 @@ namespace backend.Controllers
             }
             return NoContent();
         }
+
         private bool ZgloszenieExists(int id) => _context.Zgloszenia.Any(e => e.Id == id);
     }
 }

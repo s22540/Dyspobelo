@@ -5,6 +5,7 @@ export const MarkersContext = createContext();
 
 export const MarkersProvider = ({ children }) => {
     const [markers, setMarkers] = useState([]);
+    const [selectedMarker, setSelectedMarker] = useState(null);
 
     useEffect(() => {
         const fetchVehicles = async () => {
@@ -14,7 +15,9 @@ export const MarkersProvider = ({ children }) => {
                     id: index,
                     position: [52.237049, 21.017532],
                     iconUrl: getIconUrl(item.type),
-                    vehicleType: item.Type
+                    annType: item.TypZgloszenia,
+                    address: item.ulica + ' ' + item.numer_budynku,
+                    description: item.opis_zdarzenia
                 }));
                 setMarkers(fetchedMarkers);
             } catch (error) {
@@ -35,16 +38,20 @@ export const MarkersProvider = ({ children }) => {
             case 'Policja':
                 return process.env.PUBLIC_URL + '/radiowoz.png';
             case 'Straz_Pozarna':
-                return process.env.PUBLIC_URL + '/wozstraz.png'; 
+                return process.env.PUBLIC_URL + '/wozstraz.png';
             case 'Pogotowie':
                 return process.env.PUBLIC_URL + '/karetka.png';
             default:
-                return process.env.PUBLIC_URL + '/default_vehicle.png'; 
+                return process.env.PUBLIC_URL + '/marker.png';
         }
     };
 
+    const selectMarker = (marker) => {
+        setSelectedMarker(marker);
+    };
+
     return (
-        <MarkersContext.Provider value={{ markers, updateMarkerPosition }}>
+        <MarkersContext.Provider value={{ markers, updateMarkerPosition, selectMarker, selectedMarker }}>
             {children}
         </MarkersContext.Provider>
     );

@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 public class Zgloszenie
 {
     [Key]
@@ -20,6 +19,8 @@ public class Zgloszenie
     public int numer_mieszkania { get; set; }
     public DateTime data_zgloszenia { get; set; }
     [Required]
-    public required string opis_zdarzenia { get; set; }
-}
+    public string opis_zdarzenia { get; set; }
 
+    [ForeignKey("id_typ_zgloszenia")]
+    public TypZgloszenia TypZgloszenia { get; set; }
+}

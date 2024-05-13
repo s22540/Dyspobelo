@@ -25,7 +25,6 @@ public class AuthController : ControllerBase
 
         if (dyspozytor != null)
         {
-            Console.WriteLine($"Znaleziono użytkownika. Oczekiwane hasło: {dyspozytor.Zahashowane_Haslo}, Podane hasło: {model.Zahashowane_Haslo}");
             if (BCrypt.Net.BCrypt.Verify(model.Zahashowane_Haslo, dyspozytor.Zahashowane_Haslo))
             {
                 return Ok(new { message = "Logowanie pomyślnie zakończone" });

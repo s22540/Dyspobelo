@@ -21,10 +21,6 @@ builder.Services.AddCors(options =>
 });
 builder.Logging.AddConsole();
 
-var plainPassword = "test123@";
-var hashedPassword = BCrypt.Net.BCrypt.HashPassword(plainPassword);
-Console.WriteLine(hashedPassword);
-
 
 var app = builder.Build();
 

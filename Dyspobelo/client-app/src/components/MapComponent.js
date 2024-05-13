@@ -10,10 +10,10 @@ const interpolatePosition = (start, end, ratio) => {
     ];
 };
 
-const getRandomCoordinates = (center, range = 50) => {
+const getRandomCoordinates = (center, range = 300) => {
     return [
-        center[0] + (Math.random() - 0.5) * range,
-        center[1] + (Math.random() - 0.5) * range
+        center[0] + (Math.random() - 0.5) * range / 111320, // Dzielenie przez ~111320 przelicza stopnie na metry na równiku
+        center[1] + (Math.random() - 0.5) * range / (40075000 * Math.cos(center[0] * Math.PI / 180) / 360) // Poprawka na zmianê d³ugoœci stopnia d³ugoœci geograficznej w zale¿noœci od szerokoœci
     ];
 };
 
@@ -32,15 +32,15 @@ const MovingMarkerLogic = ({ marker }) => {
         leafletMarker.bindPopup(`<strong>Type:</strong> ${marker.vehicleType}`);
 
         let currentSegment = marker.position;
-        let nextSegment = getRandomCoordinates(currentSegment, 5); 
+        let nextSegment = getRandomCoordinates(currentSegment); 
         let startTime = performance.now();
         let travelDistance = L.latLng(currentSegment).distanceTo(nextSegment);
-        let duration = travelDistance / 100;
+        let duration = travelDistance / 75;
 
         const updatePosition = () => {
             let currentTime = performance.now();
             let elapsed = currentTime - startTime;
-            let progress = elapsed / (duration * 1000); 
+            let progress = elapsed / (duration * 5000);
 
             if (progress < 1) {
                 const newPos = interpolatePosition(currentSegment, nextSegment, progress);
@@ -49,10 +49,10 @@ const MovingMarkerLogic = ({ marker }) => {
                 requestAnimationFrame(updatePosition);
             } else {
                 currentSegment = nextSegment;
-                nextSegment = getRandomCoordinates(currentSegment, 5); 
+                nextSegment = getRandomCoordinates(currentSegment);
                 startTime = performance.now();
                 travelDistance = L.latLng(currentSegment).distanceTo(nextSegment);
-                duration = travelDistance / 100; 
+                duration = travelDistance / 75;
                 requestAnimationFrame(updatePosition);
             }
         };

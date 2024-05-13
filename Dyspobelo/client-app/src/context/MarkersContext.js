@@ -9,11 +9,11 @@ export const MarkersProvider = ({ children }) => {
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/vehicle/vehicles');
+                const response = await axios.get('http://localhost:5126/api/vehicle/vehicles');
                 const fetchedMarkers = response.data.map((item, index) => ({
                     id: index,
-                    position: [50.06143, 19.93658],
-                    iconUrl: item.Type === 'Pogotowie' ? process.env.PUBLIC_URL + '/karetka.png' : process.env.PUBLIC_URL + '/radiowoz.png',
+                    position: [52.237049, 21.017532],
+                    iconUrl: getIconUrl(item.type),
                     vehicleType: item.Type
                 }));
                 setMarkers(fetchedMarkers);
@@ -28,6 +28,19 @@ export const MarkersProvider = ({ children }) => {
         setMarkers(prevMarkers => prevMarkers.map(marker =>
             marker.id === id ? { ...marker, position: newPosition } : marker
         ));
+    };
+
+    const getIconUrl = (type) => {
+        switch (type) {
+            case 'Policja':
+                return process.env.PUBLIC_URL + '/radiowoz.png';
+            case 'Straz_Pozarna':
+                return process.env.PUBLIC_URL + '/wozstraz.png'; 
+            case 'Pogotowie':
+                return process.env.PUBLIC_URL + '/karetka.png';
+            default:
+                return process.env.PUBLIC_URL + '/default_vehicle.png'; 
+        }
     };
 
     return (

@@ -24,7 +24,7 @@ public class VehicleController : ControllerBase
 
         var vehicles = new List<object>();
         vehicles.AddRange(policja.Select(p => new { Type = "Policja", Vehicle = p }));
-        vehicles.AddRange(strazPozarna.Select(s => new { Type = "Straż Pożarna", Vehicle = s }));
+        vehicles.AddRange(strazPozarna.Select(s => new { Type = "Straz_Pozarna", Vehicle = s }));
         vehicles.AddRange(pogotowie.Select(p => new { Type = "Pogotowie", Vehicle = p }));
 
         return Ok(vehicles);

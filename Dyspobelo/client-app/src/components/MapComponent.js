@@ -90,13 +90,11 @@ const MapComponent = () => {
                         <div>
                             <strong>ID:</strong> {marker.id}
                             <br />
-                            <strong>Type:</strong> {marker.annType || 'Unknown'} {/* Displaying the announcement type */}
+                            <strong>Type:</strong> {marker.annType || 'Unknown'} 
                             <br />
                             <strong>Address:</strong> {marker.address}
                             <br />
                             <strong>Description:</strong> {marker.description}
-                            <br />
-                            <strong>Position:</strong> {marker.position[0]}, {marker.position[1]}
                         </div>
                     </Popup>
                 </Marker>
@@ -107,13 +105,11 @@ const MapComponent = () => {
                         <div>
                             <strong>ID:</strong> {selectedMarker.id}
                             <br />
-                            <strong>Type:</strong> {selectedMarker.annType || 'Unknown'} {/* Displaying the announcement type */}
+                            <strong>Type:</strong> {selectedMarker.annType || 'Unknown'} 
                             <br />
                             <strong>Address:</strong> {selectedMarker.address}
                             <br />
                             <strong>Description:</strong> {selectedMarker.description}
-                            <br />
-                            <strong>Position:</strong> {selectedMarker.position[0]}, {selectedMarker.position[1]}
                         </div>
                     </Popup>
                 </Marker>

@@ -1,17 +1,35 @@
 ﻿import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 function EditForm({ zgloszenie }) {
 	const [formData, setFormData] = useState({
-		imie: "",
-		nazwisko: "",
-		numerKontaktowy: "",
-		ulica: "",
-		numerBudynku: "",
-		numerMieszkania: "",
-		klasaZgloszenia: "",
-		typZgloszenia: "",
-		opisZdarzenia: "",
+		id: zgloszenie?.Id ?? 0,
+		id_dyspozytor: zgloszenie?.id_dyspozytor ?? 0,
+		id_zglaszajacy: zgloszenie?.id_zglaszajacy ?? 0,
+		id_typ_zgloszenia: zgloszenie?.id_typ_zgloszenia ?? 0,
+		id_klasa_zgloszenia: zgloszenie?.id_klasa_zgloszenia ?? 0,
+		id_zgloszenie_jednostka: zgloszenie?.id_zgloszenie_jednostka ?? 0,
+		ulica: zgloszenie?.ulica ?? "",
+		numer_budynku: zgloszenie?.numer_budynku.toString() ?? "",
+		numer_mieszkania: zgloszenie?.numer_mieszkania.toString() ?? "",
+		data_zgloszenia:
+			zgloszenie?.data_zgloszenia ?? new Date().toISOString().substring(0, 10),
+		opis_zdarzenia: zgloszenie?.opis_zdarzenia ?? "",
 	});
+
+	useEffect(() => {
+		if (zgloszenie) {
+			setFormData({
+				...formData,
+				...zgloszenie,
+				numer_budynku: zgloszenie.numer_budynku.toString(),
+				numer_mieszkania: zgloszenie.numer_mieszkania.toString(),
+				data_zgloszenia: new Date(zgloszenie.data_zgloszenia)
+					.toISOString()
+					.substring(0, 10),
+			});
+		}
+	}, [zgloszenie]);
 
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
@@ -21,62 +39,55 @@ function EditForm({ zgloszenie }) {
 		}));
 	};
 
+	//FETCH
+
+	// const handleSubmit = async (e) => {
+	// 	e.preventDefault();
+	// 	console.log("Form Data:", formData);
+	// 	if (!formData.opis_zdarzenia) {
+	// 		alert("OPIS");
+	// 		return;
+	// 	}
+	// 	try {
+	// 		const response = await fetch(
+	// 			`http://localhost:5126/api/Zgloszenia/${zgloszenie.id}`,
+	// 			{
+	// 				method: "PUT",
+	// 				headers: {
+	// 					"Content-Type": "application/json",
+	// 				},
+	// 				body: JSON.stringify(formData),
+	// 			}
+	// 		);
+
+	// 		if (!response.ok) {
+	// 			throw new Error(`HTTP error! status: ${response.status}`);
+	// 		}
+	// 		const data = await response.json();
+	// 		console.log("Updated: ", data);
+	// 		console.log("Data updated:", response.data);
+	// 		alert("Update successful!");
+	// 	} catch (error) {
+	// 		console.error("Failed to update: ", error);
+	// 	}
+	// };
+
+	//AXIOS
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log("Form Data:", formData);
-		// const response = await axios.put(
-		// 	`http://localhost:5126/api/Zgloszenia/${zgloszenie.id}`,
-		// 	formData
-		// );
 		try {
-			const response = await fetch(
-				`http://localhost:5126/api/Zgloszenia/${zgloszenie.id}`,
-				{
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(formData),
-				}
+			const response = await axios.put(
+				`http://localhost:5126/api/Zgloszenia/${formData.id}`,
+				formData
 			);
-
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			const data = await response.json();
-			console.log("Updated: ", data);
+			console.log("Data updated:", response.data);
+			alert("Update successful!");
 		} catch (error) {
-			console.error("Failed to update: ", error);
+			console.error("Failed to update:", error);
+			alert("Update failed!");
 		}
 	};
-
-	useEffect(() => {
-		if (zgloszenie) {
-			setFormData({
-				imie: "",
-				nazwisko: "",
-				numerKontaktowy: "",
-				ulica: zgloszenie.ulica,
-				numerBudynku: zgloszenie.numer_budynku.toString(),
-				numerMieszkania: zgloszenie.numer_mieszkania.toString(),
-				klasaZgloszenia: zgloszenie.id_klasa_zgloszenia.toString(),
-				typZgloszenia: zgloszenie.id_typ_zgloszenia.toString(),
-				opisZdarzenia: zgloszenie.opis_zdarzenia,
-			});
-		} else {
-			setFormData({
-				imie: "",
-				nazwisko: "",
-				numerKontaktowy: "",
-				ulica: "",
-				numerBudynku: "",
-				numerMieszkania: "",
-				klasaZgloszenia: "",
-				typZgloszenia: "",
-				opisZdarzenia: "",
-			});
-		}
-	}, [zgloszenie]);
 
 	const styles = {
 		formContainer: {
@@ -135,8 +146,8 @@ function EditForm({ zgloszenie }) {
 					style={styles.input}
 				/>
 				<input
-					name="numerKontaktowy"
-					value={formData.numerKontaktowy}
+					name="numer_kontaktowy"
+					value={formData.numer_kontaktowy}
 					onChange={handleInputChange}
 					placeholder="Numer kontaktowy"
 					style={styles.input}
@@ -149,22 +160,22 @@ function EditForm({ zgloszenie }) {
 					style={styles.input}
 				/>
 				<input
-					name="numerBudynku"
-					value={formData.numerBudynku}
+					name="numer_budynku"
+					value={formData.numer_budynku}
 					onChange={handleInputChange}
 					placeholder="Numer budynku (opcjonalne)"
 					style={styles.input}
 				/>
 				<input
-					name="numerMieszkania"
-					value={formData.numerMieszkania}
+					name="numer_mieszkania"
+					value={formData.numer_mieszkania}
 					onChange={handleInputChange}
 					placeholder="Numer mieszkania (opcjonalne)"
 					style={styles.input}
 				/>
 				<select
-					name="klasaZgloszenia"
-					value={formData.klasaZgloszenia}
+					name="klasa_zgloszenia"
+					value={formData.klasa_zgloszenia}
 					onChange={handleInputChange}
 					style={styles.input}
 				>
@@ -173,8 +184,8 @@ function EditForm({ zgloszenie }) {
 					<option value="klasa2">Klasa 2</option>
 				</select>
 				<select
-					name="typZgloszenia"
-					value={formData.typZgloszenia}
+					name="typ_zgloszenia"
+					value={formData.typ_zgloszenia}
 					onChange={handleInputChange}
 					style={styles.input}
 				>
@@ -183,8 +194,8 @@ function EditForm({ zgloszenie }) {
 					<option value="typ2">Typ 2</option>
 				</select>
 				<textarea
-					name="opisZdarzenia"
-					value={formData.opisZdarzenia}
+					name="opis_zdarzenia"
+					value={formData.opis_zdarzenia}
 					onChange={handleInputChange}
 					placeholder="Opis zdarzenia"
 					style={{ ...styles.input, height: "100px" }}

@@ -40,7 +40,8 @@ namespace backend.Controllers
                     Numer_budynku = z.numer_budynku,
                     Numer_mieszkania = z.numer_mieszkania,
                     Data_zgloszenia = z.data_zgloszenia,
-                    Opis_zdarzenia = z.opis_zdarzenia
+                    Opis_zdarzenia = z.opis_zdarzenia,
+                    Kod_pocztowy = z.kod_pocztowy
                 })
                 .ToListAsync();
 
@@ -66,7 +67,8 @@ namespace backend.Controllers
                     Numer_budynku = z.numer_budynku,
                     Numer_mieszkania = z.numer_mieszkania,
                     Data_zgloszenia = z.data_zgloszenia,
-                    Opis_zdarzenia = z.opis_zdarzenia
+                    Opis_zdarzenia = z.opis_zdarzenia,
+                    Kod_pocztowy = z.kod_pocztowy
                 })
                 .FirstOrDefaultAsync(z => z.Id == id);
 

@@ -12,4 +12,5 @@
     public int Numer_mieszkania { get; set; }
     public DateTime Data_zgloszenia { get; set; }
     public string Opis_zdarzenia { get; set; }
+    public string Kod_pocztowy { get; set; }
 }

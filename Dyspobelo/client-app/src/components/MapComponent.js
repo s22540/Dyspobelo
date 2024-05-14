@@ -3,7 +3,6 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { MarkersContext } from '../context/MarkersContext';
 
-// Helper functions
 const interpolatePosition = (start, end, ratio) => {
     return [
         start[0] + (end[0] - start[0]) * ratio,
@@ -13,12 +12,11 @@ const interpolatePosition = (start, end, ratio) => {
 
 const getRandomCoordinates = (center, range = 300) => {
     return [
-        center[0] + (Math.random() - 0.5) * range / 111320, // Convert degrees to meters at equator
-        center[1] + (Math.random() - 0.5) * range / (40075000 * Math.cos(center[0] * Math.PI / 180) / 360) // Adjust for longitude
+        center[0] + (Math.random() - 0.5) * range / 111320,
+        center[1] + (Math.random() - 0.5) * range / (40075000 * Math.cos(center[0] * Math.PI / 180) / 360) 
     ];
 };
 
-// MovingMarkerLogic component
 const MovingMarkerLogic = ({ marker }) => {
     const map = useMap();
     const { updateMarkerPosition } = useContext(MarkersContext);
@@ -73,10 +71,6 @@ const MapComponent = () => {
     const { markers, selectedMarker } = useContext(MarkersContext);
 
     const defaultPosition = [52.237049, 21.017532];
-
-    useEffect(() => {
-        console.log("Selected Marker:", selectedMarker);
-    }, [selectedMarker]);
 
     return (
         <MapContainer center={selectedMarker?.position || defaultPosition} zoom={13} style={{ height: '65vh', width: '100%' }}>

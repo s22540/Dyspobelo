@@ -15,7 +15,7 @@ function App() {
 			<MarkersProvider>
 				<Routes>
 					<Route path="/login" element={<LoginScreen />} />
-					<Route path="/main" element={<MainScreen />} />
+					<Route path="/main/*" element={<MainScreen />} />
 					<Route path="/add-announcement" element={<AddAnnouncement />} />
 					<Route path="/edit-announcement" element={<EditAnnouncement />} />
 					<Route path="/show-announcement" element={<ShowAnnouncement />} />

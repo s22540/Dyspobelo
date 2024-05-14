@@ -3,9 +3,10 @@ import axios from "axios";
 import { MarkersContext } from '../context/MarkersContext';
 
 // Geocoding function
-const getCoordinatesFromAddress = async (address) => {
-    const formattedAddress = encodeURIComponent(`${address}, Poland`);
-    const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${formattedAddress}&format=json&addressdetails=1&limit=1`);
+const getCoordinatesFromAddress = async (address, postalCode) => {
+    const formattedAddress = encodeURIComponent(`${address}, ${postalCode}, Warsaw, Poland`);
+    const viewbox = "20.7122,52.0497,21.3122,52.4097";
+    const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${formattedAddress}&format=json&addressdetails=1&limit=1&viewbox=${viewbox}&bounded=1`);
     const data = await response.json();
 
     if (data && data.length > 0) {
@@ -67,19 +68,20 @@ function List({ onSelectZgloszenie }) {
 
     const handleSelectZgloszenie = async (zgloszenie) => {
         const address = `${zgloszenie.ulica} ${zgloszenie.numer_budynku}`;
-        console.log("Fetching coordinates for address:", address);
+        const postalCode = zgloszenie.kod_pocztowy;
+        console.log("Fetching coordinates for address:", address, postalCode);
 
         try {
-            const { latitude, longitude } = await getCoordinatesFromAddress(address);
+            const { latitude, longitude } = await getCoordinatesFromAddress(address, postalCode);
             console.log("Coordinates found:", latitude, longitude);
 
             onSelectZgloszenie(zgloszenie);
             selectMarker({
                 id: zgloszenie.id,
                 position: [latitude, longitude],
-                iconUrl: process.env.PUBLIC_URL + '/marker.png', 
+                iconUrl: process.env.PUBLIC_URL + '/marker.png',
                 annType: zgloszenie.typZgloszenia || 'Unknown',
-                address: address,
+                address: `${address}, ${postalCode}`,
                 description: zgloszenie.opis_zdarzenia
             });
         } catch (error) {

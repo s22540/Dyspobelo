@@ -9,10 +9,6 @@ const MapComponent = () => {
 
     const defaultPosition = [52.237049, 21.017532];
 
-    useEffect(() => {
-        console.log("Selected Marker:", selectedMarker);
-    }, [selectedMarker]);
-
     return (
         <MapContainer center={selectedMarker?.position || defaultPosition} zoom={13} style={{ height: '65vh', width: '100%' }}>
             <TileLayer

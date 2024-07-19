@@ -26,22 +26,19 @@ namespace backend.Controllers
         public async Task<ActionResult<IEnumerable<ZgloszenieDto>>> GetZgloszenia()
         {
             var zgloszenia = await _context.Zgloszenia
-                .Include(z => z.TypZgloszenia)
                 .Select(z => new ZgloszenieDto
                 {
                     Id = z.Id,
                     Id_dyspozytor = z.id_dyspozytor,
                     Id_zglaszajacy = z.id_zglaszajacy,
                     Id_typ_zgloszenia = z.id_typ_zgloszenia,
-                    TypZgloszenia = z.TypZgloszenia.nazwa_typu,
                     Id_klasa_zgloszenia = z.id_klasa_zgloszenia,
                     Id_zgloszenie_jednostka = z.id_zgloszenie_jednostka,
                     Ulica = z.ulica,
                     Numer_budynku = z.numer_budynku,
                     Numer_mieszkania = z.numer_mieszkania,
                     Data_zgloszenia = z.data_zgloszenia,
-                    Opis_zdarzenia = z.opis_zdarzenia,
-                    Kod_pocztowy = z.kod_pocztowy
+                    Opis_zdarzenia = z.opis_zdarzenia
                 })
                 .ToListAsync();
 
@@ -53,22 +50,19 @@ namespace backend.Controllers
         public async Task<ActionResult<ZgloszenieDto>> GetZgloszenie(int id)
         {
             var zgloszenie = await _context.Zgloszenia
-                .Include(z => z.TypZgloszenia)
                 .Select(z => new ZgloszenieDto
                 {
                     Id = z.Id,
                     Id_dyspozytor = z.id_dyspozytor,
                     Id_zglaszajacy = z.id_zglaszajacy,
                     Id_typ_zgloszenia = z.id_typ_zgloszenia,
-                    TypZgloszenia = z.TypZgloszenia.nazwa_typu,
                     Id_klasa_zgloszenia = z.id_klasa_zgloszenia,
                     Id_zgloszenie_jednostka = z.id_zgloszenie_jednostka,
                     Ulica = z.ulica,
                     Numer_budynku = z.numer_budynku,
                     Numer_mieszkania = z.numer_mieszkania,
                     Data_zgloszenia = z.data_zgloszenia,
-                    Opis_zdarzenia = z.opis_zdarzenia,
-                    Kod_pocztowy = z.kod_pocztowy
+                    Opis_zdarzenia = z.opis_zdarzenia
                 })
                 .FirstOrDefaultAsync(z => z.Id == id);
 
@@ -93,7 +87,7 @@ namespace backend.Controllers
 
             _context.Zgloszenia.Add(zgloszenie);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetZgloszenie", new { id = zgloszenie.Id }, zgloszenie);
+            return CreatedAtAction(nameof(GetZgloszenie), new { id = zgloszenie.Id }, zgloszenie);
         }
 
         // PUT: api/Zgloszenia/{id}

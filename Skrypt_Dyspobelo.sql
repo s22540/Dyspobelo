@@ -48,6 +48,7 @@ id INT,
 numer_dyspozytora INT,
 imie VARCHAR(20),
 nazwisko VARCHAR(20),
+zahashowane_haslo VARCHAR(1000),
 CONSTRAINT PK_dyspozytor PRIMARY KEY (id)
 );
 
@@ -60,7 +61,7 @@ CONSTRAINT FK_dyzur_id_harmonogramu FOREIGN KEY (dyzur_id_harmonogramu) REFERENC
 );
 
 CREATE TABLE zglaszajacy(
-id INT,
+id INT AUTO_INCREMENT,
 imie VARCHAR(20) NOT NULL,
 nazwisko VARCHAR(20) NOT NULL,
 numer_kontaktowy VARCHAR(20),
@@ -152,7 +153,7 @@ CONSTRAINT FK_pogotowie_id FOREIGN KEY (pogotowie_id) REFERENCES pogotowie (id)
 );
 
 CREATE TABLE zgloszenie(
-id INT,
+id INT AUTO_INCREMENT,
 id_dyspozytor INT,
 id_zglaszajacy INT,
 id_typ_zgloszenia INT,

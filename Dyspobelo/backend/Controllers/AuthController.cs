@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using System;
 
@@ -27,7 +28,7 @@ public class AuthController : ControllerBase
         {
             if (BCrypt.Net.BCrypt.Verify(model.Zahashowane_Haslo, dyspozytor.Zahashowane_Haslo))
             {
-                return Ok(new { message = "Logowanie pomyślnie zakończone" });
+                return Ok(new { id_dyspozytor = dyspozytor.Id });
             }
         }
         Console.WriteLine("Numer dyspozytora lub hasło nieprawidłowe");

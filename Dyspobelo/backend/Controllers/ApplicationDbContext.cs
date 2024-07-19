@@ -21,8 +21,8 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Zgloszenie>()
             .ToTable("zgloszenie")
-            .HasOne(z => z.TypZgloszenia)
-            .WithMany(tz => tz.Zgloszenia)
+            .HasOne<TypZgloszenia>()
+            .WithMany()
             .HasForeignKey(z => z.id_typ_zgloszenia);
 
         modelBuilder.Entity<Zglaszajacy>().ToTable("zglaszajacy");

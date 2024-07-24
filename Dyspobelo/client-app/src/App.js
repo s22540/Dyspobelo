@@ -7,23 +7,29 @@ import EditAnnouncement from "./screens/EditAnnouncement";
 import ShowAnnouncement from "./screens/ShowAnnouncement";
 import Settings from "./screens/Settings";
 import "leaflet/dist/leaflet.css";
+import { Provider } from "react-redux";
+import { store } from "../src/tools/store";
 import { MarkersProvider } from "./context/MarkersContext";
+import MapComponent from "./components/MapComponent";
 
 function App() {
 	return (
-		<BrowserRouter>
+		<Provider store={store}>
 			<MarkersProvider>
-				<Routes>
-					<Route path="/login" element={<LoginScreen />} />
-					<Route path="/main/*" element={<MainScreen />} />
-					<Route path="/add-announcement" element={<AddAnnouncement />} />
-					<Route path="/edit-announcement" element={<EditAnnouncement />} />
-					<Route path="/show-announcement" element={<ShowAnnouncement />} />
-					<Route path="/settings" element={<Settings />} />
-					<Route path="/" element={<Navigate to="/login" replace />} />
-				</Routes>
+				<BrowserRouter>
+					<Routes>
+						<Route path="/login" element={<LoginScreen />} />
+						<Route path="/main/*" element={<MainScreen />} />
+						<Route path="/add-announcement" element={<AddAnnouncement />} />
+						<Route path="/edit-announcement" element={<EditAnnouncement />} />
+						<Route path="/show-announcement" element={<ShowAnnouncement />} />
+						<Route path="/settings" element={<Settings />} />
+						<Route path="/" element={<Navigate to="/login" replace />} />
+					</Routes>
+				</BrowserRouter>
+				<MapComponent />
 			</MarkersProvider>
-		</BrowserRouter>
+		</Provider>
 	);
 }
 export default App;

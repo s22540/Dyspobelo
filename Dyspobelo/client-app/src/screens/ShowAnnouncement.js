@@ -2,47 +2,45 @@ import React, { useState } from "react";
 import Map from "../components/MapComponent";
 import Menu from "../components/Menu";
 import List from "../components/List";
-import { MarkersProvider } from '../context/MarkersContext';
+import { MarkersContext } from "../context/MarkersContext";
 
-const ShowAnnouncement = () => {
-    const [selectedZgloszenie, setSelectedZgloszenie] = useState(null);
+const ShowAnnouncement = ({ MapComponent }) => {
+	const [selectedZgloszenie, setSelectedZgloszenie] = useState(null);
 
-    const handleSelectZgloszenie = (zgloszenie) => {
-        setSelectedZgloszenie(zgloszenie);
-    };
+	const handleSelectZgloszenie = (zgloszenie) => {
+		setSelectedZgloszenie(zgloszenie);
+	};
 
-    const styles = {
-        layout: {
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-        },
-        container: {
-            width: "100%",
-            height: "100%",
-        },
-        halfWidth: {
-            width: "50%",
-        },
-    };
+	const styles = {
+		layout: {
+			display: "flex",
+			justifyContent: "space-between",
+			alignItems: "flex-start",
+		},
+		container: {
+			width: "100%",
+			height: "100%",
+		},
+		halfWidth: {
+			width: "50%",
+		},
+	};
 
-    return (
-        <MarkersProvider>
-            <div style={styles.container}>
-                <div>
-                    <Menu />
-                </div>
-                <div style={styles.layout}>
-                    <div style={styles.halfWidth}>
-                        <List onSelectZgloszenie={handleSelectZgloszenie} />
-                    </div>
-                    <div style={styles.halfWidth}>
-                        <Map />
-                    </div>
-                </div>
-            </div>
-        </MarkersProvider>
-    );
+	return (
+		<MarkersContext>
+			<div style={styles.container}>
+				<div>
+					<Menu />
+				</div>
+				<div style={styles.layout}>
+					<div style={styles.halfWidth}>
+						<List onSelectZgloszenie={handleSelectZgloszenie} />
+					</div>
+					<div style={styles.halfWidth}>{MapComponent}</div>
+				</div>
+			</div>
+		</MarkersContext>
+	);
 };
 
 export default ShowAnnouncement;

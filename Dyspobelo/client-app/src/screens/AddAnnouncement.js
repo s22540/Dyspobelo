@@ -3,37 +3,33 @@ import Form from "../components/Form";
 import Menu from "../components/Menu";
 import Map from "../components/MapComponent";
 
-const AddAnnouncement = () => {
-
-    const styles = {
-        layout: {
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start'
-        },
-        container: {
-            width: '100%'
-        },
-        halfWidth: {
-            width: '50%'
-        }
-    };
-
+const AddAnnouncement = ({ MapComponent }) => {
+	const styles = {
+		layout: {
+			display: "flex",
+			justifyContent: "space-between",
+			alignItems: "flex-start",
+		},
+		container: {
+			width: "100%",
+		},
+		halfWidth: {
+			width: "50%",
+		},
+	};
 
 	return (
-        <div style={styles.container}>
-            <div>
-                <Menu />
-            </div>
-            <div style={styles.layout}>
-                <div style={styles.halfWidth}>
-                    <Form />
-                </div>
-                <div style={styles.halfWidth}>
-                    <Map />
-                </div>
-            </div>
-        </div>
+		<div style={styles.container}>
+			<div>
+				<Menu />
+			</div>
+			<div style={styles.layout}>
+				<div style={styles.halfWidth}>
+					<Form />
+				</div>
+				<div style={styles.halfWidth}>{MapComponent}</div>
+			</div>
+		</div>
 	);
 };
 

@@ -175,7 +175,7 @@ function Form() {
 					<option value="">Wybierz typ zgłoszenia</option>
 					{typyZgloszen.map((typ) => (
 						<option key={typ.id} value={typ.id}>
-							{typ.nazwa_Typu}
+							{typ.nazwa_typu}
 						</option>
 					))}
 				</select>

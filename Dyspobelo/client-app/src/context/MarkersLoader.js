@@ -1,15 +1,10 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import axios from "axios";
+import { setMarkers } from "../tools/markersSlice";
 
-export const MarkersContext = createContext();
-
-export const useMarkers = () => {
-	return useContext(MarkersContext);
-};
-
-export const MarkersProvider = ({ children }) => {
-	const [markers, setMarkers] = useState([]);
-	const [selectedMarker, setSelectedMarker] = useState(null);
+const MarkersLoader = () => {
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		const fetchMarkers = async () => {
@@ -25,23 +20,14 @@ export const MarkersProvider = ({ children }) => {
 					address: item.ulica + " " + item.numer_budynku,
 					description: item.opis_zdarzenia,
 				}));
-				console.log("Fetched markers:", fetchedMarkers); // Dodaj logowanie
-				setMarkers(fetchedMarkers);
+				dispatch(setMarkers(fetchedMarkers));
 			} catch (error) {
 				console.error("Failed to fetch vehicles:", error);
 			}
 		};
 
 		fetchMarkers();
-	}, []);
-
-	const updateMarkerPosition = (id, newPosition) => {
-		setMarkers((prevMarkers) =>
-			prevMarkers.map((marker) =>
-				marker.id === id ? { ...marker, position: newPosition } : marker
-			)
-		);
-	};
+	}, [dispatch]);
 
 	const getIconUrl = (type) => {
 		switch (type) {
@@ -56,15 +42,7 @@ export const MarkersProvider = ({ children }) => {
 		}
 	};
 
-	const selectMarker = (marker) => {
-		setSelectedMarker(marker);
-	};
-
-	return (
-		<MarkersContext.Provider
-			value={{ markers, updateMarkerPosition, selectMarker, selectedMarker }}
-		>
-			{children}
-		</MarkersContext.Provider>
-	);
+	return null;
 };
+
+export default MarkersLoader;

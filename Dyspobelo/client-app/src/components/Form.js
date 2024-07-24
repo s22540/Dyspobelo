@@ -8,15 +8,22 @@ function Form() {
         ulica: "",
         numerBudynku: "",
         numerMieszkania: "",
-        idKlasaZgloszenia: "",
-        idTypZgloszenia: "",
-        opisZdarzenia: "",
+        id_typ_zgloszenia: "",
+        id_klasa_zgloszenia: "",
+        opis_zdarzenia: "",
+        policja_id: "",
+        straz_pozarna_id: "",
+        pogotowie_id: ""
     });
+
     const [typyZgloszen, setTypyZgloszen] = useState([]);
     const [klasyZgloszen, setKlasyZgloszen] = useState([]);
+    const [policjaList, setPolicjaList] = useState([]);
+    const [strazPozarnaList, setStrazPozarnaList] = useState([]);
+    const [pogotowieList, setPogotowieList] = useState([]);
 
     useEffect(() => {
-        const fetchTypyIKlasy = async () => {
+        const fetchData = async () => {
             try {
                 const typyResponse = await fetch("http://localhost:5126/api/TypyZgloszenia");
                 const typyData = await typyResponse.json();
@@ -25,12 +32,24 @@ function Form() {
                 const klasyResponse = await fetch("http://localhost:5126/api/KlasyZgloszenia");
                 const klasyData = await klasyResponse.json();
                 setKlasyZgloszen(klasyData);
+
+                const policjaResponse = await fetch("http://localhost:5126/api/Policja");
+                const policjaData = await policjaResponse.json();
+                setPolicjaList(policjaData);
+
+                const strazPozarnaResponse = await fetch("http://localhost:5126/api/StrazPozarna");
+                const strazPozarnaData = await strazPozarnaResponse.json();
+                setStrazPozarnaList(strazPozarnaData);
+
+                const pogotowieResponse = await fetch("http://localhost:5126/api/Pogotowie");
+                const pogotowieData = await pogotowieResponse.json();
+                setPogotowieList(pogotowieData);
             } catch (error) {
-                console.error("Error loading types and classes:", error);
+                console.error("Error loading data:", error);
             }
         };
 
-        fetchTypyIKlasy();
+        fetchData();
     }, []);
 
     const handleInputChange = (e) => {
@@ -41,62 +60,40 @@ function Form() {
         }));
     };
 
-    const createZglaszajacy = async () => {
-        const zglaszajacyData = {
-            imie: formData.imie,
-            nazwisko: formData.nazwisko,
-            numer_kontaktowy: formData.numerKontaktowy,
-        };
-
-        const requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(zglaszajacyData),
-        };
-
-        try {
-            const response = await fetch("http://localhost:5126/api/Zglaszajacy", requestOptions);
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error("Error creating zgłaszający:", errorText);
-                throw new Error("Failed to create zgłaszający");
-            }
-            const responseData = await response.json();
-            return responseData.id;
-        } catch (error) {
-            console.error("Error creating zgłaszający:", error);
-            throw error;
-        }
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const id_dyspozytor = localStorage.getItem('id_dyspozytor');
-        if (!id_dyspozytor) {
-            console.error("Brak id_dyspozytor w sesji");
-            return;
-        }
-
-        if (!formData.ulica || !formData.idTypZgloszenia || !formData.idKlasaZgloszenia) {
-            console.error("Wszystkie wymagane pola muszą być wypełnione");
-            return;
-        }
-
         try {
-            const id_zglaszajacy = await createZglaszajacy();
+            const zglaszajacyData = {
+                imie: formData.imie,
+                nazwisko: formData.nazwisko,
+                numer_kontaktowy: formData.numerKontaktowy
+            };
+
+            const zglaszajacyResponse = await fetch("http://localhost:5126/api/Zglaszajacy", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(zglaszajacyData),
+            });
+
+            if (!zglaszajacyResponse.ok) throw new Error("Failed to create zglaszajacy");
+            const zglaszajacy = await zglaszajacyResponse.json();
 
             const zgloszenieData = {
-                id_dyspozytor: parseInt(id_dyspozytor),
-                id_zglaszajacy: id_zglaszajacy,
-                id_typ_zgloszenia: parseInt(formData.idTypZgloszenia),
-                id_klasa_zgloszenia: parseInt(formData.idKlasaZgloszenia),
-                id_zgloszenie_jednostka: 12,
+                id_dyspozytor: parseInt(localStorage.getItem('id_dyspozytor')),
+                id_zglaszajacy: zglaszajacy.id, // id nowego zglaszajacego
+                id_typ_zgloszenia: parseInt(formData.id_typ_zgloszenia),
+                id_klasa_zgloszenia: parseInt(formData.id_klasa_zgloszenia),
                 ulica: formData.ulica,
-                numer_budynku: formData.numerBudynku ? parseInt(formData.numerBudynku) : null,
-                numer_mieszkania: formData.numerMieszkania ? parseInt(formData.numerMieszkania) : null,
-                opis_zdarzenia: formData.opisZdarzenia || '',
-                data_zgloszenia: new Date().toISOString().split('T')[0], // Formatowanie daty na yyyy-mm-dd
+                numer_budynku: parseInt(formData.numerBudynku),
+                numer_mieszkania: parseInt(formData.numerMieszkania),
+                opis_zdarzenia: formData.opis_zdarzenia,
+                data_zgloszenia: new Date().toISOString(),
+                jednostka: {
+                    policja_id: formData.policja_id ? parseInt(formData.policja_id) : null,
+                    straz_pozarna_id: formData.straz_pozarna_id ? parseInt(formData.straz_pozarna_id) : null,
+                    pogotowie_id: formData.pogotowie_id ? parseInt(formData.pogotowie_id) : null
+                }
             };
 
             const requestOptions = {
@@ -108,11 +105,7 @@ function Form() {
             console.log("Sending Form Data:", JSON.stringify(zgloszenieData));
 
             const response = await fetch("http://localhost:5126/api/Zgloszenia", requestOptions);
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error("Error submitting form:", errorText);
-                throw new Error("Failed to submit the form");
-            }
+            if (!response.ok) throw new Error("Failed to submit the form");
             const responseData = await response.json();
             console.log("Submit successful:", responseData);
         } catch (error) {
@@ -195,19 +188,19 @@ function Form() {
                     name="numerBudynku"
                     value={formData.numerBudynku}
                     onChange={handleInputChange}
-                    placeholder="Numer budynku (opcjonalne)"
+                    placeholder="Numer budynku"
                     style={styles.input}
                 />
                 <input
                     name="numerMieszkania"
                     value={formData.numerMieszkania}
                     onChange={handleInputChange}
-                    placeholder="Numer mieszkania (opcjonalne)"
+                    placeholder="Numer mieszkania"
                     style={styles.input}
                 />
                 <select
-                    name="idTypZgloszenia"
-                    value={formData.idTypZgloszenia}
+                    name="id_typ_zgloszenia"
+                    value={formData.id_typ_zgloszenia}
                     onChange={handleInputChange}
                     style={styles.input}
                 >
@@ -219,8 +212,8 @@ function Form() {
                     ))}
                 </select>
                 <select
-                    name="idKlasaZgloszenia"
-                    value={formData.idKlasaZgloszenia}
+                    name="id_klasa_zgloszenia"
+                    value={formData.id_klasa_zgloszenia}
                     onChange={handleInputChange}
                     style={styles.input}
                 >
@@ -232,12 +225,51 @@ function Form() {
                     ))}
                 </select>
                 <textarea
-                    name="opisZdarzenia"
-                    value={formData.opisZdarzenia}
+                    name="opis_zdarzenia"
+                    value={formData.opis_zdarzenia}
                     onChange={handleInputChange}
                     placeholder="Opis zdarzenia"
                     style={{ ...styles.input, height: "100px" }}
                 />
+                <select
+                    name="policja_id"
+                    value={formData.policja_id}
+                    onChange={handleInputChange}
+                    style={styles.input}
+                >
+                    <option value="">Wybierz jednostkę policji</option>
+                    {policjaList.map((p) => (
+                        <option key={p.id} value={p.id}>
+                            {p.numer_Patrolu} - {p.status_Patrolu}
+                        </option>
+                    ))}
+                </select>
+                <select
+                    name="straz_pozarna_id"
+                    value={formData.straz_pozarna_id}
+                    onChange={handleInputChange}
+                    style={styles.input}
+                >
+                    <option value="">Wybierz jednostkę straży pożarnej</option>
+                    {strazPozarnaList.map((s) => (
+                        <option key={s.id} value={s.id}>
+                            {s.numer_Wozu} - {s.status_Wozu}
+                        </option>
+                    ))}
+                </select>
+                <select
+                    name="pogotowie_id"
+                    value={formData.pogotowie_id}
+                    onChange={handleInputChange}
+                    style={styles.input}
+                >
+                    <option value="">Wybierz jednostkę pogotowia</option>
+                    {pogotowieList.map((p) => (
+                        <option key={p.id} value={p.id}>
+                            {p.numer_Karetki} - {p.status_Karetki}
+                        </option>
+                    ))}
+                </select>
                 <div style={styles.buttonContainer}>
                     <button
                         type="button"

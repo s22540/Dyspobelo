@@ -20,4 +20,7 @@ public class Zgloszenie
     public DateTime data_zgloszenia { get; set; }
     [Required]
     public string opis_zdarzenia { get; set; }
+
+    [NotMapped]
+    public ZgloszenieJednostka Jednostka { get; set; }
 }

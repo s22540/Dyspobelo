@@ -3,7 +3,7 @@ import Form from "../components/Form";
 import Menu from "../components/Menu";
 import Map from "../components/MapComponent";
 
-const AddAnnouncement = ({ MapComponent }) => {
+const AddAnnouncement = () => {
 	const styles = {
 		layout: {
 			display: "flex",
@@ -27,7 +27,7 @@ const AddAnnouncement = ({ MapComponent }) => {
 				<div style={styles.halfWidth}>
 					<Form />
 				</div>
-				<div style={styles.halfWidth}>{MapComponent}</div>
+				<div style={styles.halfWidth}></div>
 			</div>
 		</div>
 	);

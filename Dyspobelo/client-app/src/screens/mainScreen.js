@@ -2,7 +2,7 @@ import React from "react";
 import Menu from "../components/Menu";
 import Map from "../components/MapComponent";
 
-const MainScreen = ({ MapComponent }) => {
+const MainScreen = () => {
 	const styles = {
 		outerContainer: {
 			display: "flex",
@@ -20,7 +20,7 @@ const MainScreen = ({ MapComponent }) => {
 		<div>
 			<Menu />
 			<div style={styles.outerContainer}>
-				<div style={styles.mapContainer}>{MapComponent}</div>
+				<div style={styles.mapContainer}></div>
 			</div>
 		</div>
 	);

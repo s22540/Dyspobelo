@@ -4,7 +4,7 @@ import Menu from "../components/Menu";
 import List from "../components/List";
 import { MarkersContext } from "../context/MarkersContext";
 
-const ShowAnnouncement = ({ MapComponent }) => {
+const ShowAnnouncement = ({ mapComponent }) => {
 	const [selectedZgloszenie, setSelectedZgloszenie] = useState(null);
 
 	const handleSelectZgloszenie = (zgloszenie) => {
@@ -36,7 +36,7 @@ const ShowAnnouncement = ({ MapComponent }) => {
 					<div style={styles.halfWidth}>
 						<List onSelectZgloszenie={handleSelectZgloszenie} />
 					</div>
-					<div style={styles.halfWidth}>{MapComponent}</div>
+					<div style={styles.halfWidth}>{mapComponent}</div>
 				</div>
 			</div>
 		</MarkersContext>

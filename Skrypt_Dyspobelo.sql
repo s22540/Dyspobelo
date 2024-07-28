@@ -65,6 +65,7 @@ id INT AUTO_INCREMENT,
 imie VARCHAR(20) NOT NULL,
 nazwisko VARCHAR(20) NOT NULL,
 numer_kontaktowy VARCHAR(20),
+id_zgloszenia INT,
 CONSTRAINT PK_zglaszajacy PRIMARY KEY (id)
 );
 

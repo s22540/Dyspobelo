@@ -31,5 +31,18 @@ namespace backend.Controllers
 
             return Ok(zglaszajacy);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Zglaszajacy>> GetZglaszajacy(int id)
+        {
+            var zglaszajacy = await _context.Zglaszajacy.FindAsync(id);
+
+            if (zglaszajacy == null)
+            {
+                return NotFound();
+            }
+
+            return zglaszajacy;
+        }
     }
 }

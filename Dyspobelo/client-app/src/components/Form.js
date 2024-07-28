@@ -64,24 +64,23 @@ function Form() {
         e.preventDefault();
 
         try {
-            const zglaszajacyData = {
-                imie: formData.imie,
-                nazwisko: formData.nazwisko,
-                numer_kontaktowy: formData.numerKontaktowy
-            };
-
+            // First, create the zgłaszający
             const zglaszajacyResponse = await fetch("http://localhost:5126/api/Zglaszajacy", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(zglaszajacyData),
+                body: JSON.stringify({
+                    imie: formData.imie,
+                    nazwisko: formData.nazwisko,
+                    numer_kontaktowy: formData.numerKontaktowy,
+                }),
             });
 
-            if (!zglaszajacyResponse.ok) throw new Error("Failed to create zglaszajacy");
-            const zglaszajacy = await zglaszajacyResponse.json();
+            if (!zglaszajacyResponse.ok) throw new Error("Failed to create zgłaszający");
+            const zglaszajacyData = await zglaszajacyResponse.json();
 
             const zgloszenieData = {
                 id_dyspozytor: parseInt(localStorage.getItem('id_dyspozytor')),
-                id_zglaszajacy: zglaszajacy.id, // id nowego zglaszajacego
+                id_zglaszajacy: zglaszajacyData.id,
                 id_typ_zgloszenia: parseInt(formData.id_typ_zgloszenia),
                 id_klasa_zgloszenia: parseInt(formData.id_klasa_zgloszenia),
                 ulica: formData.ulica,
@@ -96,17 +95,22 @@ function Form() {
                 }
             };
 
-            const requestOptions = {
+            const response = await fetch("http://localhost:5126/api/Zgloszenia", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(zgloszenieData),
-            };
+            });
 
-            console.log("Sending Form Data:", JSON.stringify(zgloszenieData));
-
-            const response = await fetch("http://localhost:5126/api/Zgloszenia", requestOptions);
             if (!response.ok) throw new Error("Failed to submit the form");
             const responseData = await response.json();
+
+            // Update zgłaszający with the new zgloszenie id
+            await fetch(`http://localhost:5126/api/Zglaszajacy/${zglaszajacyData.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id_zgloszenia: responseData.id }),
+            });
+
             console.log("Submit successful:", responseData);
         } catch (error) {
             console.error("Error submitting form:", error);

@@ -85,27 +85,15 @@ namespace backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            
             _context.Zgloszenia.Add(zgloszenie);
             await _context.SaveChangesAsync();
 
-           
-            if (zgloszenie.Jednostka != null)
+            // Update zg³aszaj¹cy with the new zgloszenie id
+            var zglaszajacy = await _context.Zglaszajacy.FindAsync(zgloszenie.id_zglaszajacy);
+            if (zglaszajacy != null)
             {
-                var zgloszenieJednostka = new ZgloszenieJednostka
-                {
-                    Id_Zgloszenia = zgloszenie.Id,
-                    Policja_Id = zgloszenie.Jednostka.Policja_Id,
-                    Straz_Pozarna_Id = zgloszenie.Jednostka.Straz_Pozarna_Id,
-                    Pogotowie_Id = zgloszenie.Jednostka.Pogotowie_Id
-                };
-
-                _context.ZgloszenieJednostka.Add(zgloszenieJednostka);
-                await _context.SaveChangesAsync();
-
-               
-                zgloszenie.id_zgloszenie_jednostka = zgloszenieJednostka.Id_Zgloszenia;
-                _context.Entry(zgloszenie).State = EntityState.Modified;
+                zglaszajacy.id_zgloszenia = zgloszenie.Id;
+                _context.Zglaszajacy.Update(zglaszajacy);
                 await _context.SaveChangesAsync();
             }
 

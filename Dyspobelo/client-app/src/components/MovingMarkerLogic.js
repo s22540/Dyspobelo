@@ -45,6 +45,7 @@ const MovingMarkerLogic = ({ marker }) => {
 				routingControlRef.current = null;
 			}
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [map, marker]);
 
 	const getRandomCoordinates = (center, range = 500) => {

@@ -74,6 +74,63 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+/* App.css or another global CSS file */
+
+@media (max-width: 720px) {
+	.add-announcement-map-container {
+		width: 100%;
+		height: calc(100vh - 160px);
+		position: relative;
+		top: 0;
+		right: 0;
+		margin-top: 20px; /* Add margin for separation */
+	}
+}
+
+@media (min-width: 721px) and (max-width: 1920px) {
+	.add-announcement-map-container {
+		width: 50%;
+		height: calc(100vh - 160px);
+		position: absolute;
+		right: 0;
+		top: 160px;
+		bottom: 0;
+	}
+}
+
+@media (min-width: 1921px) and (max-width: 2560px) {
+	.add-announcement-map-container {
+		width: 50%;
+		height: calc(100vh - 160px);
+		position: absolute;
+		right: 0;
+		top: 160px;
+		bottom: 0;
+	}
+}
+
+@media (min-width: 2561px) and (max-width: 3440px) {
+	.add-announcement-map-container {
+		width: 50%;
+		height: calc(100vh - 160px);
+		position: absolute;
+		right: 0;
+		top: 160px;
+		bottom: 0;
+	}
+}
+
+@media (min-width: 3441px) {
+	.add-announcement-map-container {
+		width: 50%;
+		height: calc(100vh - 160px);
+		position: absolute;
+		right: 0;
+		top: 160px;
+		bottom: 0;
+	}
+}
+
 
 .App-header {
   background-color: #282c34;

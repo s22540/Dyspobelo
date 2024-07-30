@@ -21,7 +21,6 @@ const Layout = ({ children }) => {
 			borderRadius: "10px",
 			overflow: "hidden",
 			backgroundColor: "white",
-
 			zIndex: 1000,
 		}),
 	};
@@ -35,12 +34,9 @@ const Layout = ({ children }) => {
 			height: "calc(100vh - 200px)",
 		},
 		"/add-announcement": {
-			position: "fixed",
-			width: "750px",
-			height: "calc(100vh - 500px)",
-			marginTop: "160px",
-			marginLeft: "50rem",
-			marginRight: "200px",
+			width: "50%", // Default width for large screens
+			height: "calc(100vh - 160px)",
+			marginRight: "3rem",
 		},
 		"/show-announcement": {
 			position: "fixed",
@@ -60,7 +56,10 @@ const Layout = ({ children }) => {
 		<div style={styles.container}>
 			<div style={styles.content}>{children}</div>
 			{!shouldHideMap && (
-				<div style={styles.mapContainer(currentPathStyle)}>
+				<div
+					className="add-announcement-map-container"
+					style={styles.mapContainer(currentPathStyle)}
+				>
 					<MapComponent />
 				</div>
 			)}

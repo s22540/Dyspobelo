@@ -94,7 +94,7 @@ const LoginScreen = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Login successful, id_dyspozytor received:", data);
-                localStorage.setItem('id_dyspozytor', data.id_dyspozytor);
+                localStorage.setItem('id_dyspozytora', data.id_dyspozytor);
                 navigate("/main");
             } else {
                 const errorText = await response.text();

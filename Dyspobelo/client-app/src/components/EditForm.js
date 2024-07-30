@@ -56,7 +56,7 @@ function EditForm({ zgloszenie }) {
                         ...prevState,
                         imie: zglaszajacyData.imie,
                         nazwisko: zglaszajacyData.nazwisko,
-                        numer_kontaktowy: zglaszajacyData.numer_kontaktowy,
+                        numer_kontaktowy: zglaszajacyData.numer_Kontaktowy,
                     }));
                 } catch (error) {
                     console.error("Error loading zgłaszający data:", error);
@@ -208,13 +208,6 @@ function EditForm({ zgloszenie }) {
                     style={{ ...styles.input, height: "100px" }}
                 />
                 <div style={styles.buttonContainer}>
-                    <button
-                        type="button"
-                        onClick={() => setFormData({})}
-                        style={{ ...styles.button, ...styles.cancelButton }}
-                    >
-                        Anuluj
-                    </button>
                     <button
                         type="submit"
                         style={{ ...styles.button, ...styles.submitButton }}

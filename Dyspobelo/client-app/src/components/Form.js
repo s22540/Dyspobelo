@@ -16,6 +16,23 @@ function Form() {
         pogotowie_id: ""
     });
 
+    const resetForm = () => {
+        setFormData({
+            imie: "",
+            nazwisko: "",
+            numerKontaktowy: "",
+            ulica: "",
+            numerBudynku: "",
+            numerMieszkania: "",
+            id_typ_zgloszenia: "",
+            id_klasa_zgloszenia: "",
+            opis_zdarzenia: "",
+            policja_id: "",
+            straz_pozarna_id: "",
+            pogotowie_id: ""
+        });
+    };
+
     const [typyZgloszen, setTypyZgloszen] = useState([]);
     const [klasyZgloszen, setKlasyZgloszen] = useState([]);
     const [policjaList, setPolicjaList] = useState([]);
@@ -277,7 +294,7 @@ function Form() {
                 <div style={styles.buttonContainer}>
                     <button
                         type="button"
-                        onClick={() => setFormData({})}
+                        onClick={resetForm}
                         style={{ ...styles.button, ...styles.cancelButton }}
                     >
                         Anuluj

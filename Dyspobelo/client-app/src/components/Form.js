@@ -81,7 +81,7 @@ function Form() {
         e.preventDefault();
 
         try {
-            // First, create the zgłaszający
+            // Tworzenie zgłaszającego przed dodaniem zgłoszenia
             const zglaszajacyResponse = await fetch("http://localhost:5126/api/Zglaszajacy", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -121,7 +121,7 @@ function Form() {
             if (!response.ok) throw new Error("Failed to submit the form");
             const responseData = await response.json();
 
-            // Update zgłaszający with the new zgloszenie id
+            // Update zgłaszający z nowym zgłoszeniem id
             await fetch(`http://localhost:5126/api/Zglaszajacy/${zglaszajacyData.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },

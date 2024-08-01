@@ -20,7 +20,7 @@ const MapComponent = () => {
                     <Marker
                         position={marker.position}
                         icon={L.icon({ iconUrl: marker.iconUrl, iconSize: [40, 40], iconAnchor: [20, 20] })}
-                        interactive={false} // Set interactive to false
+                        interactive={false} // Zmiana interactive na false (do sprawdzenia czy nadal potrzebne)
                     />
                     <MovingMarkerLogic marker={marker} />
                 </React.Fragment>
@@ -29,7 +29,7 @@ const MapComponent = () => {
                 <Marker
                     position={selectedMarker.position}
                     icon={L.icon({ iconUrl: selectedMarker.iconUrl, iconSize: [40, 40], iconAnchor: [20, 20] })}
-                    interactive={false} // Set interactive to false
+                    interactive={false} // Zmiana interactive na false (do sprawdzenia czy nadal potrzebne)
                 />
             )}
         </MapContainer>

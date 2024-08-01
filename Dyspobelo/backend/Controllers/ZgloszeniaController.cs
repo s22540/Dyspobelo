@@ -88,7 +88,7 @@ namespace backend.Controllers
             _context.Zgloszenia.Add(zgloszenie);
             await _context.SaveChangesAsync();
 
-            // Update zg³aszaj¹cy with the new zgloszenie id
+            // Update zg³aszaj¹cy z nowym zgloszenie id
             var zglaszajacy = await _context.Zglaszajacy.FindAsync(zgloszenie.id_zglaszajacy);
             if (zglaszajacy != null)
             {

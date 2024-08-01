@@ -45,7 +45,7 @@ const ChangePassword = () => {
             borderRadius: "8px",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
             marginTop: "10px",
-            fontFamily: "Arial, sans-serif", // Upewnij siê, ¿e font obs³uguje polskie znaki
+            fontFamily: "Arial, sans-serif",
         },
         form: {
             display: "flex",

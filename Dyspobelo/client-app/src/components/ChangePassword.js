@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const ChangePassword = () => {
+    const { t } = useTranslation();
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -9,7 +11,7 @@ const ChangePassword = () => {
         e.preventDefault();
 
         if (newPassword !== confirmPassword) {
-            alert("Nowe has³o i potwierdzenie has³a musz¹ byæ takie same.");
+            alert(t("Nowe has³o i potwierdzenie has³a musz¹ byæ takie same."));
             return;
         }
 
@@ -29,40 +31,90 @@ const ChangePassword = () => {
         });
 
         if (response.ok) {
-            alert("Has³o zosta³o zmienione.");
+            alert(t("Has³o zosta³o zmienione."));
         } else {
-            alert("Nie uda³o siê zmieniæ has³a.");
+            alert(t("Nie uda³o siê zmieniæ has³a."));
         }
     };
 
+    const styles = {
+        formContainer: {
+            margin: "0 auto",
+            backgroundColor: "#f2f2f2",
+            padding: "20px",
+            borderRadius: "8px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+            marginTop: "10px",
+            fontFamily: "Arial, sans-serif", // Upewnij siê, ¿e font obs³uguje polskie znaki
+        },
+        form: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+        },
+        input: {
+            padding: "10px",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+            width: "100%",
+            boxSizing: "border-box",
+        },
+        button: {
+            padding: "10px 15px",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            backgroundColor: "#4CAF50",
+            marginTop: "20px",
+            width: "100%",
+            boxSizing: "border-box",
+        },
+        label: {
+            marginBottom: "5px",
+            display: "block",
+            textAlign: "left",
+        },
+        inputContainer: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "5px",
+        },
+    };
+
     return (
-        <form onSubmit={handleChangePassword}>
-            <div>
-                <label>Obecne has³o:</label>
-                <input
-                    type="password"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                />
-            </div>
-            <div>
-                <label>Nowe has³o:</label>
-                <input
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                />
-            </div>
-            <div>
-                <label>PotwierdŸ nowe has³o:</label>
-                <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-            </div>
-            <button type="submit">Zmieñ has³o</button>
-        </form>
+        <div style={styles.formContainer}>
+            <form onSubmit={handleChangePassword} style={styles.form}>
+                <div style={styles.inputContainer}>
+                    <label style={styles.label}>{t('Current Password')}:</label>
+                    <input
+                        type="password"
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        style={styles.input}
+                    />
+                </div>
+                <div style={styles.inputContainer}>
+                    <label style={styles.label}>{t('New Password')}:</label>
+                    <input
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        style={styles.input}
+                    />
+                </div>
+                <div style={styles.inputContainer}>
+                    <label style={styles.label}>{t('Confirm New Password')}:</label>
+                    <input
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        style={styles.input}
+                    />
+                </div>
+                <button type="submit" style={styles.button}>{t('Submit')}</button>
+            </form>
+        </div>
     );
 };
 

@@ -77,12 +77,49 @@ function EditForm({ zgloszenie }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
-            const response = await axios.put(
-                `http://localhost:5126/api/Zgloszenia/${formData.id}`,
-                formData
+            // Aktualizacja zgłaszającego
+            const zglaszajacyPayload = {
+                id: zgloszenie.id_zglaszajacy,
+                imie: formData.imie,
+                nazwisko: formData.nazwisko,
+                numer_kontaktowy: formData.numer_kontaktowy,
+            };
+
+            await axios.put(
+                `http://localhost:5126/api/Zglaszajacy/${zgloszenie.id_zglaszajacy}`,
+                zglaszajacyPayload,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
             );
-            console.log("Data updated:", response.data);
+
+            // Aktualizacja zgłoszenia
+            const zgloszeniePayload = {
+                id: formData.id,
+                id_dyspozytor: formData.id_dyspozytor,
+                id_typ_zgloszenia: formData.id_typ_zgloszenia,
+                id_klasa_zgloszenia: formData.id_klasa_zgloszenia,
+                ulica: formData.ulica,
+                numer_budynku: parseInt(formData.numer_budynku, 10),
+                numer_mieszkania: parseInt(formData.numer_mieszkania, 10),
+                data_zgloszenia: formData.data_zgloszenia,
+                opis_zdarzenia: formData.opis_zdarzenia,
+            };
+
+            await axios.put(
+                `http://localhost:5126/api/Zgloszenia/${formData.id}`,
+                zgloszeniePayload,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
             alert("Update successful!");
         } catch (error) {
             console.error("Failed to update:", error);

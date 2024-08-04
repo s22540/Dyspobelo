@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useRef } from "react";
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet.sync";
 import { MarkersContext } from "../context/MarkersContext";
@@ -60,7 +60,15 @@ const MapComponent = () => {
 								handleMarkerMove(event.target.getLatLng(), marker.id);
 							},
 						}}
-					/>
+					>
+						<Popup>
+							<div>
+								<h2>{marker.name}</h2>
+								<p>Status: {marker.status}</p>
+								<p>Report: {marker.report}</p>
+							</div>
+						</Popup>
+					</Marker>
 					<MovingMarkerLogic marker={marker} />
 				</React.Fragment>
 			))}
@@ -75,7 +83,15 @@ const MapComponent = () => {
 							iconAnchor: [20, 20],
 						})}
 						interactive={false}
-					/>
+					>
+						<Popup>
+							<div>
+								<h2>{selectedMarker.name}</h2>
+								<p>Status: {selectedMarker.status}</p>
+								<p>Report: {selectedMarker.report}</p>
+							</div>
+						</Popup>
+					</Marker>
 				)}
 		</MapContainer>
 	);

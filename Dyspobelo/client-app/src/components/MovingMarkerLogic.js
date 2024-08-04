@@ -20,8 +20,28 @@ const MovingMarkerLogic = ({ marker }) => {
 					iconSize: [40, 40],
 					iconAnchor: [20, 20],
 				}),
-				interactive: false,
-			}).addTo(map);
+				interactive: true,
+			})
+				.addTo(map)
+				.bindPopup(
+					`<div>
+					<h2>Jednostka: ${marker.name}</h2>
+					<p>Status: ${marker.status}</p>
+					<p>Report: ${marker.report}</p>
+				</div>`
+				)
+				.on("mouseover", (event) => {
+					const leafletMarker = event.target;
+					if (!leafletMarker.getPopup().isOpen()) {
+						leafletMarker.openPopup();
+					}
+				})
+				.on("mouseout", (event) => {
+					const leafletMarker = event.target;
+					if (leafletMarker.getPopup().isOpen()) {
+						leafletMarker.closePopup();
+					}
+				});
 		} else {
 			markerRef.current.setLatLng(marker.position);
 		}

@@ -25,7 +25,7 @@ export const MarkersProvider = ({ children }) => {
 					address: item.ulica + " " + item.numer_budynku,
 					description: item.opis_zdarzenia,
 				}));
-				console.log("Fetched markers:", fetchedMarkers); // Dodaj logowanie
+				console.log("Fetched markers:", fetchedMarkers);
 				setMarkers(fetchedMarkers);
 			} catch (error) {
 				console.error("Failed to fetch vehicles:", error);

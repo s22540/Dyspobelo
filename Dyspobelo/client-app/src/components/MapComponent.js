@@ -27,17 +27,17 @@ const MapComponent = () => {
 		}
 	}, []);
 
-	const defaultPosition = [52.237049, 21.017532];
+	//const defaultPosition = [52.237049, 21.017532];
 
-	const handleMarkerMove = (newPosition, id) => {
-		updateMarkerPosition(id, newPosition);
-	};
+	// const handleMarkerMove = (newPosition, id) => {
+	// 	updateMarkerPosition(id, newPosition);
+	// };
 
 	return (
 		<MapContainer
 			ref={mapRef}
-			center={selectedMarker?.position || defaultPosition}
-			zoom={13}
+			//center={selectedMarker?.position || defaultPosition}
+			//zoom={20}
 			style={{ height: "65vh", width: "100%" }}
 			className="leaflet-container"
 		>
@@ -47,52 +47,9 @@ const MapComponent = () => {
 			/>
 			{markers.map((marker) => (
 				<React.Fragment key={marker.id}>
-					<Marker
-						position={marker.position}
-						icon={L.icon({
-							iconUrl: marker.iconUrl,
-							iconSize: [40, 40],
-							iconAnchor: [20, 20],
-						})}
-						draggable={true}
-						eventHandlers={{
-							dragend: (event) => {
-								handleMarkerMove(event.target.getLatLng(), marker.id);
-							},
-						}}
-					>
-						<Popup>
-							<div>
-								<h2>{marker.name}</h2>
-								<p>Status: {marker.status}</p>
-								<p>Report: {marker.report}</p>
-							</div>
-						</Popup>
-					</Marker>
 					<MovingMarkerLogic marker={marker} />
 				</React.Fragment>
 			))}
-			{selectedMarker &&
-				selectedMarker.position &&
-				selectedMarker.position.length === 2 && (
-					<Marker
-						position={selectedMarker.position}
-						icon={L.icon({
-							iconUrl: selectedMarker.iconUrl,
-							iconSize: [40, 40],
-							iconAnchor: [20, 20],
-						})}
-						interactive={false}
-					>
-						<Popup>
-							<div>
-								<h2>{selectedMarker.name}</h2>
-								<p>Status: {selectedMarker.status}</p>
-								<p>Report: {selectedMarker.report}</p>
-							</div>
-						</Popup>
-					</Marker>
-				)}
 		</MapContainer>
 	);
 };

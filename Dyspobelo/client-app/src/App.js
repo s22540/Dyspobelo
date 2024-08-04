@@ -10,7 +10,6 @@ import "leaflet/dist/leaflet.css";
 import { Provider } from "react-redux";
 import { store } from "../src/tools/store";
 import { MarkersProvider } from "./context/MarkersContext";
-//import MapComponent from "./components/MapComponent";
 import Layout from "./components/Layout";
 
 function App() {

@@ -39,12 +39,9 @@ const Layout = ({ children }) => {
 			marginRight: "3rem",
 		},
 		"/show-announcement": {
-			position: "fixed",
-			top: "20px",
-			left: "50%",
-			transform: "translateX(-50%)",
-			width: "calc(100% - 40px)",
-			height: "33%",
+			width: "50%", // Default width for large screens
+			height: "calc(100vh - 160px)",
+			marginRight: "3rem",
 		},
 	};
 
@@ -57,7 +54,9 @@ const Layout = ({ children }) => {
 			<div style={styles.content}>{children}</div>
 			{!shouldHideMap && (
 				<div
-					className="add-announcement-map-container"
+					className={
+						"add-announcement-map-container show-announcement-map-container"
+					}
 					style={styles.mapContainer(currentPathStyle)}
 				>
 					<MapComponent />

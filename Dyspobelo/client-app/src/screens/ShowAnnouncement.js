@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import Map from "../components/MapComponent";
 import Menu from "../components/Menu";
 import List from "../components/List";
-import { MarkersContext } from "../context/MarkersContext";
+import { MarkersProvider } from "../context/MarkersContext";
 
-const ShowAnnouncement = ({ mapComponent }) => {
+const ShowAnnouncement = ({ children }) => {
 	const [selectedZgloszenie, setSelectedZgloszenie] = useState(null);
 
 	const handleSelectZgloszenie = (zgloszenie) => {
@@ -27,7 +27,7 @@ const ShowAnnouncement = ({ mapComponent }) => {
 	};
 
 	return (
-		<MarkersContext>
+		<MarkersProvider>
 			<div style={styles.container}>
 				<div>
 					<Menu />
@@ -36,10 +36,10 @@ const ShowAnnouncement = ({ mapComponent }) => {
 					<div style={styles.halfWidth}>
 						<List onSelectZgloszenie={handleSelectZgloszenie} />
 					</div>
-					<div style={styles.halfWidth}>{mapComponent}</div>
+					<div style={styles.halfWidth}>{children}</div>
 				</div>
 			</div>
-		</MarkersContext>
+		</MarkersProvider>
 	);
 };
 

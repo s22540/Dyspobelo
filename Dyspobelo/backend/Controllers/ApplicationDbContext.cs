@@ -15,14 +15,16 @@ public class ApplicationDbContext : DbContext
     public DbSet<StrazPozarna> StrazPozarna { get; set; }
     public DbSet<Pogotowie> Pogotowie { get; set; }
 
+    public DbSet<ZgloszenieJednostka> ZgloszenieJednostka { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Zgloszenie>()
             .ToTable("zgloszenie")
-            .HasOne(z => z.TypZgloszenia)
-            .WithMany(tz => tz.Zgloszenia)
+            .HasOne<TypZgloszenia>()
+            .WithMany()
             .HasForeignKey(z => z.id_typ_zgloszenia);
 
         modelBuilder.Entity<Zglaszajacy>().ToTable("zglaszajacy");
@@ -32,5 +34,6 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Policja>().ToTable("policja");
         modelBuilder.Entity<StrazPozarna>().ToTable("straz_pozarna");
         modelBuilder.Entity<Pogotowie>().ToTable("pogotowie");
+        modelBuilder.Entity<ZgloszenieJednostka>().ToTable("zgloszenie_jednostka");
     }
 }

@@ -48,6 +48,7 @@ id INT,
 numer_dyspozytora INT,
 imie VARCHAR(20),
 nazwisko VARCHAR(20),
+zahashowane_haslo VARCHAR(1000),
 CONSTRAINT PK_dyspozytor PRIMARY KEY (id)
 );
 
@@ -60,10 +61,11 @@ CONSTRAINT FK_dyzur_id_harmonogramu FOREIGN KEY (dyzur_id_harmonogramu) REFERENC
 );
 
 CREATE TABLE zglaszajacy(
-id INT,
+id INT AUTO_INCREMENT,
 imie VARCHAR(20) NOT NULL,
 nazwisko VARCHAR(20) NOT NULL,
 numer_kontaktowy VARCHAR(20),
+id_zgloszenia INT,
 CONSTRAINT PK_zglaszajacy PRIMARY KEY (id)
 );
 
@@ -145,14 +147,13 @@ id_zgloszenia INT,
 policja_id INT,
 straz_pozarna_id INT,
 pogotowie_id INT,
-CONSTRAINT PK_zgloszenie_jednostka PRIMARY KEY (id_zgloszenia),
 CONSTRAINT FK_policja_id FOREIGN KEY (policja_id) REFERENCES policja (id),
 CONSTRAINT FK_straz_pozarna_id FOREIGN KEY (straz_pozarna_id) REFERENCES straz_pozarna (id),
 CONSTRAINT FK_pogotowie_id FOREIGN KEY (pogotowie_id) REFERENCES pogotowie (id)
 );
 
 CREATE TABLE zgloszenie(
-id INT,
+id INT AUTO_INCREMENT,
 id_dyspozytor INT,
 id_zglaszajacy INT,
 id_typ_zgloszenia INT,
@@ -167,8 +168,7 @@ CONSTRAINT PK_zgloszenie PRIMARY KEY (id),
 CONSTRAINT FK_id_dyspozytor FOREIGN KEY (id_dyspozytor) REFERENCES dyspozytor (id),
 CONSTRAINT FK_id_zglaszajacy FOREIGN KEY (id_zglaszajacy) REFERENCES zglaszajacy (id),
 CONSTRAINT FK_id_typ_zgloszenia FOREIGN KEY (id_typ_zgloszenia) REFERENCES typ_zgloszenia (id),
-CONSTRAINT FK_id_klasa_zgloszenia FOREIGN KEY (id_klasa_zgloszenia) REFERENCES klasa_zgloszenia (id),
-CONSTRAINT FK_id_zgloszenie_jednostka FOREIGN KEY (id_zgloszenie_jednostka) REFERENCES zgloszenie_jednostka (id_zgloszenia)
+CONSTRAINT FK_id_klasa_zgloszenia FOREIGN KEY (id_klasa_zgloszenia) REFERENCES klasa_zgloszenia (id)
 );
 
 /*ALTER TABLE zgloszenie_jednostka

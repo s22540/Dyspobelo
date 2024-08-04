@@ -10,5 +10,7 @@ public class Zglaszajacy
     [Required]
     public string Nazwisko { get; set; }
     [Required]
-    public string NumerKontaktowy { get; set; }
+    public string Numer_Kontaktowy { get; set; }
+    
+    public int id_zgloszenia { get; set; }
 }

@@ -1,17 +1,12 @@
 -- Wstawianie danych do tabeli dyspozytor
-INSERT INTO dyspozytor (id, numer_dyspozytora, imie, nazwisko) VALUES
-(1, 101, 'Jan', 'Kowalski'),
-(2, 102, 'Anna', 'Nowak');
+INSERT INTO dyspozytor (id, numer_dyspozytora, imie, nazwisko, zahashowane_haslo) VALUES
+(1, 101, 'Jan', 'Kowalski','$2a$12$.cY4DU1ypSs2wG3.9Wz5Qe5HfvzPdpqmRd4XTBut3rIaMc4rOucqa'),
+(2, 102, 'Anna', 'Nowak', null);
 
 -- Wstawianie danych do tabeli dyzur
 INSERT INTO dyzur (id_harmonogramu, data_rozpoczecia_dyzuru, data_zakonczenia_dyzuru) VALUES
 (1, '2023-05-01', '2023-05-02'),
 (2, '2023-05-03', '2023-05-04');
-
--- Wstawianie danych do tabeli dyspozytor_dyzur
-INSERT INTO dyspozytor_dyzur (dyspozytor_id, dyzur_id_harmonogramu) VALUES
-(1, 1),
-(2, 2);
 
 -- Wstawianie danych do tabeli zglaszajacy
 INSERT INTO zglaszajacy (id, imie, nazwisko, numer_kontaktowy) VALUES
@@ -52,10 +47,3 @@ INSERT INTO straz_pozarna (id, numer_wozu, status_wozu, obsluzone_zgloszenia, uw
 INSERT INTO pogotowie (id, numer_karetki, status_karetki, obsluzone_zgloszenia, uwagi, szpital_id) VALUES
 (1, 'M001', 'A', 8, 'Brak uwag', 1);
 
--- Wstawianie danych do tabeli zgloszenie_jednostka
-INSERT INTO zgloszenie_jednostka (id_zgloszenia, policja_id, straz_pozarna_id, pogotowie_id) VALUES
-(1, 1, 1, 1);
-
--- Wstawianie danych do tabeli zgloszenie
-INSERT INTO zgloszenie (id, id_dyspozytor, id_zglaszajacy, id_typ_zgloszenia, id_klasa_zgloszenia, id_zgloszenie_jednostka, ulica, numer_budynku, numer_mieszkania, data_zgloszenia, opis_zdarzenia) VALUES
-(1, 1, 1, 1, 1, 1, 'Ul. Testowa', 10, 5, '2023-05-01', 'Opis testowego zdarzenia');

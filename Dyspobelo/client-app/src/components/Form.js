@@ -52,15 +52,15 @@ function Form() {
 
                 const policjaResponse = await fetch("http://localhost:5126/api/Policja");
                 const policjaData = await policjaResponse.json();
-                setPolicjaList(policjaData);
+                setPolicjaList(policjaData.filter(p => p.status_Patrolu === 'A'));
 
                 const strazPozarnaResponse = await fetch("http://localhost:5126/api/StrazPozarna");
                 const strazPozarnaData = await strazPozarnaResponse.json();
-                setStrazPozarnaList(strazPozarnaData);
+                setStrazPozarnaList(strazPozarnaData.filter(s => s.status_Wozu === 'A')); 
 
                 const pogotowieResponse = await fetch("http://localhost:5126/api/Pogotowie");
                 const pogotowieData = await pogotowieResponse.json();
-                setPogotowieList(pogotowieData);
+                setPogotowieList(pogotowieData.filter(p => p.status_Karetki === 'A')); 
             } catch (error) {
                 console.error("Error loading data:", error);
             }

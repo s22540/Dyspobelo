@@ -1,46 +1,48 @@
 import React, { useState } from "react";
-import Map from "../components/MapComponent";
+import SimpleMap from "../components/SimpleMap";
 import Menu from "../components/Menu";
-import List from "../components/List";
+import EventList from "../components/EventList";
 import { MarkersProvider } from "../context/MarkersContext";
 
-const ShowAnnouncement = ({ children }) => {
-	const [selectedZgloszenie, setSelectedZgloszenie] = useState(null);
+const ShowAnnouncement = () => {
+    const [markers, setMarkers] = useState([]);
 
-	const handleSelectZgloszenie = (zgloszenie) => {
-		setSelectedZgloszenie(zgloszenie);
-	};
+    const handleSelectEvent = (event) => {
+        setMarkers([event]);
+    };
 
-	const styles = {
-		layout: {
-			display: "flex",
-			justifyContent: "space-between",
-			alignItems: "flex-start",
-		},
-		container: {
-			width: "100%",
-			height: "100%",
-		},
-		halfWidth: {
-			width: "50%",
-		},
-	};
+    const styles = {
+        layout: {
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+        },
+        container: {
+            width: "100%",
+            height: "100%",
+        },
+        halfWidth: {
+            width: "50%",
+        },
+    };
 
-	return (
-		<MarkersProvider>
-			<div style={styles.container}>
-				<div>
-					<Menu />
-				</div>
-				<div style={styles.layout}>
-					<div style={styles.halfWidth}>
-						<List onSelectZgloszenie={handleSelectZgloszenie} />
-					</div>
-					<div style={styles.halfWidth}>{children}</div>
-				</div>
-			</div>
-		</MarkersProvider>
-	);
+    return (
+        <MarkersProvider>
+            <div style={styles.container}>
+                <div>
+                    <Menu />
+                </div>
+                <div style={styles.layout}>
+                    <div style={styles.halfWidth}>
+                        <EventList onSelectEvent={handleSelectEvent} />
+                    </div>
+                    <div style={styles.halfWidth}>
+                        <SimpleMap markers={markers} />
+                    </div>
+                </div>
+            </div>
+        </MarkersProvider>
+    );
 };
 
 export default ShowAnnouncement;

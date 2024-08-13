@@ -45,7 +45,7 @@ const Layout = ({ children }) => {
 		},
 	};
 
-	const hideMapOnPaths = ["/login", "/settings", "/edit-announcement"];
+	const hideMapOnPaths = ["/login", "/settings", "/edit-announcement","/show-announcement"];
 	const shouldHideMap = hideMapOnPaths.includes(location.pathname);
 	const currentPathStyle = pathStyles[location.pathname] || pathStyles["/main"];
 
@@ -55,7 +55,7 @@ const Layout = ({ children }) => {
 			{!shouldHideMap && (
 				<div
 					className={
-						"add-announcement-map-container show-announcement-map-container"
+						"add-announcement-map-container"
 					}
 					style={styles.mapContainer(currentPathStyle)}
 				>

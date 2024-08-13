@@ -1,26 +1,25 @@
 import React, { useEffect, useContext, useRef } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet.sync";
 import { MarkersContext } from "../context/MarkersContext";
 import MovingMarkerLogic from "./MovingMarkerLogic";
 
 const MapComponent = () => {
-	const { markers, selectedMarker, updateMarkerPosition } =
-		useContext(MarkersContext);
+	const { markers } = useContext(MarkersContext);
 	const mapRef = useRef(null);
 
 	useEffect(() => {
 		if (mapRef.current) {
-			mapRef.current._leaflet_map = mapRef.current.leafletElement;
+			const leafletMap = mapRef.current._leaflet_map;
 			const otherMapContainers =
 				document.querySelectorAll(".leaflet-container");
+
 			otherMapContainers.forEach((otherMapContainer) => {
 				if (otherMapContainer !== mapRef.current) {
 					const otherMap = otherMapContainer._leaflet_map;
 					if (otherMap) {
-						mapRef.current._leaflet_map.sync(otherMap);
-						otherMap.sync(mapRef.current._leaflet_map);
+						leafletMap.sync(otherMap);
+						otherMap.sync(leafletMap);
 					}
 				}
 			});
@@ -31,24 +30,24 @@ const MapComponent = () => {
 		<div style={{ position: "relative" }}>
 			<style>
 				{`
-					.leaflet-routing-container {
-						display: none !important;
-					}
-				`}
+                    .leaflet-routing-container {
+                        display: none !important;
+                    }
+                `}
 			</style>
 			<MapContainer
 				ref={mapRef}
 				style={{ height: "65vh", width: "100%" }}
 				className="leaflet-container"
+				center={[51.505, -0.09]}
+				zoom={13}
 			>
 				<TileLayer
 					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 				/>
 				{markers.map((marker) => (
-					<React.Fragment key={marker.id}>
-						<MovingMarkerLogic marker={marker} />
-					</React.Fragment>
+					<MovingMarkerLogic key={marker.id} marker={marker} />
 				))}
 			</MapContainer>
 		</div>

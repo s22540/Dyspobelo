@@ -11,6 +11,9 @@ public class Zglaszajacy
     public string Nazwisko { get; set; }
     [Required]
     public string Numer_Kontaktowy { get; set; }
-    
+
     public int id_zgloszenia { get; set; }
+
+    [ForeignKey("Id_Zgloszenia")]
+    public Zgloszenie Zgloszenie { get; set; }
 }

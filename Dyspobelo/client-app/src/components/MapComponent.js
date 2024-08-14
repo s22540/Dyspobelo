@@ -47,7 +47,7 @@ const MapComponent = () => {
 					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 				/>
 				{markers.map((marker) => (
-					<MovingMarkerLogic key={marker.id} marker={marker} />
+					<MovingMarkerLogic key={`marker-${marker.id}`} marker={marker} />
 				))}
 			</MapContainer>
 		</div>

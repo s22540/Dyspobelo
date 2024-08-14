@@ -132,7 +132,7 @@ function Form({ onReportSubmit }) {
 			const zglaszajacyData = await zglaszajacyResponse.json();
 
 			const zgloszenieData = {
-				id_dyspozytor: parseInt(localStorage.getItem("id_dyspozytor")),
+				id_dyspozytor: parseInt(localStorage.getItem("id_dyspozytora")),
 				id_zglaszajacy: zglaszajacyData.id,
 				id_typ_zgloszenia: parseInt(formData.id_typ_zgloszenia),
 				id_klasa_zgloszenia: parseInt(formData.id_klasa_zgloszenia),

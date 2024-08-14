@@ -41,10 +41,10 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				.addTo(map)
 				.bindPopup(
 					`<div>
-                        <h2>Jednostka: ${marker.number}</h2>
-                        <p>Status: ${marker.status}</p>
-                        <p>Uwagi: ${marker.remarks}</p>
-                    </div>`
+						<h2>Jednostka: ${marker.number}</h2>
+						<p>Status: ${marker.status}</p>
+						<p>Uwagi: ${marker.remarks}</p>
+					</div>`
 				)
 				.on("mouseover", (event) => {
 					const leafletMarker = event.target;
@@ -62,16 +62,24 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 			markerRef.current.setLatLng(marker.position);
 		}
 
-		const end = destination
-			? destination
-			: getRandomCoordinates(marker.position);
-		initializeRoute(
-			marker.position,
-			end,
-			markerRef.current,
-			routingControlRef,
-			map
-		);
+		if (!destination) {
+			const randomEnd = getRandomCoordinates(marker.position);
+			initializeRoute(
+				marker.position,
+				randomEnd,
+				markerRef.current,
+				routingControlRef,
+				map
+			);
+		} else {
+			initializeRoute(
+				marker.position,
+				destination,
+				markerRef.current,
+				routingControlRef,
+				map
+			);
+		}
 
 		return () => {
 			if (markerRef.current) {

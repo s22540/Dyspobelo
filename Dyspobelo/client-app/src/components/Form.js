@@ -111,7 +111,14 @@ function Form({ onReportSubmit }) {
 			const coordinates = await convertAddressToCoordinates(address);
 
 			if (coordinates) {
-				onReportSubmit(coordinates);
+				const selectedVehicleId =
+					formData.policja_id ||
+					formData.straz_pozarna_id ||
+					formData.pogotowie_id;
+				if (selectedVehicleId) {
+					// Przekazanie koordynatów i id wybranego pojazdu do komponentu obsługującego ruch
+					onReportSubmit(coordinates, selectedVehicleId);
+				}
 			}
 			// Tworzenie zgłaszającego przed dodaniem zgłoszenia
 			const zglaszajacyResponse = await fetch(

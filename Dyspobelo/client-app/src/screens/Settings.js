@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import Menu from "../components/Menu";
 import ChangePassword from "../components/ChangePassword";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
     const { t, i18n } = useTranslation();
+    const navigate = useNavigate();
     const [showChangePassword, setShowChangePassword] = useState(false);
-    const [userId, setUserId] = useState(null);
+    const [setUserId] = useState(null);
     const [userInfo, setUserInfo] = useState({ imie: '', nazwisko: '' });
     const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
 
@@ -35,6 +37,11 @@ const Settings = () => {
 
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('id_dyspozytora');
+        navigate('/login');
     };
 
     const styles = {
@@ -129,7 +136,7 @@ const Settings = () => {
                         {t('User')}
                         <span>{userInfo.imie && userInfo.nazwisko ? `${userInfo.imie} ${userInfo.nazwisko}` : t('User user')}</span>
                     </li>
-                    <li style={styles.logoutLink}>{t('Logout')}</li>
+                    <li style={styles.logoutLink} onClick={handleLogout}>{t('Logout')}</li>
                 </ul>
             </div>
         </div>

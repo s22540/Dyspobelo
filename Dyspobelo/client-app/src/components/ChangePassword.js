@@ -11,7 +11,7 @@ const ChangePassword = () => {
         e.preventDefault();
 
         if (newPassword !== confirmPassword) {
-            alert(t("Nowe has≥o i potwierdzenie has≥a muszπ byÊ takie same."));
+            alert(t("Nowe has≈Ço i potwierdzenie has≈Ça muszƒÖ byƒá takie same."));
             return;
         }
 
@@ -21,7 +21,7 @@ const ChangePassword = () => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${userId}`, // Uøycie ID uøytkownika z lokalnego magazynu
+                "Authorization": `Bearer ${userId}`,
             },
             body: JSON.stringify({
                 currentPassword,
@@ -31,9 +31,9 @@ const ChangePassword = () => {
         });
 
         if (response.ok) {
-            alert(t("Has≥o zosta≥o zmienione."));
+            alert(t("Has≈Ço zosta≈Ço zmienione."));
         } else {
-            alert(t("Nie uda≥o siÍ zmieniÊ has≥a."));
+            alert(t("Nie uda≈Ço siƒô zmieniƒá has≈Ça."));
         }
     };
 
@@ -86,7 +86,7 @@ const ChangePassword = () => {
         <div style={styles.formContainer}>
             <form onSubmit={handleChangePassword} style={styles.form}>
                 <div style={styles.inputContainer}>
-                    <label style={styles.label}>{t('Current Password')}:</label>
+                    <label style={styles.label}>{t('Obecne has≈Ço')}:</label>
                     <input
                         type="password"
                         value={currentPassword}
@@ -95,7 +95,7 @@ const ChangePassword = () => {
                     />
                 </div>
                 <div style={styles.inputContainer}>
-                    <label style={styles.label}>{t('New Password')}:</label>
+                    <label style={styles.label}>{t('Nowe has≈Ço')}:</label>
                     <input
                         type="password"
                         value={newPassword}
@@ -104,7 +104,7 @@ const ChangePassword = () => {
                     />
                 </div>
                 <div style={styles.inputContainer}>
-                    <label style={styles.label}>{t('Confirm New Password')}:</label>
+                    <label style={styles.label}>{t('Potwierd≈∫ nowe has≈Ço')}:</label>
                     <input
                         type="password"
                         value={confirmPassword}
@@ -112,7 +112,7 @@ const ChangePassword = () => {
                         style={styles.input}
                     />
                 </div>
-                <button type="submit" style={styles.button}>{t('Submit')}</button>
+                <button type="submit" style={styles.button}>{t('Zatwierd≈∫')}</button>
             </form>
         </div>
     );

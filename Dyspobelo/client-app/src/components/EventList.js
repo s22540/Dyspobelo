@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const EventList = ({ onSelectEvent }) => {
+    const { t } = useTranslation();
     const [events, setEvents] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -30,7 +32,7 @@ const EventList = ({ onSelectEvent }) => {
 
     const geocodeAddress = async (event) => {
         const city = "Warszawa";
-        const country = "Polska";
+        const country = t("Polska");
         const address = `${event.ulica} ${event.numer_budynku}, ${city}, ${country}`;
         const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
 
@@ -92,7 +94,7 @@ const EventList = ({ onSelectEvent }) => {
         <div style={styles.container}>
             <input
                 type="text"
-                placeholder="Szukaj po ID, ulicy, lub numerze budynku..."
+                placeholder={t("Szukaj po ID, ulicy, lub numerze budynku...")}
                 value={searchTerm}
                 onChange={handleSearchChange}
                 style={styles.searchInput}
@@ -109,13 +111,13 @@ const EventList = ({ onSelectEvent }) => {
                     onClick={() => geocodeAddress(event)}
                 >
                     <div>
-                        <strong>ID:</strong> {event.id}
+                        <strong>{t("ID")}:</strong> {event.id}
                     </div>
                     <div>
-                        <strong>Adres:</strong> {event.ulica} {event.numer_budynku}/{event.numer_mieszkania}
+                        <strong>{t("Adres")}:</strong> {event.ulica} {event.numer_budynku}/{event.numer_mieszkania}
                     </div>
                     <div>
-                        <strong>Data zg≥oszenia:</strong> {new Date(event.data_zgloszenia).toLocaleDateString()}
+                        <strong>{t("Data zg≈Çoszenia")}:</strong> {new Date(event.data_zgloszenia).toLocaleDateString()}
                     </div>
                 </div>
             ))}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import * as Label from "@radix-ui/react-label";
 import { styled } from "@stitches/react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const StyledContainer = styled("div", {
     display: "flex",
@@ -91,6 +92,7 @@ const StyledSecondaryButton = styled("button", {
 });
 
 const LoginScreen = () => {
+    const { t } = useTranslation();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -118,11 +120,11 @@ const LoginScreen = () => {
             } else {
                 const errorText = await response.text();
                 console.error("Login failed:", errorText);
-                alert("Login failed: " + errorText);
+                alert(t("Login failed: ") + errorText);
             }
         } catch (error) {
             console.error("Login error:", error);
-            alert("Error logging in: " + error.message);
+            alert(t("Error logging in: ") + error.message);
         }
     };
 
@@ -133,35 +135,35 @@ const LoginScreen = () => {
     return (
         <StyledContainer>
             <StyledForm onSubmit={handleLogin}>
-                <StyledTitle>Login</StyledTitle>
+                <StyledTitle>{t("Login")}</StyledTitle>
 
                 <StyledInputContainer>
-                    <StyledLabel htmlFor="numerDyspozytora">Login</StyledLabel>
+                    <StyledLabel htmlFor="numerDyspozytora">{t("Login")}</StyledLabel>
                     <StyledInput
                         id="numerDyspozytora"
                         name="numerDyspozytora"
-                        placeholder="numerDyspozytora"
+                        placeholder={t("numerDyspozytora")}
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </StyledInputContainer>
 
                 <StyledInputContainer>
-                    <StyledLabel htmlFor="password">Password</StyledLabel>
+                    <StyledLabel htmlFor="password">{t("Password")}</StyledLabel>
                     <StyledInput
                         id="password"
                         name="password"
                         type="password"
-                        placeholder="********"
+                        placeholder={t("********")}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </StyledInputContainer>
 
-                <StyledButton type="submit">Zaloguj</StyledButton>
+                <StyledButton type="submit">{t("Login")}</StyledButton>
             </StyledForm>
 
-            <StyledSecondaryButton onClick={handleLoginAsAnalityk}>Zaloguj jako analityk</StyledSecondaryButton>
+            <StyledSecondaryButton onClick={handleLoginAsAnalityk}>{t("Login as Analyst")}</StyledSecondaryButton>
         </StyledContainer>
     );
 };

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import SimpleMap from "../components/SimpleMap";
 import Menu from "../components/Menu";
 import EventList from "../components/EventList";
 import { MarkersProvider } from "../context/MarkersContext";
 
 const ShowAnnouncement = () => {
+    const { t } = useTranslation();
     const [markers, setMarkers] = useState([]);
 
     const handleSelectEvent = (event) => {

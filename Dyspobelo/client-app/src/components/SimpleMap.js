@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
+import { useTranslation } from "react-i18next";
 
 const customIcon = L.icon({
     iconUrl: process.env.PUBLIC_URL + '/marker.png',
-    iconSize: [32, 32], 
-    iconAnchor: [16, 32], 
-    popupAnchor: [0, -32] 
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
 });
 
 const MapUpdater = ({ position }) => {
@@ -14,7 +15,7 @@ const MapUpdater = ({ position }) => {
 
     useEffect(() => {
         if (position) {
-            map.closePopup(); 
+            map.closePopup();
             map.setView(position, map.getZoom(), { animate: true });
         }
     }, [position, map]);
@@ -23,6 +24,8 @@ const MapUpdater = ({ position }) => {
 };
 
 const SimpleMap = ({ markers }) => {
+    const { t } = useTranslation();
+
     return (
         <MapContainer
             center={[52.237049, 21.017532]}
@@ -42,9 +45,9 @@ const SimpleMap = ({ markers }) => {
                     >
                         <Popup>
                             <div>
-                                <strong>ID:</strong> {markers[0].id}<br />
-                                <strong>Ulica:</strong> {markers[0].ulica}<br />
-                                <strong>Data:</strong> {new Date(markers[0].data).toLocaleDateString()}
+                                <strong>{t("ID")}:</strong> {markers[0].id}<br />
+                                <strong>{t("Ulica")}:</strong> {markers[0].ulica}<br />
+                                <strong>{t("Data")}:</strong> {new Date(markers[0].data).toLocaleDateString()}
                             </div>
                         </Popup>
                     </Marker>

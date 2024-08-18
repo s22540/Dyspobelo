@@ -1,4 +1,5 @@
 import "./App.css";
+import "./i18n"; 
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import LoginScreen from "./screens/LoginScreen";
 import MainScreen from "./screens/mainScreen";
@@ -14,25 +15,26 @@ import Layout from "./components/Layout";
 import LoginScreenAnalityk from "./screens/LoginScreenAnalityk";
 
 function App() {
-	return (
-		<Provider store={store}>
-			<MarkersProvider>
-				<BrowserRouter>
-					<Layout>
-						<Routes>
-							<Route path="/login" element={<LoginScreen />} />
-							<Route path="/login-analityk" element={<LoginScreenAnalityk />} />
-							<Route path="/main/*" element={<MainScreen />} />
-							<Route path="/add-announcement" element={<AddAnnouncement />} />
-							<Route path="/edit-announcement" element={<EditAnnouncement />} />
-							<Route path="/show-announcement" element={<ShowAnnouncement />} />
-							<Route path="/settings/*" element={<Settings />} />
-							<Route path="/" element={<Navigate to="/login" replace />} />
-						</Routes>
-					</Layout>
-				</BrowserRouter>
-			</MarkersProvider>
-		</Provider>
-	);
+    return (
+        <Provider store={store}>
+            <MarkersProvider>
+                <BrowserRouter>
+                    <Layout>
+                        <Routes>
+                            <Route path="/login" element={<LoginScreen />} />
+                            <Route path="/login-analityk" element={<LoginScreenAnalityk />} />
+                            <Route path="/main/*" element={<MainScreen />} />
+                            <Route path="/add-announcement" element={<AddAnnouncement />} />
+                            <Route path="/edit-announcement" element={<EditAnnouncement />} />
+                            <Route path="/show-announcement" element={<ShowAnnouncement />} />
+                            <Route path="/settings/*" element={<Settings />} />
+                            <Route path="/" element={<Navigate to="/login" replace />} />
+                        </Routes>
+                    </Layout>
+                </BrowserRouter>
+            </MarkersProvider>
+        </Provider>
+    );
 }
+
 export default App;

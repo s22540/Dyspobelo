@@ -1,4 +1,5 @@
 import "./App.css";
+import "./i18n"; 
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import LoginScreen from "./screens/LoginScreen";
 import MainScreen from "./screens/mainScreen";
@@ -16,6 +17,7 @@ import MainAnalityk from "./screens/MainAnalityk";
 import AnalitykSettings from "./screens/AnalitykSettings";
 
 function App() {
+
 	return (
 		<Provider store={store}>
 			<MarkersProvider>
@@ -39,4 +41,5 @@ function App() {
 		</Provider>
 	);
 }
+
 export default App;

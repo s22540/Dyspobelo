@@ -1,7 +1,9 @@
 ﻿import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const List = ({ onSelectZgloszenie }) => {
+    const { t } = useTranslation();
     const [zgloszenia, setZgloszenia] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -63,7 +65,7 @@ const List = ({ onSelectZgloszenie }) => {
         <div style={styles.container}>
             <input
                 type="text"
-                placeholder="Szukaj po ID lub ulicy..."
+                placeholder={t("Szukaj po ID lub ulicy...")}
                 value={searchTerm}
                 onChange={handleSearchChange}
                 style={styles.searchInput}
@@ -79,7 +81,7 @@ const List = ({ onSelectZgloszenie }) => {
                     onMouseLeave={() => setHoveredItem(null)}
                     onClick={() => onSelectZgloszenie(zgloszenie)}
                 >
-                    Zgłoszenie ID: {zgloszenie.id}, Ulica: {zgloszenie.ulica}, Data: {new Date(zgloszenie.data_zgloszenia).toLocaleDateString()}
+                    {t("Zgłoszenie ID")}: {zgloszenie.id}, {t("Ulica")}: {zgloszenie.ulica}, {t("Data")}: {new Date(zgloszenie.data_zgloszenia).toLocaleDateString()}
                 </div>
             ))}
         </div>

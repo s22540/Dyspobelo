@@ -16,70 +16,56 @@ function Form() {
 		pogotowie_id: "",
 	});
 
-	const resetForm = () => {
-		setFormData({
-			imie: "",
-			nazwisko: "",
-			numerKontaktowy: "",
-			ulica: "",
-			numerBudynku: "",
-			numerMieszkania: "",
-			id_typ_zgloszenia: "",
-			id_klasa_zgloszenia: "",
-			opis_zdarzenia: "",
-			policja_id: "",
-			straz_pozarna_id: "",
-			pogotowie_id: "",
-		});
-	};
+    const [typyZgloszen, setTypyZgloszen] = useState([]);
+    const [klasyZgloszen, setKlasyZgloszen] = useState([]);
+    const [policjaList, setPolicjaList] = useState([]);
+    const [strazPozarnaList, setStrazPozarnaList] = useState([]);
+    const [pogotowieList, setPogotowieList] = useState([]);
+    const [message, setMessage] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-	const [typyZgloszen, setTypyZgloszen] = useState([]);
-	const [klasyZgloszen, setKlasyZgloszen] = useState([]);
-	const [policjaList, setPolicjaList] = useState([]);
-	const [strazPozarnaList, setStrazPozarnaList] = useState([]);
-	const [pogotowieList, setPogotowieList] = useState([]);
+    const fetchData = async () => {
+        try {
+            const typyResponse = await fetch(
+                "http://localhost:5126/api/TypyZgloszenia"
+            );
+            const typyData = await typyResponse.json();
+            setTypyZgloszen(typyData);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const typyResponse = await fetch(
-					"http://localhost:5126/api/TypyZgloszenia"
-				);
-				const typyData = await typyResponse.json();
-				setTypyZgloszen(typyData);
+            const klasyResponse = await fetch(
+                "http://localhost:5126/api/KlasyZgloszenia"
+            );
+            const klasyData = await klasyResponse.json();
+            setKlasyZgloszen(klasyData);
 
-				const klasyResponse = await fetch(
-					"http://localhost:5126/api/KlasyZgloszenia"
-				);
-				const klasyData = await klasyResponse.json();
-				setKlasyZgloszen(klasyData);
+            const policjaResponse = await fetch(
+                "http://localhost:5126/api/Policja"
+            );
+            const policjaData = await policjaResponse.json();
+            setPolicjaList(policjaData.filter((p) => p.status_Patrolu === "A"));
 
-				const policjaResponse = await fetch(
-					"http://localhost:5126/api/Policja"
-				);
-				const policjaData = await policjaResponse.json();
-				setPolicjaList(policjaData.filter((p) => p.status_Patrolu === "A"));
+            const strazPozarnaResponse = await fetch(
+                "http://localhost:5126/api/StrazPozarna"
+            );
+            const strazPozarnaData = await strazPozarnaResponse.json();
+            setStrazPozarnaList(
+                strazPozarnaData.filter((s) => s.status_Wozu === "A")
+            );
 
-				const strazPozarnaResponse = await fetch(
-					"http://localhost:5126/api/StrazPozarna"
-				);
-				const strazPozarnaData = await strazPozarnaResponse.json();
-				setStrazPozarnaList(
-					strazPozarnaData.filter((s) => s.status_Wozu === "A")
-				);
+            const pogotowieResponse = await fetch(
+                "http://localhost:5126/api/Pogotowie"
+            );
+            const pogotowieData = await pogotowieResponse.json();
+            setPogotowieList(pogotowieData.filter((p) => p.status_Karetki === "A"));
+        } catch (error) {
+            console.error("Error loading data:", error);
+            setMessage(t("Błąd ładowania danych"));
+        }
+    };
 
-				const pogotowieResponse = await fetch(
-					"http://localhost:5126/api/Pogotowie"
-				);
-				const pogotowieData = await pogotowieResponse.json();
-				setPogotowieList(pogotowieData.filter((p) => p.status_Karetki === "A"));
-			} catch (error) {
-				console.error("Error loading data:", error);
-			}
-		};
-
-		fetchData();
-	}, []);
+    useEffect(() => {
+        fetchData();
+    }, [t]);
 
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
@@ -92,24 +78,26 @@ function Form() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		try {
-			// Tworzenie zgłaszającego przed dodaniem zgłoszenia
-			const zglaszajacyResponse = await fetch(
-				"http://localhost:5126/api/Zglaszajacy",
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						imie: formData.imie,
-						nazwisko: formData.nazwisko,
-						numer_kontaktowy: formData.numerKontaktowy,
-					}),
-				}
-			);
+        if (isSubmitting) return;
 
-			if (!zglaszajacyResponse.ok)
-				throw new Error("Failed to create zgłaszający");
-			const zglaszajacyData = await zglaszajacyResponse.json();
+        setIsSubmitting(true);
+
+        try {
+            const zglaszajacyResponse = await fetch(
+                "http://localhost:5126/api/Zglaszajacy",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        imie: formData.imie,
+                        nazwisko: formData.nazwisko,
+                        numer_kontaktowy: formData.numerKontaktowy,
+                    }),
+                }
+            );
+
+            if (!zglaszajacyResponse.ok) throw new Error(t("Nie udało się utworzyć zgłaszającego"));
+            const zglaszajacyData = await zglaszajacyResponse.json();
 
 			const zgloszenieData = {
 				id_dyspozytor: parseInt(localStorage.getItem("id_dyspozytora")),
@@ -140,8 +128,8 @@ function Form() {
 				body: JSON.stringify(zgloszenieData),
 			});
 
-			if (!response.ok) throw new Error("Failed to submit the form");
-			const responseData = await response.json();
+            if (!response.ok) throw new Error(t("Nie udało się dodać zgłoszenia"));
+            const responseData = await response.json();
 
 			// Update zgłaszający z nowym zgłoszeniem id
 			await fetch(
@@ -153,187 +141,245 @@ function Form() {
 				}
 			);
 
-			console.log("Submit successful:", responseData);
-		} catch (error) {
-			console.error("Error submitting form:", error);
-		}
-	};
+            setMessage(t("Zgłoszenie zostało pomyślnie dodane"));
 
-	const styles = {
-		formContainer: {
-			width: "50%",
-			margin: "0 auto",
-			backgroundColor: "#f2f2f2",
-			padding: "20px",
-			borderRadius: "8px",
-			boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-		},
-		form: {
-			display: "flex",
-			flexDirection: "column",
-			gap: "10px",
-		},
-		input: {
-			padding: "10px",
-			borderRadius: "5px",
-			border: "1px solid #ccc",
-		},
-		buttonContainer: {
-			display: "flex",
-			justifyContent: "flex-end",
-			gap: "10px",
-		},
-		button: {
-			padding: "10px 15px",
-			color: "white",
-			border: "none",
-			borderRadius: "5px",
-			cursor: "pointer",
-		},
-		submitButton: {
-			backgroundColor: "#4CAF50",
-		},
-		cancelButton: {
-			backgroundColor: "#f44336",
-		},
-	};
+            // Resetowanie formularza
+            setFormData({
+                imie: "",
+                nazwisko: "",
+                numerKontaktowy: "",
+                ulica: "",
+                numerBudynku: "",
+                numerMieszkania: "",
+                id_typ_zgloszenia: "",
+                id_klasa_zgloszenia: "",
+                opis_zdarzenia: "",
+                policja_id: "",
+                straz_pozarna_id: "",
+                pogotowie_id: "",
+            });
+        } catch (error) {
+            console.error("Error submitting form:", error);
+            setMessage(error.message);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
-	return (
-		<div style={styles.formContainer}>
-			<h2>Wprowadź dane zgłoszenia</h2>
-			<form onSubmit={handleSubmit} style={styles.form}>
-				<input
-					name="imie"
-					value={formData.imie}
-					onChange={handleInputChange}
-					placeholder="Imię"
-					style={styles.input}
-				/>
-				<input
-					name="nazwisko"
-					value={formData.nazwisko}
-					onChange={handleInputChange}
-					placeholder="Nazwisko"
-					style={styles.input}
-				/>
-				<input
-					name="numerKontaktowy"
-					value={formData.numerKontaktowy}
-					onChange={handleInputChange}
-					placeholder="Numer kontaktowy"
-					style={styles.input}
-				/>
-				<input
-					name="ulica"
-					value={formData.ulica}
-					onChange={handleInputChange}
-					placeholder="Ulica"
-					style={styles.input}
-				/>
-				<input
-					name="numerBudynku"
-					value={formData.numerBudynku}
-					onChange={handleInputChange}
-					placeholder="Numer budynku"
-					style={styles.input}
-				/>
-				<input
-					name="numerMieszkania"
-					value={formData.numerMieszkania}
-					onChange={handleInputChange}
-					placeholder="Numer mieszkania"
-					style={styles.input}
-				/>
-				<select
-					name="id_typ_zgloszenia"
-					value={formData.id_typ_zgloszenia}
-					onChange={handleInputChange}
-					style={styles.input}
-				>
-					<option value="">Wybierz typ zgłoszenia</option>
-					{typyZgloszen.map((typ) => (
-						<option key={typ.id} value={typ.id}>
-							{typ.nazwa_typu}
-						</option>
-					))}
-				</select>
-				<select
-					name="id_klasa_zgloszenia"
-					value={formData.id_klasa_zgloszenia}
-					onChange={handleInputChange}
-					style={styles.input}
-				>
-					<option value="">Wybierz klasę zgłoszenia</option>
-					{klasyZgloszen.map((klasa) => (
-						<option key={klasa.id} value={klasa.id}>
-							{klasa.klasa_zgloszenia}
-						</option>
-					))}
-				</select>
-				<textarea
-					name="opis_zdarzenia"
-					value={formData.opis_zdarzenia}
-					onChange={handleInputChange}
-					placeholder="Opis zdarzenia"
-					style={{ ...styles.input, height: "100px" }}
-				/>
-				<select
-					name="policja_id"
-					value={formData.policja_id}
-					onChange={handleInputChange}
-					style={styles.input}
-				>
-					<option value="">Wybierz jednostkę policji</option>
-					{policjaList.map((p) => (
-						<option key={p.id} value={p.id}>
-							{p.numer_Patrolu} - {p.status_Patrolu}
-						</option>
-					))}
-				</select>
-				<select
-					name="straz_pozarna_id"
-					value={formData.straz_pozarna_id}
-					onChange={handleInputChange}
-					style={styles.input}
-				>
-					<option value="">Wybierz jednostkę straży pożarnej</option>
-					{strazPozarnaList.map((s) => (
-						<option key={s.id} value={s.id}>
-							{s.numer_Wozu} - {s.status_Wozu}
-						</option>
-					))}
-				</select>
-				<select
-					name="pogotowie_id"
-					value={formData.pogotowie_id}
-					onChange={handleInputChange}
-					style={styles.input}
-				>
-					<option value="">Wybierz jednostkę pogotowia</option>
-					{pogotowieList.map((p) => (
-						<option key={p.id} value={p.id}>
-							{p.numer_Karetki} - {p.status_Karetki}
-						</option>
-					))}
-				</select>
-				<div style={styles.buttonContainer}>
-					<button
-						type="button"
-						onClick={resetForm}
-						style={{ ...styles.button, ...styles.cancelButton }}
-					>
-						Anuluj
-					</button>
-					<button
-						type="submit"
-						style={{ ...styles.button, ...styles.submitButton }}
-					>
-						Zatwierdź
-					</button>
-				</div>
-			</form>
-		</div>
-	);
+    const styles = {
+        formContainer: {
+            width: "50%",
+            margin: "0 auto",
+            backgroundColor: "#f2f2f2",
+            padding: "20px",
+            borderRadius: "8px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+        },
+        form: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+        },
+        input: {
+            padding: "10px",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+        },
+        buttonContainer: {
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "10px",
+        },
+        button: {
+            padding: "10px 15px",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+        },
+        submitButton: {
+            backgroundColor: "#4CAF50",
+        },
+        cancelButton: {
+            backgroundColor: "#f44336",
+        },
+        message: {
+            marginTop: "20px",
+            padding: "10px",
+            borderRadius: "5px",
+            textAlign: "center",
+            backgroundColor: "#d4edda",
+            color: "#155724",
+            border: "1px solid #c3e6cb",
+        },
+        errorMessage: {
+            marginTop: "20px",
+            padding: "10px",
+            borderRadius: "5px",
+            textAlign: "center",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+            border: "1px solid #f5c6cb",
+        },
+    };
+
+    return (
+        <div style={styles.formContainer}>
+            <h2>{t("Wprowadź dane zgłoszenia")}</h2>
+            <form onSubmit={handleSubmit} style={styles.form}>
+                <input
+                    name="imie"
+                    value={formData.imie}
+                    onChange={handleInputChange}
+                    placeholder={t("Imię")}
+                    style={styles.input}
+                />
+                <input
+                    name="nazwisko"
+                    value={formData.nazwisko}
+                    onChange={handleInputChange}
+                    placeholder={t("Nazwisko")}
+                    style={styles.input}
+                />
+                <input
+                    name="numerKontaktowy"
+                    value={formData.numerKontaktowy}
+                    onChange={handleInputChange}
+                    placeholder={t("Numer kontaktowy")}
+                    style={styles.input}
+                />
+                <input
+                    name="ulica"
+                    value={formData.ulica}
+                    onChange={handleInputChange}
+                    placeholder={t("Ulica")}
+                    style={styles.input}
+                />
+                <input
+                    name="numerBudynku"
+                    value={formData.numerBudynku}
+                    onChange={handleInputChange}
+                    placeholder={t("Numer budynku")}
+                    style={styles.input}
+                />
+                <input
+                    name="numerMieszkania"
+                    value={formData.numerMieszkania}
+                    onChange={handleInputChange}
+                    placeholder={t("Numer mieszkania")}
+                    style={styles.input}
+                />
+                <select
+                    name="id_typ_zgloszenia"
+                    value={formData.id_typ_zgloszenia}
+                    onChange={handleInputChange}
+                    style={styles.input}
+                >
+                    <option value="">{t("Wybierz typ zgłoszenia")}</option>
+                    {typyZgloszen.map((typ) => (
+                        <option key={typ.id} value={typ.id}>
+                            {t(typ.nazwa_typu)}
+                        </option>
+                    ))}
+                </select>
+                <select
+                    name="id_klasa_zgloszenia"
+                    value={formData.id_klasa_zgloszenia}
+                    onChange={handleInputChange}
+                    style={styles.input}
+                >
+                    <option value="">{t("Wybierz klasę zgłoszenia")}</option>
+                    {klasyZgloszen.map((klasa) => (
+                        <option key={klasa.id} value={klasa.id}>
+                            {t(klasa.klasa_zgloszenia)}
+                        </option>
+                    ))}
+                </select>
+                <textarea
+                    name="opis_zdarzenia"
+                    value={formData.opis_zdarzenia}
+                    onChange={handleInputChange}
+                    placeholder={t("Opis zdarzenia")}
+                    style={{ ...styles.input, height: "100px" }}
+                />
+                <select
+                    name="policja_id"
+                    value={formData.policja_id}
+                    onChange={handleInputChange}
+                    style={styles.input}
+                >
+                    <option value="">{t("Wybierz jednostkę policji")}</option>
+                    {policjaList.map((p) => (
+                        <option key={p.id} value={p.id}>
+                            {p.numer_Patrolu} - {p.status_Patrolu}
+                        </option>
+                    ))}
+                </select>
+                <select
+                    name="straz_pozarna_id"
+                    value={formData.straz_pozarna_id}
+                    onChange={handleInputChange}
+                    style={styles.input}
+                >
+                    <option value="">{t("Wybierz jednostkę straży pożarnej")}</option>
+                    {strazPozarnaList.map((s) => (
+                        <option key={s.id} value={s.id}>
+                            {s.numer_Wozu} - {s.status_Wozu}
+                        </option>
+                    ))}
+                </select>
+                <select
+                    name="pogotowie_id"
+                    value={formData.pogotowie_id}
+                    onChange={handleInputChange}
+                    style={styles.input}
+                >
+                    <option value="">{t("Wybierz jednostkę pogotowia")}</option>
+                    {pogotowieList.map((p) => (
+                        <option key={p.id} value={p.id}>
+                            {p.numer_Karetki} - {p.status_Karetki}
+                        </option>
+                    ))}
+                </select>
+                <div style={styles.buttonContainer}>
+                    <button
+                        type="button"
+                        onClick={() =>
+                            setFormData({
+                                imie: "",
+                                nazwisko: "",
+                                numerKontaktowy: "",
+                                ulica: "",
+                                numerBudynku: "",
+                                numerMieszkania: "",
+                                id_typ_zgloszenia: "",
+                                id_klasa_zgloszenia: "",
+                                opis_zdarzenia: "",
+                                policja_id: "",
+                                straz_pozarna_id: "",
+                                pogotowie_id: "",
+                            })
+                        }
+                        style={{ ...styles.button, ...styles.cancelButton }}
+                    >
+                        {t("Anuluj")}
+                    </button>
+                    <button
+                        type="submit"
+                        style={{ ...styles.button, ...styles.submitButton }}
+                        disabled={isSubmitting}
+                    >
+                        {t("Zatwierdź")}
+                    </button>
+                </div>
+            </form>
+            {message && (
+                <div style={message.includes(t("pomyślnie")) ? styles.message : styles.errorMessage}>
+                    {message}
+                </div>
+            )}
+        </div>
+    );
 }
 
 export default Form;

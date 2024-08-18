@@ -79,7 +79,7 @@ const List = ({ onSelectZgloszenie }) => {
                     onMouseLeave={() => setHoveredItem(null)}
                     onClick={() => onSelectZgloszenie(zgloszenie)}
                 >
-                    Zgłoszenie ID: {zgloszenie.id}, Ulica: {zgloszenie.ulica}, Data: {new Date(zgloszenie.data_zgloszenia).toLocaleDateString()}
+                    {t("Zgłoszenie ID")}: {zgloszenie.id}, {t("Adres")}: {zgloszenie.ulica} {zgloszenie.numer_budynku}{zgloszenie.numer_mieszkania ? `/${zgloszenie.numer_mieszkania}` : ""}, {t("Data")}: {new Date(zgloszenie.data_zgloszenia).toLocaleDateString()}
                 </div>
             ))}
         </div>

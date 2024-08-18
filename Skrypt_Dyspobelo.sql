@@ -52,7 +52,7 @@ zahashowane_haslo VARCHAR(1000),
 CONSTRAINT PK_dyspozytor PRIMARY KEY (id)
 );
 
-CREATE TABLE Analityk(
+CREATE TABLE analityk(
 id INT,
 numer_analityka INT,
 imie VARCHAR(20),

@@ -3,6 +3,9 @@ INSERT INTO dyspozytor (id, numer_dyspozytora, imie, nazwisko, zahashowane_haslo
 (1, 101, 'Jan', 'Kowalski','$2a$12$.cY4DU1ypSs2wG3.9Wz5Qe5HfvzPdpqmRd4XTBut3rIaMc4rOucqa'),
 (2, 102, 'Anna', 'Nowak', null);
 
+INSERT INTO analityk (Id, Numer_Analityka, Imie, Nazwisko, Zahashowane_Haslo)
+VALUES (1, 123456, 'Jan', 'Kowalski', '$2a$11$1VLNPmpoD9VYJl7V/1HtIOmlMOUyZQtbenkrjCKKF8a9XsPjqXPs2');
+
 -- Wstawianie danych do tabeli dyzur
 INSERT INTO dyzur (id_harmonogramu, data_rozpoczecia_dyzuru, data_zakonczenia_dyzuru) VALUES
 (1, '2023-05-01', '2023-05-02'),

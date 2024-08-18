@@ -28,4 +28,20 @@ public class UserController : ControllerBase
 
         return Ok(user);
     }
+
+    [HttpGet("analityk/{id}")]
+    public async Task<IActionResult> GetAnalitykById(int id)
+    {
+        var analityk = await _context.Analityk
+            .Where(u => u.Id == id)
+            .Select(u => new { u.Imie, u.Nazwisko })
+            .SingleOrDefaultAsync();
+
+        if (analityk == null)
+        {
+            return NotFound(new { message = "Analityk nie został znaleziony" });
+        }
+
+        return Ok(analityk);
+    }
 }

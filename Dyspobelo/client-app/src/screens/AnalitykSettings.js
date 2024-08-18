@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import Menu from "../components/Menu";
-import ChangePassword from "../components/ChangePassword";
+﻿import React, { useState, useEffect } from "react";
+import AnalitykMenu from "../components/AnalitykMenu";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import ChangePasswordAnalityk from "../components/ChangePasswordAnalityk";
 
-const Settings = () => {
+const AnalitykSettings = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const [showChangePassword, setShowChangePassword] = useState(false);
@@ -14,20 +14,20 @@ const Settings = () => {
 
     useEffect(() => {
         const fetchUserData = async () => {
-            const storedUserId = localStorage.getItem('id_dyspozytora');
+            const storedUserId = localStorage.getItem('id_analityk');
             setUserId(storedUserId);
 
             if (storedUserId) {
                 try {
-                    const response = await fetch(`http://localhost:5126/api/user/${storedUserId}`);
+                    const response = await fetch(`http://localhost:5126/api/user/analityk/${storedUserId}`);
                     if (response.ok) {
                         const data = await response.json();
                         setUserInfo({ imie: data.imie, nazwisko: data.nazwisko });
                     } else {
-                        console.error("Failed to fetch user data");
+                        console.error("Failed to fetch analityk data");
                     }
                 } catch (error) {
-                    console.error("Error fetching user data:", error);
+                    console.error("Error fetching analityk data:", error);
                 }
             }
         };
@@ -40,8 +40,8 @@ const Settings = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('id_dyspozytora');
-        navigate('/login');
+        localStorage.removeItem('id_analityk');
+        navigate('/login-analityk');
     };
 
     const styles = {
@@ -110,14 +110,14 @@ const Settings = () => {
     return (
         <div>
             <div>
-                <Menu />
+                <AnalitykMenu />
             </div>
             <div style={styles.container}>
                 <button style={styles.button} onClick={() => setShowChangePassword(!showChangePassword)}>
                     {t('Change Password')}
                     <span>▼</span>
                 </button>
-                {showChangePassword && <ChangePassword />}
+                {showChangePassword && <ChangePasswordAnalityk />}
                 <div style={styles.button} onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}>
                     {t('Language')} <span>▼</span>
                 </div>
@@ -143,4 +143,4 @@ const Settings = () => {
     );
 };
 
-export default Settings;
+export default AnalitykSettings;

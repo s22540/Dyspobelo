@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dyspobelo.backend.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class ApplicationDbContext : DbContext
 {
@@ -14,8 +15,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<Policja> Policja { get; set; }
     public DbSet<StrazPozarna> StrazPozarna { get; set; }
     public DbSet<Pogotowie> Pogotowie { get; set; }
-
     public DbSet<ZgloszenieJednostka> ZgloszenieJednostka { get; set; }
+    public DbSet<Analityk> Analityk { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -35,5 +37,6 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<StrazPozarna>().ToTable("straz_pozarna");
         modelBuilder.Entity<Pogotowie>().ToTable("pogotowie");
         modelBuilder.Entity<ZgloszenieJednostka>().ToTable("zgloszenie_jednostka");
+        modelBuilder.Entity<Analityk>().ToTable("analityk");
     }
 }

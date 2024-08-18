@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using System;
+using Dyspobelo.backend.Models;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -33,5 +34,23 @@ public class AuthController : ControllerBase
         }
         Console.WriteLine("Numer dyspozytora lub hasło nieprawidłowe");
         return BadRequest(new { message = "Numer dyspozytora lub hasło nieprawidłowe" });
+    }
+
+    [HttpPost("login-analityk")]
+    public async Task<IActionResult> LoginAnalityk([FromBody] Analityk model)
+    {
+        Console.WriteLine($"Próba logowania analityka {model.Numer_Analityka}");
+        var analityk = await _context.Analityk
+            .SingleOrDefaultAsync(u => u.Numer_Analityka == model.Numer_Analityka);
+
+        if (analityk != null)
+        {
+            if (BCrypt.Net.BCrypt.Verify(model.Zahashowane_Haslo, analityk.Zahashowane_Haslo))
+            {
+                return Ok(new { id_analityk = analityk.Id });
+            }
+        }
+        Console.WriteLine("Numer analityka lub hasło nieprawidłowe");
+        return BadRequest(new { message = "Numer analityka lub hasło nieprawidłowe" });
     }
 }

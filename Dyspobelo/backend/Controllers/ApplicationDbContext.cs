@@ -29,6 +29,10 @@ public class ApplicationDbContext : DbContext
             .WithMany()
             .HasForeignKey(z => z.id_typ_zgloszenia);
 
+        modelBuilder.Entity<Zgloszenie>()
+       .Property(z => z.numer_mieszkania)
+       .IsRequired(false);
+
         modelBuilder.Entity<Zglaszajacy>().ToTable("zglaszajacy");
         modelBuilder.Entity<TypZgloszenia>().ToTable("typ_zgloszenia");
         modelBuilder.Entity<Klasa_Zgloszenia>().ToTable("klasa_zgloszenia");

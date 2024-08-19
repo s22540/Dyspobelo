@@ -1,4 +1,4 @@
-import {
+import React, {
 	useEffect,
 	useRef,
 	useContext,
@@ -19,15 +19,29 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 	const [destination, setDestination] = useState(null);
 	const lastKnownPosition = useRef(marker.position);
 
-	// Eksponowanie metody handleNewReport na zewnątrz za pomocą useImperativeHandle
 	useImperativeHandle(ref, () => ({
-		handleNewReport: (coordinates) => {
+		handleNewReport: (coordinates, vehicleId) => {
+			console.log(
+				"New coordinates received:",
+				coordinates,
+				"Vehicle ID:",
+				vehicleId
+			);
 			setDestination(coordinates);
 		},
 	}));
 
 	useEffect(() => {
+		console.log(
+			"useEffect triggered. Marker:",
+			marker,
+			"Destination:",
+			destination
+		);
+
 		if (!marker || !map) return;
+
+		console.log("Marker or map updated:", marker, map);
 
 		if (!markerRef.current) {
 			markerRef.current = L.marker(marker.position, {
@@ -41,10 +55,10 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				.addTo(map)
 				.bindPopup(
 					`<div>
-						<h2>Jednostka: ${marker.number}</h2>
-						<p>Status: ${marker.status}</p>
-						<p>Uwagi: ${marker.remarks}</p>
-					</div>`
+                        <h2>Jednostka: ${marker.number}</h2>
+                        <p>Status: ${marker.status}</p>
+                        <p>Uwagi: ${marker.remarks}</p>
+                    </div>`
 				)
 				.on("mouseover", (event) => {
 					const leafletMarker = event.target;
@@ -62,16 +76,8 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 			markerRef.current.setLatLng(marker.position);
 		}
 
-		if (!destination) {
-			const randomEnd = getRandomCoordinates(marker.position);
-			initializeRoute(
-				marker.position,
-				randomEnd,
-				markerRef.current,
-				routingControlRef,
-				map
-			);
-		} else {
+		if (destination) {
+			console.log("Setting new route to destination:", destination);
 			initializeRoute(
 				marker.position,
 				destination,
@@ -82,6 +88,7 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 		}
 
 		return () => {
+			console.log("Cleaning up marker and routing control");
 			if (markerRef.current) {
 				markerRef.current.remove();
 				markerRef.current = null;
@@ -93,18 +100,14 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 		};
 	}, [map, marker, destination]);
 
-	const getRandomCoordinates = (center, range = 500) => {
-		const latOffset = ((Math.random() - 0.5) * range) / 111320;
-		const lngOffset =
-			((Math.random() - 0.5) * range) /
-			((40075000 * Math.cos((center[0] * Math.PI) / 180)) / 360);
-		return [center[0] + latOffset, center[1] + lngOffset];
-	};
-
 	const initializeRoute = (start, end, marker, routingControlRef, map) => {
+		console.log("Initializing route from:", start, "to:", end);
+
 		if (routingControlRef.current) {
 			map.removeControl(routingControlRef.current);
+			console.log("Removed previous routing control.");
 		}
+
 		routingControlRef.current = L.Routing.control({
 			waypoints: [L.latLng(start[0], start[1]), L.latLng(end[0], end[1])],
 			router: L.Routing.mapbox(
@@ -120,12 +123,25 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 		})
 			.on("routesfound", (e) => {
 				const routes = e.routes[0].coordinates;
+				console.log("Route found with", routes.length, "points.");
+				console.log(
+					"Route start:",
+					routes[0],
+					"Route end:",
+					routes[routes.length - 1]
+				);
 				animateMarker(routes, marker, routingControlRef, map);
 			})
+			.on("routingerror", (err) => {
+				console.error("Routing error occurred:", err);
+			})
 			.addTo(map);
+
+		console.log("Route initialization complete.");
 	};
 
 	const animateMarker = (route, marker, routingControlRef, map) => {
+		console.log("Starting animation along route:", route);
 		let i = 0;
 		const interval = setInterval(() => {
 			if (i < route.length) {
@@ -133,17 +149,25 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				lastKnownPosition.current = [lat, lng];
 				marker.setLatLng([lat, lng]);
 				updateMarkerPosition(marker.id, [lat, lng]);
+				console.log(`Marker moved to [${lat}, ${lng}]`);
 				i++;
 			} else {
 				clearInterval(interval);
 
 				const [lat, lng] = lastKnownPosition.current;
 
-				if (!destination) {
-					const newEnd = getRandomCoordinates([lat, lng]);
-					initializeRoute([lat, lng], newEnd, marker, routingControlRef, map);
-				} else {
+				if (destination) {
+					console.log("Reaching destination:", destination);
+					initializeRoute(
+						[lat, lng],
+						destination,
+						marker,
+						routingControlRef,
+						map
+					);
 					setDestination(null);
+				} else {
+					console.log("Destination reached, stopping animation.");
 				}
 			}
 		}, 1000);

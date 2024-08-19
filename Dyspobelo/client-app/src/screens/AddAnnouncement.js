@@ -8,8 +8,18 @@ const AddAnnouncement = ({ children }) => {
 	const movingMarkerRef = useRef(null);
 
 	const handleNewReport = (coordinates, vehicleId) => {
+		console.log(
+			"handleNewReport called with coordinates:",
+			coordinates,
+			"and vehicleId:",
+			vehicleId
+		);
+
 		if (movingMarkerRef.current) {
+			console.log("Calling handleNewReport on MovingMarkerLogic");
 			movingMarkerRef.current.handleNewReport(coordinates, vehicleId);
+		} else {
+			console.log("movingMarkerRef.current is null");
 		}
 	};
 
@@ -37,7 +47,12 @@ const AddAnnouncement = ({ children }) => {
 					<Form onReportSubmit={handleNewReport} />
 				</div>
 				<div style={styles.halfWidth}>
-					<MapComponent ref={movingMarkerRef} />
+					{/* Jeśli dzieci (children) są przekazane, użyj ich, w przeciwnym razie użyj MapComponent */}
+					{children ? (
+						React.cloneElement(children, { ref: movingMarkerRef })
+					) : (
+						<MapComponent ref={movingMarkerRef} />
+					)}
 				</div>
 			</div>
 		</div>

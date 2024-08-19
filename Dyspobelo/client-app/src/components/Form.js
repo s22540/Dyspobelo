@@ -1,6 +1,7 @@
-﻿import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect, onSelectEvent } from "react";
 import L from "leaflet";
 import "leaflet-control-geocoder";
+import axios from "axios";
 
 function Form({ onReportSubmit }) {
 	const [formData, setFormData] = useState({
@@ -89,102 +90,119 @@ function Form({ onReportSubmit }) {
 		}));
 	};
 
-	const convertAddressToCoordinates = (address) => {
-		return new Promise((resolve, reject) => {
-			const geocoder = L.Control.Geocoder.nominatim();
-			geocoder.geocode(address, (results) => {
-				if (results && results.length > 0) {
-					const { center } = results[0];
-					resolve([center.lat, center.lng]);
-				} else {
-					reject(new Error(`No results found for the address: ${address}`));
-				}
-			});
-		});
+	const geocodeAddress = async () => {
+		const city = "Warszawa";
+		const country = "Polska";
+		const address = `${formData.ulica} ${formData.numerBudynku}, ${city}, ${country}`;
+		const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+			address
+		)}&format=json&limit=1`;
+
+		try {
+			console.log(`Geocoding address: ${address}`);
+			const response = await axios.get(url);
+			const data = response.data;
+
+			if (data.length > 0) {
+				const latitude = parseFloat(data[0].lat);
+				const longitude = parseFloat(data[0].lon);
+				console.log(`Geocoded coordinates: [${latitude}, ${longitude}]`);
+				return [latitude, longitude];
+			} else {
+				console.error("Geocoding failed for address:", address);
+				return null;
+			}
+		} catch (error) {
+			console.error("Error in geocoding address:", error);
+			return null;
+		}
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		try {
-			const address = `${formData.ulica} ${formData.numerBudynku}`;
-			const coordinates = await convertAddressToCoordinates(address);
+			console.log("Submitting form data:", formData);
+			const coordinates = await geocodeAddress();
 
 			if (coordinates) {
 				const selectedVehicleId =
 					formData.policja_id ||
 					formData.straz_pozarna_id ||
 					formData.pogotowie_id;
+
+				console.log(`Selected Vehicle ID: ${selectedVehicleId}`);
+
 				if (selectedVehicleId) {
-					// Przekazanie koordynatów i id wybranego pojazdu do komponentu obsługującego ruch
 					onReportSubmit(coordinates, selectedVehicleId);
 				}
-			}
-			// Tworzenie zgłaszającego przed dodaniem zgłoszenia
-			const zglaszajacyResponse = await fetch(
-				"http://localhost:5126/api/Zglaszajacy",
-				{
+
+				const zglaszajacyResponse = await fetch(
+					"http://localhost:5126/api/Zglaszajacy",
+					{
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							imie: formData.imie,
+							nazwisko: formData.nazwisko,
+							numer_kontaktowy: formData.numerKontaktowy,
+						}),
+					}
+				);
+
+				if (!zglaszajacyResponse.ok)
+					throw new Error("Failed to create zgłaszający");
+				const zglaszajacyData = await zglaszajacyResponse.json();
+				console.log("Created zgłaszający:", zglaszajacyData);
+
+				const zgloszenieData = {
+					id_dyspozytor: parseInt(localStorage.getItem("id_dyspozytora")),
+					id_zglaszajacy: zglaszajacyData.id,
+					id_typ_zgloszenia: parseInt(formData.id_typ_zgloszenia),
+					id_klasa_zgloszenia: parseInt(formData.id_klasa_zgloszenia),
+					ulica: formData.ulica,
+					numer_budynku: parseInt(formData.numerBudynku),
+					numer_mieszkania: parseInt(formData.numerMieszkania),
+					opis_zdarzenia: formData.opis_zdarzenia,
+					data_zgloszenia: new Date().toISOString(),
+					jednostka: {
+						policja_id: formData.policja_id
+							? parseInt(formData.policja_id)
+							: null,
+						straz_pozarna_id: formData.straz_pozarna_id
+							? parseInt(formData.straz_pozarna_id)
+							: null,
+						pogotowie_id: formData.pogotowie_id
+							? parseInt(formData.pogotowie_id)
+							: null,
+					},
+					koordynaty: {
+						lat: coordinates[0],
+						lon: coordinates[1],
+					},
+				};
+
+				const response = await fetch("http://localhost:5126/api/Zgloszenia", {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						imie: formData.imie,
-						nazwisko: formData.nazwisko,
-						numer_kontaktowy: formData.numerKontaktowy,
-					}),
-				}
-			);
+					body: JSON.stringify(zgloszenieData),
+				});
 
-			if (!zglaszajacyResponse.ok)
-				throw new Error("Failed to create zgłaszający");
-			const zglaszajacyData = await zglaszajacyResponse.json();
+				if (!response.ok) throw new Error("Failed to submit the form");
+				const responseData = await response.json();
+				console.log("Submitted zgłoszenie:", responseData);
 
-			const zgloszenieData = {
-				id_dyspozytor: parseInt(localStorage.getItem("id_dyspozytora")),
-				id_zglaszajacy: zglaszajacyData.id,
-				id_typ_zgloszenia: parseInt(formData.id_typ_zgloszenia),
-				id_klasa_zgloszenia: parseInt(formData.id_klasa_zgloszenia),
-				ulica: formData.ulica,
-				numer_budynku: parseInt(formData.numerBudynku),
-				numer_mieszkania: parseInt(formData.numerMieszkania),
-				opis_zdarzenia: formData.opis_zdarzenia,
-				data_zgloszenia: new Date().toISOString(),
-				jednostka: {
-					policja_id: formData.policja_id
-						? parseInt(formData.policja_id)
-						: null,
-					straz_pozarna_id: formData.straz_pozarna_id
-						? parseInt(formData.straz_pozarna_id)
-						: null,
-					pogotowie_id: formData.pogotowie_id
-						? parseInt(formData.pogotowie_id)
-						: null,
-				},
-				// koordynaty: {
-				// 	lat: parseFloat(lat),
-				// 	lon: parseFloat(lon),
-				// },
-			};
+				await fetch(
+					`http://localhost:5126/api/Zglaszajacy/${zglaszajacyData.id}`,
+					{
+						method: "PUT",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({ id_zgloszenia: responseData.id }),
+					}
+				);
 
-			const response = await fetch("http://localhost:5126/api/Zgloszenia", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(zgloszenieData),
-			});
-
-			if (!response.ok) throw new Error("Failed to submit the form");
-			const responseData = await response.json();
-
-			// Update zgłaszający z nowym zgłoszeniem id
-			await fetch(
-				`http://localhost:5126/api/Zglaszajacy/${zglaszajacyData.id}`,
-				{
-					method: "PUT",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ id_zgloszenia: responseData.id }),
-				}
-			);
-
-			console.log("Submit successful:", responseData);
+				console.log("Updated zgłaszający with zgłoszenie ID");
+			}
 		} catch (error) {
 			console.error("Error submitting form:", error);
 		}

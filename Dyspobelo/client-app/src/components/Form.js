@@ -19,6 +19,13 @@ function Form() {
         pogotowie_id: "",
     });
 
+    const [typyZgloszen, setTypyZgloszen] = useState([]);
+    const [klasyZgloszen, setKlasyZgloszen] = useState([]);
+    const [policjaList, setPolicjaList] = useState([]);
+    const [strazPozarnaList, setStrazPozarnaList] = useState([]);
+    const [pogotowieList, setPogotowieList] = useState([]);
+    const [message, setMessage] = useState(""); // Nowy stan dla komunikatów
+
     const resetForm = () => {
         setFormData({
             imie: "",
@@ -35,12 +42,6 @@ function Form() {
             pogotowie_id: "",
         });
     };
-
-    const [typyZgloszen, setTypyZgloszen] = useState([]);
-    const [klasyZgloszen, setKlasyZgloszen] = useState([]);
-    const [policjaList, setPolicjaList] = useState([]);
-    const [strazPozarnaList, setStrazPozarnaList] = useState([]);
-    const [pogotowieList, setPogotowieList] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -154,9 +155,11 @@ function Form() {
                 }
             );
 
-            console.log("Submit successful:", responseData);
+            resetForm(); // Resetowanie formularza
+            setMessage("Zgłoszenie zostało pomyślnie dodane!"); // Komunikat o sukcesie
         } catch (error) {
             console.error("Error submitting form:", error);
+            setMessage(`Błąd: ${error.message}`); // Komunikat o błędzie
         }
     };
 
@@ -196,6 +199,15 @@ function Form() {
         },
         cancelButton: {
             backgroundColor: "#f44336",
+        },
+        message: {
+            marginTop: "20px",
+            padding: "10px",
+            borderRadius: "5px",
+            textAlign: "center",
+            backgroundColor: message.includes("Błąd") ? "#f8d7da" : "#d4edda",
+            color: message.includes("Błąd") ? "#721c24" : "#155724",
+            border: message.includes("Błąd") ? "1px solid #f5c6cb" : "1px solid #c3e6cb",
         },
     };
 
@@ -254,7 +266,7 @@ function Form() {
                     <option value="">{t("Wybierz typ zgłoszenia")}</option>
                     {typyZgloszen.map((typ) => (
                         <option key={typ.id} value={typ.id}>
-                            {t(typ.nazwa_typu)} {/* Tłumaczenie typu zgłoszenia */}
+                            {t(typ.nazwa_typu)}
                         </option>
                     ))}
                 </select>
@@ -267,7 +279,7 @@ function Form() {
                     <option value="">{t("Wybierz klasę zgłoszenia")}</option>
                     {klasyZgloszen.map((klasa) => (
                         <option key={klasa.id} value={klasa.id}>
-                            {t(klasa.klasa_zgloszenia)} {/* Tłumaczenie klasy zgłoszenia */}
+                            {t(klasa.klasa_zgloszenia)}
                         </option>
                     ))}
                 </select>
@@ -333,6 +345,7 @@ function Form() {
                     </button>
                 </div>
             </form>
+            {message && <div style={styles.message}>{message}</div>}
         </div>
     );
 }

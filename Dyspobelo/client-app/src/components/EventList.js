@@ -114,7 +114,7 @@ const EventList = ({ onSelectEvent }) => {
                         <strong>{t("ID")}:</strong> {event.id}
                     </div>
                     <div>
-                        <strong>{t("Adres")}:</strong> {event.ulica} {event.numer_budynku}/{event.numer_mieszkania}
+                        <strong>{t("Adres")}:</strong> {`${event.ulica} ${event.numer_budynku}${event.numer_mieszkania ? '/' + event.numer_mieszkania : ''}`}
                     </div>
                     <div>
                         <strong>{t("Data zgłoszenia")}:</strong> {new Date(event.data_zgloszenia).toLocaleDateString()}

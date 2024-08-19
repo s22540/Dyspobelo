@@ -46,8 +46,8 @@ const SimpleMap = ({ markers }) => {
                         <Popup>
                             <div>
                                 <strong>{t("ID")}:</strong> {markers[0].id}<br />
-                                <strong>{t("Ulica")}:</strong> {markers[0].ulica}<br />
-                                <strong>{t("Data")}:</strong> {new Date(markers[0].data).toLocaleDateString()}
+                                <strong>{t("Adres")}:</strong> {`${markers[0].ulica} ${markers[0].numerBudynku}${markers[0].numerMieszkania ? '/' + markers[0].numerMieszkania : ''}`}<br />
+                                <strong>{t("Data zgłoszenia")}:</strong> {new Date(markers[0].data).toLocaleDateString()}
                             </div>
                         </Popup>
                     </Marker>

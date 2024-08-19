@@ -24,7 +24,8 @@ function Form() {
     const [policjaList, setPolicjaList] = useState([]);
     const [strazPozarnaList, setStrazPozarnaList] = useState([]);
     const [pogotowieList, setPogotowieList] = useState([]);
-    const [message, setMessage] = useState(""); // Nowy stan dla komunikatów
+    const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState("");
 
     const resetForm = () => {
         setFormData({
@@ -155,12 +156,18 @@ function Form() {
                 }
             );
 
-            resetForm(); // Resetowanie formularza
-            setMessage("Zgłoszenie zostało pomyślnie dodane!"); // Komunikat o sukcesie
+            resetForm();
+            setMessage("Zgłoszenie zostało pomyślnie dodane!");
+            setMessageType("success");
         } catch (error) {
             console.error("Error submitting form:", error);
-            setMessage(`Błąd: ${error.message}`); // Komunikat o błędzie
+            setMessage(`Błąd: ${error.message}`); 
+            setMessageType("error"); 
         }
+
+        setTimeout(() => {
+            setMessage("");
+        }, 3000);
     };
 
     const styles = {
@@ -200,14 +207,19 @@ function Form() {
         cancelButton: {
             backgroundColor: "#f44336",
         },
-        message: {
-            marginTop: "20px",
-            padding: "10px",
-            borderRadius: "5px",
+        messagePopup: {
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: messageType === "error" ? "rgba(248, 215, 218, 0.9)" : "rgba(212, 237, 218, 0.9)",
+            color: messageType === "error" ? "#721c24" : "#155724",
+            padding: "15px 30px",
+            borderRadius: "8px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+            zIndex: 9999,
             textAlign: "center",
-            backgroundColor: message.includes("Błąd") ? "#f8d7da" : "#d4edda",
-            color: message.includes("Błąd") ? "#721c24" : "#155724",
-            border: message.includes("Błąd") ? "1px solid #f5c6cb" : "1px solid #c3e6cb",
+            border: messageType === "error" ? "1px solid rgba(245, 198, 203, 0.9)" : "1px solid rgba(195, 230, 203, 0.9)",
         },
     };
 
@@ -345,7 +357,11 @@ function Form() {
                     </button>
                 </div>
             </form>
-            {message && <div style={styles.message}>{message}</div>}
+            {message && (
+                <div style={styles.messagePopup}>
+                    {message}
+                </div>
+            )}
         </div>
     );
 }

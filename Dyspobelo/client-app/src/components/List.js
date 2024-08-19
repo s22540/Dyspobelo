@@ -33,10 +33,32 @@ const List = ({ onSelectZgloszenie }) => {
     const styles = {
         container: {
             width: "95%",
-            padding: "20px",
+            height: "570px",
+            padding: "0 20px 20px 20px",
             backgroundColor: "#f2f2f2",
             borderRadius: "8px",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+            overflowY: "auto",
+            position: "relative",
+        },
+        searchContainer: {
+            position: "sticky",
+            top: 0,
+            backgroundColor: "#f2f2f2",
+            zIndex: 100,
+            padding: "10px 0",
+            marginBottom: "10px",
+            width: "100%",
+        },
+        searchInput: {
+            width: "97.5%",
+            padding: "10px",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+            margin: "0 auto",
+            display: "block",
+            backgroundColor: "#ffffff",
+            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
         },
         item: {
             padding: "10px",
@@ -50,26 +72,21 @@ const List = ({ onSelectZgloszenie }) => {
         itemHover: {
             backgroundColor: "#e9ecef",
         },
-        searchInput: {
-            width: "75%",
-            padding: "10px",
-            marginBottom: "10px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-        },
     };
 
     const [hoveredItem, setHoveredItem] = useState(null);
 
     return (
         <div style={styles.container}>
-            <input
-                type="text"
-                placeholder={t("Szukaj po ID lub ulicy...")}
-                value={searchTerm}
-                onChange={handleSearchChange}
-                style={styles.searchInput}
-            />
+            <div style={styles.searchContainer}>
+                <input
+                    type="text"
+                    placeholder={t("Szukaj po ID lub ulicy...")}
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    style={styles.searchInput}
+                />
+            </div>
             {filteredZgloszenia.map((zgloszenie, index) => (
                 <div
                     key={zgloszenie.id}
@@ -81,10 +98,9 @@ const List = ({ onSelectZgloszenie }) => {
                     onMouseLeave={() => setHoveredItem(null)}
                     onClick={() => onSelectZgloszenie(zgloszenie)}
                 >
-                    {t("Zgłoszenie ID")}: {zgloszenie.id},
-                    {t("Adres")}: {zgloszenie.ulica} {zgloszenie.numer_budynku}
-                    {zgloszenie.numer_mieszkania ? `/${zgloszenie.numer_mieszkania}` : ""},
-                    {t("Data")}: {new Date(zgloszenie.data_zgloszenia).toLocaleDateString()}
+                    <div><strong>{t("Zgłoszenie ID")}:</strong> {zgloszenie.id}</div>
+                    <div><strong>{t("Adres")}:</strong> {zgloszenie.ulica} {zgloszenie.numer_budynku}{zgloszenie.numer_mieszkania ? `/${zgloszenie.numer_mieszkania}` : ""}</div>
+                    <div><strong>{t("Data")}:</strong> {new Date(zgloszenie.data_zgloszenia).toLocaleDateString()}</div>
                 </div>
             ))}
         </div>

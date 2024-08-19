@@ -33,6 +33,9 @@ public class ApplicationDbContext : DbContext
        .Property(z => z.numer_mieszkania)
        .IsRequired(false);
 
+        modelBuilder.Entity<RaportZgloszenDto>().HasNoKey();
+        modelBuilder.Entity<RaportUlicDTO>().HasNoKey();
+
         modelBuilder.Entity<Zglaszajacy>().ToTable("zglaszajacy");
         modelBuilder.Entity<TypZgloszenia>().ToTable("typ_zgloszenia");
         modelBuilder.Entity<Klasa_Zgloszenia>().ToTable("klasa_zgloszenia");

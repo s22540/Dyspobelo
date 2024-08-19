@@ -26,6 +26,8 @@ const StyledTitle = styled("h1", {
     color: "#000",
     fontSize: "32px",
     margin: "0 0 24px",
+    textAlign: "center",
+    width: "100%",
 });
 
 const StyledLabel = styled(Label.Root, {
@@ -35,6 +37,8 @@ const StyledLabel = styled(Label.Root, {
     color: "#000",
     lineHeight: "25px",
     paddingRight: "1rem",
+    width: "100px",
+    textAlign: "right",
 });
 
 const StyledInputContainer = styled("div", {
@@ -44,12 +48,14 @@ const StyledInputContainer = styled("div", {
     "&:not(:last-child)": {
         marginRight: "12px",
     },
+    justifyContent: "space-between",
+    width: "100%",
 });
 
 const StyledInput = styled("input", {
     all: "unset",
     display: "block",
-    width: "20rem",
+    width: "calc(100% - 110px)",
     boxSizing: "border-box",
     padding: "10px",
     borderRadius: "4px",
@@ -60,7 +66,7 @@ const StyledInput = styled("input", {
 const StyledButton = styled("button", {
     all: "unset",
     padding: "10px 20px",
-    width: "60%",
+    width: "auto",
     borderRadius: "4px",
     backgroundColor: "#000",
     color: "white",
@@ -75,7 +81,7 @@ const StyledButton = styled("button", {
 const StyledSecondaryButton = styled("button", {
     all: "unset",
     padding: "10px 20px",
-    width: "60%",
+    width: "auto",
     borderRadius: "4px",
     backgroundColor: "#000",
     color: "white",
@@ -142,7 +148,7 @@ const LoginScreen = () => {
                     <StyledInput
                         id="numerDyspozytora"
                         name="numerDyspozytora"
-                        placeholder={t("numerDyspozytora")}
+                        placeholder={t("Numer dyspozytora")}
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />

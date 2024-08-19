@@ -15,6 +15,8 @@ import Layout from "./components/Layout";
 import LoginScreenAnalityk from "./screens/LoginScreenAnalityk";
 import MainAnalityk from "./screens/MainAnalityk";
 import AnalitykSettings from "./screens/AnalitykSettings";
+import RaportZgloszen from "./components/RaportZgloszen";
+import RaportUlic from "./components/RaportUlic";
 
 function App() {
 
@@ -33,6 +35,8 @@ function App() {
 							<Route path="/settings" element={<Settings />} />
 							<Route path="/main-analityk" element={<MainAnalityk />} />
 							<Route path="/analityk-settings" element={<AnalitykSettings />} />
+							<Route path="/wygeneruj-raport" element={<RaportZgloszen />} />
+							<Route path="/wygeneruj-raport-ulic" element={<RaportUlic />} />
 							<Route path="/" element={<Navigate to="/login" replace />} />
 						</Routes>
 					</Layout>

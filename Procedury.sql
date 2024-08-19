@@ -31,3 +31,49 @@ BEGIN
 END$$
 DELIMITER ;
 
+
+/*Procedura do generowania raportow*/
+
+DELIMITER //
+
+CREATE PROCEDURE GenerujRaportZgloszen()
+BEGIN
+    SELECT 
+        t.nazwa_typu AS TypZgloszenia,
+        YEAR(z.data_zgloszenia) AS Rok,
+        MONTH(z.data_zgloszenia) AS Miesiac,
+        COUNT(*) AS LiczbaZgloszen
+    FROM 
+        zgloszenie z
+    JOIN 
+        typ_zgloszenia t ON z.id_typ_zgloszenia = t.id
+    GROUP BY 
+        t.nazwa_typu, 
+        YEAR(z.data_zgloszenia), 
+        MONTH(z.data_zgloszenia)
+    ORDER BY 
+        Rok, Miesiac, TypZgloszenia;
+END //
+
+DELIMITER ;
+
+/*Procedura do generowania raportow z ulicami*/
+DELIMITER //
+
+CREATE PROCEDURE GenerujRaportUlic()
+BEGIN
+    SELECT 
+        z.ulica AS Ulica,
+        t.nazwa_typu AS TypZgloszenia,
+        COUNT(*) AS LiczbaZgloszen
+    FROM 
+        zgloszenie z
+    JOIN 
+        typ_zgloszenia t ON z.id_typ_zgloszenia = t.id
+    GROUP BY 
+        z.ulica, t.nazwa_typu
+    ORDER BY 
+        LiczbaZgloszen DESC;
+END //
+
+DELIMITER ;

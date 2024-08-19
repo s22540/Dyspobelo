@@ -45,7 +45,7 @@ const Layout = ({ children }) => {
 		},
 	};
 
-	const hideMapOnPaths = ["/login", "/settings", "/edit-announcement", "/show-announcement", "/login-analityk", "/main-analityk","/analityk-settings"];
+	const hideMapOnPaths = ["/login", "/settings", "/edit-announcement", "/show-announcement", "/login-analityk", "/main-analityk", "/analityk-settings", "/wygeneruj-raport","/wygeneruj-raport-ulic"];
 	const shouldHideMap = hideMapOnPaths.includes(location.pathname);
 	const currentPathStyle = pathStyles[location.pathname] || pathStyles["/main"];
 

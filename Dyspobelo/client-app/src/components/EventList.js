@@ -62,10 +62,32 @@ const EventList = ({ onSelectEvent }) => {
     const styles = {
         container: {
             width: "95%",
-            padding: "20px",
+            height: "570px",
+            padding: "0 20px 20px 20px",
             backgroundColor: "#f2f2f2",
             borderRadius: "8px",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+            overflowY: "auto",
+            position: "relative",
+        },
+        searchContainer: {
+            position: "sticky",
+            top: 0,
+            backgroundColor: "#f2f2f2",
+            zIndex: 100,
+            padding: "10px 0",
+            marginBottom: "10px",
+            width: "100%",
+        },
+        searchInput: {
+            width: "97.5%",
+            padding: "10px",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+            margin: "0 auto",
+            display: "block",
+            backgroundColor: "#ffffff",
+            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
         },
         item: {
             padding: "10px",
@@ -79,26 +101,21 @@ const EventList = ({ onSelectEvent }) => {
         itemHover: {
             backgroundColor: "#e9ecef",
         },
-        searchInput: {
-            width: "75%",
-            padding: "10px",
-            marginBottom: "10px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-        },
     };
 
     const [hoveredItem, setHoveredItem] = useState(null);
 
     return (
         <div style={styles.container}>
-            <input
-                type="text"
-                placeholder={t("Szukaj po ID, ulicy, lub numerze budynku...")}
-                value={searchTerm}
-                onChange={handleSearchChange}
-                style={styles.searchInput}
-            />
+            <div style={styles.searchContainer}>
+                <input
+                    type="text"
+                    placeholder={t("Szukaj po ID, ulicy, lub numerze budynku...")}
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    style={styles.searchInput}
+                />
+            </div>
             {filteredEvents.map((event, index) => (
                 <div
                     key={event.id}

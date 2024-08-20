@@ -179,13 +179,13 @@ function Form({ onReportSubmit }) {
 					data_zgloszenia: new Date().toISOString(),
 					jednostka: {
 						policja_id: formData.policja_id
-							? parseInt(formData.policja_id)
+							? `policja-${parseInt(formData.policja_id)}`
 							: null,
 						straz_pozarna_id: formData.straz_pozarna_id
-							? parseInt(formData.straz_pozarna_id)
+							? `straz-${parseInt(formData.straz_pozarna_id)}`
 							: null,
 						pogotowie_id: formData.pogotowie_id
-							? parseInt(formData.pogotowie_id)
+							? `pogotowie-${parseInt(formData.pogotowie_id)}`
 							: null,
 					},
 					koordynaty: {

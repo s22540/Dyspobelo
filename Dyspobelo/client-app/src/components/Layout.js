@@ -50,6 +50,7 @@ const Layout = ({ children }) => {
 		"/settings",
 		"/edit-announcement",
 		"/show-announcement",
+		"/add-announcement",
 		"/login-analityk",
 		"/main-analityk",
 		"/analityk-settings",

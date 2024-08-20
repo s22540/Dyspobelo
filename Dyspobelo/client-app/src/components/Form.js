@@ -112,7 +112,7 @@ function Form() {
             );
 
             if (!zglaszajacyResponse.ok)
-                throw new Error("Failed to create zgłaszający");
+                throw new Error("Problem z utworzeniem zgłaszającego");
             const zglaszajacyData = await zglaszajacyResponse.json();
 
             const zgloszenieData = {

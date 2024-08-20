@@ -24,6 +24,8 @@ function EditForm({ zgloszenie }) {
 
     const [typyZgloszen, setTypyZgloszen] = useState([]);
     const [klasyZgloszen, setKlasyZgloszen] = useState([]);
+    const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -82,7 +84,6 @@ function EditForm({ zgloszenie }) {
         e.preventDefault();
 
         try {
-            // Aktualizacja zgłaszającego
             const zglaszajacyPayload = {
                 id: zgloszenie.id_zglaszajacy,
                 imie: formData.imie,
@@ -100,7 +101,6 @@ function EditForm({ zgloszenie }) {
                 }
             );
 
-            // Aktualizacja zgłoszenia
             const zgloszeniePayload = {
                 id: formData.id,
                 id_dyspozytor: formData.id_dyspozytor,
@@ -123,11 +123,17 @@ function EditForm({ zgloszenie }) {
                 }
             );
 
-            alert(t("Update successful!"));
+            setMessage("Zgłoszenie zostało pomyślnie zaktualizowane!");
+            setMessageType("success");
         } catch (error) {
             console.error("Failed to update:", error);
-            alert(t("Update failed!"));
+            setMessage(`Błąd: ${error.message}`);
+            setMessageType("error");
         }
+
+        setTimeout(() => {
+            setMessage("");
+        }, 3000);
     };
 
     const styles = {
@@ -165,6 +171,20 @@ function EditForm({ zgloszenie }) {
         },
         cancelButton: {
             backgroundColor: "#f44336",
+        },
+        messagePopup: {
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: messageType === "error" ? "rgba(248, 215, 218, 0.9)" : "rgba(212, 237, 218, 0.9)",
+            color: messageType === "error" ? "#721c24" : "#155724",
+            padding: "15px 30px",
+            borderRadius: "8px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+            zIndex: 9999,
+            textAlign: "center",
+            border: messageType === "error" ? "1px solid rgba(245, 198, 203, 0.9)" : "1px solid rgba(195, 230, 203, 0.9)",
         },
     };
 
@@ -256,6 +276,11 @@ function EditForm({ zgloszenie }) {
                     </button>
                 </div>
             </form>
+            {message && (
+                <div style={styles.messagePopup}>
+                    {message}
+                </div>
+            )}
         </div>
     );
 }

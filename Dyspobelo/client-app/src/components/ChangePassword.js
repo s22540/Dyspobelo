@@ -6,12 +6,22 @@ const ChangePassword = () => {
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState("");
+
+    const resetForm = () => {
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+    };
 
     const handleChangePassword = async (e) => {
         e.preventDefault();
 
         if (newPassword !== confirmPassword) {
-            alert(t("Nowe hasło i potwierdzenie hasła muszą być takie same."));
+            setMessage(t("Nowe hasło i potwierdzenie hasła muszą być takie same."));
+            setMessageType("error");
+            setTimeout(() => setMessage(""), 3000);
             return;
         }
 
@@ -31,10 +41,15 @@ const ChangePassword = () => {
         });
 
         if (response.ok) {
-            alert(t("Hasło zostało zmienione."));
+            setMessage(t("Hasło zostało zmienione."));
+            setMessageType("success");
+            resetForm();
         } else {
-            alert(t("Nie udało się zmienić hasła."));
+            setMessage(t("Nie udało się zmienić hasła."));
+            setMessageType("error");
         }
+
+        setTimeout(() => setMessage(""), 3000);
     };
 
     const styles = {
@@ -80,6 +95,20 @@ const ChangePassword = () => {
             flexDirection: "column",
             gap: "5px",
         },
+        messagePopup: {
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: messageType === "error" ? "rgba(248, 215, 218, 0.9)" : "rgba(212, 237, 218, 0.9)",
+            color: messageType === "error" ? "#721c24" : "#155724",
+            padding: "15px 30px",
+            borderRadius: "8px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+            zIndex: 9999,
+            textAlign: "center",
+            border: messageType === "error" ? "1px solid rgba(245, 198, 203, 0.9)" : "1px solid rgba(195, 230, 203, 0.9)",
+        },
     };
 
     return (
@@ -114,6 +143,11 @@ const ChangePassword = () => {
                 </div>
                 <button type="submit" style={styles.button}>{t('Zatwierdź')}</button>
             </form>
+            {message && (
+                <div style={styles.messagePopup}>
+                    {message}
+                </div>
+            )}
         </div>
     );
 };

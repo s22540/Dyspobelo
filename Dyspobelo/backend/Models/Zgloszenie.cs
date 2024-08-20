@@ -22,7 +22,4 @@ public class Zgloszenie
 
     [NotMapped]
     public ZgloszenieJednostka Jednostka { get; set; }
-
-    [ForeignKey("Id_Zglaszajacy")]
-    public Zglaszajacy Zglaszajacy { get; set; }
 }

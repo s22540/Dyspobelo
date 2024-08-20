@@ -17,6 +17,7 @@
     "express": "^4.19.2",
     "i18next": "^23.12.2",
     "leaflet": "^1.9.4",
+    "leaflet-control-geocoder": "^2.4.0",
     "leaflet-realtime": "^2.2.0",
     "leaflet-routing-machine": "^3.2.12",
     "leaflet.sync": "^0.2.4",

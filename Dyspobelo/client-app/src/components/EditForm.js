@@ -14,7 +14,7 @@ function EditForm({ zgloszenie }) {
         id_zgloszenie_jednostka: zgloszenie?.id_zgloszenie_jednostka ?? 0,
         ulica: zgloszenie?.ulica ?? "",
         numer_budynku: zgloszenie?.numer_budynku.toString() ?? "",
-        numer_mieszkania: zgloszenie?.numer_mieszkania.toString() ?? "",
+        numer_mieszkania: zgloszenie?.numer_mieszkania ? zgloszenie.numer_mieszkania.toString() : "",
         data_zgloszenia: zgloszenie?.data_zgloszenia ?? new Date().toISOString().substring(0, 10),
         opis_zdarzenia: zgloszenie?.opis_zdarzenia ?? "",
         imie: "",
@@ -48,7 +48,7 @@ function EditForm({ zgloszenie }) {
                     ...formData,
                     ...zgloszenie,
                     numer_budynku: zgloszenie.numer_budynku.toString(),
-                    numer_mieszkania: zgloszenie.numer_mieszkania.toString(),
+                    numer_mieszkania: zgloszenie?.numer_mieszkania ? zgloszenie.numer_mieszkania.toString() : "",
                     data_zgloszenia: new Date(zgloszenie.data_zgloszenia).toISOString().substring(0, 10),
                 });
 

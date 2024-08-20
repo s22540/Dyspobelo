@@ -1,7 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const AnalitykMenu = () => {
+    const { t } = useTranslation();
     const linkStyle = {
         display: "block",
         padding: "10px",
@@ -36,7 +38,7 @@ const AnalitykMenu = () => {
                                 isActive ? { ...linkStyle, ...activeStyle } : linkStyle
                             }
                         >
-                            Wygeneruj raport zgłoszeń
+                            {t('Wygeneruj raport zgłoszeń')}
                         </NavLink>
                     </li>
                     <li>
@@ -46,7 +48,7 @@ const AnalitykMenu = () => {
                                 isActive ? { ...linkStyle, ...activeStyle } : linkStyle
                             }
                         >
-                            Wygeneruj raport ulic
+                            {t('Wygeneruj raport ulic')}
                         </NavLink>
                     </li>
                     <li>
@@ -56,7 +58,7 @@ const AnalitykMenu = () => {
                                 isActive ? { ...linkStyle, ...activeStyle } : linkStyle
                             }
                         >
-                            Ustawienia
+                            {t('Ustawienia')}
                         </NavLink>
                     </li>
                 </ul>

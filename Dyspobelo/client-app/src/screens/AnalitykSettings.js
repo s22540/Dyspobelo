@@ -24,10 +24,10 @@ const AnalitykSettings = () => {
                         const data = await response.json();
                         setUserInfo({ imie: data.imie, nazwisko: data.nazwisko });
                     } else {
-                        console.error("Failed to fetch analityk data");
+                        console.error("Nie udało się pobrać danych użytkownika");
                     }
                 } catch (error) {
-                    console.error("Error fetching analityk data:", error);
+                    console.error("Błąd podczas pobierania danych użytkownika:", error);
                 }
             }
         };
@@ -114,12 +114,12 @@ const AnalitykSettings = () => {
             </div>
             <div style={styles.container}>
                 <button style={styles.button} onClick={() => setShowChangePassword(!showChangePassword)}>
-                    {t('Change Password')}
+                    {t('Zmień hasło')}
                     <span>▼</span>
                 </button>
                 {showChangePassword && <ChangePasswordAnalityk />}
                 <div style={styles.button} onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}>
-                    {t('Language')} <span>▼</span>
+                    {t('Język')} <span>▼</span>
                 </div>
                 {showLanguageDropdown && (
                     <div style={styles.dropdownMenu}>
@@ -127,16 +127,12 @@ const AnalitykSettings = () => {
                         <div style={styles.dropdownItem} onClick={() => changeLanguage('pl')}>Polski</div>
                     </div>
                 )}
-                <div style={styles.darkModeOption}>
-                    {t('Dark Mode')}
-                </div>
-
                 <ul style={styles.userInfoList}>
                     <li style={styles.userInfoItem}>
-                        {t('User')}
-                        <span>{userInfo.imie && userInfo.nazwisko ? `${userInfo.imie} ${userInfo.nazwisko}` : t('User user')}</span>
+                        {t('Użytkownik')}
+                        <span>{userInfo.imie && userInfo.nazwisko ? `${userInfo.imie} ${userInfo.nazwisko}` : t('Użytkownik')}</span>
                     </li>
-                    <li style={styles.logoutLink} onClick={handleLogout}>{t('Logout')}</li>
+                    <li style={styles.logoutLink} onClick={handleLogout}>{t('Wyloguj')}</li>
                 </ul>
             </div>
         </div>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import * as Label from "@radix-ui/react-label";
 import { styled } from "@stitches/react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const StyledContainer = styled("div", {
     display: "flex",
@@ -97,6 +98,7 @@ const StyledSecondaryButton = styled("button", {
 });
 
 const LoginScreenAnalityk = () => {
+    const { t } = useTranslation();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -120,15 +122,15 @@ const LoginScreenAnalityk = () => {
                 const data = await response.json();
                 console.log("Login successful, id_analityk received:", data);
                 localStorage.setItem('id_analityk', data.id_analityk);
-                navigate("/main-analityk");
+                navigate("/wygeneruj-raport");
             } else {
                 const errorText = await response.text();
                 console.error("Login failed:", errorText);
-                alert("Login failed: " + errorText);
+                alert(t("Login failed: ") + errorText);
             }
         } catch (error) {
             console.error("Login error:", error);
-            alert("Error logging in: " + error.message);
+            alert(t("Error logging in: ") + error.message);
         }
     };
 
@@ -139,21 +141,21 @@ const LoginScreenAnalityk = () => {
     return (
         <StyledContainer>
             <StyledForm onSubmit={handleLogin}>
-                <StyledTitle>Login analityk</StyledTitle>
+                <StyledTitle>{t("Login analityk")}</StyledTitle>
 
                 <StyledInputContainer>
-                    <StyledLabel htmlFor="numerAnalityka">Login</StyledLabel>
+                    <StyledLabel htmlFor="numerAnalityka">{t("Login")}</StyledLabel>
                     <StyledInput
                         id="numerAnalityka"
                         name="numerAnalityka"
-                        placeholder="Numer analityka"
+                        placeholder={t("Numer analityka")}
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </StyledInputContainer>
 
                 <StyledInputContainer>
-                    <StyledLabel htmlFor="password">Password</StyledLabel>
+                    <StyledLabel htmlFor="password">{t("Hasło")}</StyledLabel>
                     <StyledInput
                         id="password"
                         name="password"
@@ -164,10 +166,10 @@ const LoginScreenAnalityk = () => {
                     />
                 </StyledInputContainer>
 
-                <StyledButton type="submit">Zaloguj</StyledButton>
+                <StyledButton type="submit">{t("Zaloguj")}</StyledButton>
             </StyledForm>
 
-            <StyledSecondaryButton onClick={handleBackToLogin}>Zaloguj jako dyspozytor</StyledSecondaryButton>
+            <StyledSecondaryButton onClick={handleBackToLogin}>{t("Zaloguj jako dyspozytor")}</StyledSecondaryButton>
         </StyledContainer>
     );
 };

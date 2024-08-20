@@ -141,7 +141,7 @@ const LoginScreen = () => {
     return (
         <StyledContainer>
             <StyledForm onSubmit={handleLogin}>
-                <StyledTitle>{t("Login")}</StyledTitle>
+                <StyledTitle>{t("Login dyspozytor")}</StyledTitle>
 
                 <StyledInputContainer>
                     <StyledLabel htmlFor="numerDyspozytora">{t("Login")}</StyledLabel>
@@ -155,7 +155,7 @@ const LoginScreen = () => {
                 </StyledInputContainer>
 
                 <StyledInputContainer>
-                    <StyledLabel htmlFor="password">{t("Password")}</StyledLabel>
+                    <StyledLabel htmlFor="password">{t("Hasło")}</StyledLabel>
                     <StyledInput
                         id="password"
                         name="password"
@@ -166,10 +166,10 @@ const LoginScreen = () => {
                     />
                 </StyledInputContainer>
 
-                <StyledButton type="submit">{t("Login")}</StyledButton>
+                <StyledButton type="submit">{t("Zaloguj")}</StyledButton>
             </StyledForm>
 
-            <StyledSecondaryButton onClick={handleLoginAsAnalityk}>{t("Login as Analyst")}</StyledSecondaryButton>
+            <StyledSecondaryButton onClick={handleLoginAsAnalityk}>{t("Zaloguj jako analityk")}</StyledSecondaryButton>
         </StyledContainer>
     );
 };

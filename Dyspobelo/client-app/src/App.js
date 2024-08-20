@@ -13,7 +13,6 @@ import { store } from "../src/tools/store";
 import { MarkersProvider } from "./context/MarkersContext";
 import Layout from "./components/Layout";
 import LoginScreenAnalityk from "./screens/LoginScreenAnalityk";
-import MainAnalityk from "./screens/MainAnalityk";
 import AnalitykSettings from "./screens/AnalitykSettings";
 import RaportZgloszen from "./components/RaportZgloszen";
 import RaportUlic from "./components/RaportUlic";
@@ -33,7 +32,6 @@ function App() {
 							<Route path="/edit-announcement" element={<EditAnnouncement />} />
 							<Route path="/show-announcement" element={<ShowAnnouncement />} />
 							<Route path="/settings" element={<Settings />} />
-							<Route path="/main-analityk" element={<MainAnalityk />} />
 							<Route path="/analityk-settings" element={<AnalitykSettings />} />
 							<Route path="/wygeneruj-raport" element={<RaportZgloszen />} />
 							<Route path="/wygeneruj-raport-ulic" element={<RaportUlic />} />

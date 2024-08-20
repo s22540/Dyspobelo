@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import AnalitykMenu from "./AnalitykMenu";
+import { useTranslation } from "react-i18next";
 
 const RaportUlic = () => {
     const [raport, setRaport] = useState(null);
     const [loading, setLoading] = useState(false);
+    const { t } = useTranslation();
 
     const wygenerujRaport = async () => {
         setLoading(true);
@@ -60,27 +62,27 @@ const RaportUlic = () => {
         <div>
             <AnalitykMenu />
             <div style={styles.container}>
-                <h1>Wygeneruj raport zgłoszeń na ulicach</h1>
+                <h1>{t("Wygeneruj raport zgłoszeń na ulicach")}</h1>
                 <button onClick={wygenerujRaport} style={styles.button} disabled={loading}>
-                    {loading ? "Generowanie..." : "Generuj raport"}
+                    {loading ? t("Generowanie...") : t("Generuj raport")}
                 </button>
 
                 {raport && (
                     <div style={styles.raportContainer}>
-                        <h2>Raport</h2>
+                        <h2>{t("Raport")}</h2>
                         <table style={styles.table}>
                             <thead>
                                 <tr>
-                                    <th style={styles.th}>Ulica</th>
-                                    <th style={styles.th}>Typ Zgłoszenia</th>
-                                    <th style={styles.th}>Liczba Zgłoszeń</th>
+                                    <th style={styles.th}>{t("Ulica")}</th>
+                                    <th style={styles.th}>{t("Typ zgłoszenia")}</th>
+                                    <th style={styles.th}>{t("Liczba zgłoszeń")}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {raport.map((item, index) => (
                                     <tr key={index}>
                                         <td style={styles.td}>{item.ulica}</td>
-                                        <td style={styles.td}>{item.typZgloszenia}</td>
+                                        <td style={styles.td}>{t(item.typZgloszenia)}</td>
                                         <td style={styles.td}>{item.liczbaZgloszen}</td>
                                     </tr>
                                 ))}

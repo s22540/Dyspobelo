@@ -126,10 +126,15 @@ function Form({ onReportSubmit }) {
 			const coordinates = await geocodeAddress();
 
 			if (coordinates) {
-				const selectedVehicleId =
-					formData.policja_id ||
-					formData.straz_pozarna_id ||
-					formData.pogotowie_id;
+				let selectedVehicleId = "";
+
+				if (formData.policja_id) {
+					selectedVehicleId = `policja-${formData.policja_id}`;
+				} else if (formData.straz_pozarna_id) {
+					selectedVehicleId = `straz-${formData.straz_pozarna_id}`;
+				} else if (formData.pogotowie_id) {
+					selectedVehicleId = `pogotowie-${formData.pogotowie_id}`;
+				}
 
 				console.log(`Selected Vehicle ID: ${selectedVehicleId}`);
 

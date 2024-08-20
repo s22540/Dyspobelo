@@ -27,6 +27,7 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				"Vehicle ID:",
 				vehicleId
 			);
+
 			setDestination(coordinates);
 		},
 	}));
@@ -79,8 +80,18 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 		if (destination) {
 			console.log("Setting new route to destination:", destination);
 			initializeRoute(
-				marker.position,
+				lastKnownPosition.current,
 				destination,
+				markerRef.current,
+				routingControlRef,
+				map
+			);
+			//else for random coords
+		} else {
+			const end = getRandomCoordinates(lastKnownPosition.current);
+			initializeRoute(
+				lastKnownPosition.current,
+				end,
 				markerRef.current,
 				routingControlRef,
 				map
@@ -99,6 +110,16 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 			}
 		};
 	}, [map, marker, destination]);
+
+	//getRandorms
+
+	const getRandomCoordinates = (center, range = 500) => {
+		const latOffset = ((Math.random() - 0.5) * range) / 111320;
+		const lngOffset =
+			((Math.random() - 0.5) * range) /
+			((40075000 * Math.cos((center[0] * Math.PI) / 180)) / 360);
+		return [center[0] + latOffset, center[1] + lngOffset];
+	};
 
 	const initializeRoute = (start, end, marker, routingControlRef, map) => {
 		console.log("Initializing route from:", start, "to:", end);

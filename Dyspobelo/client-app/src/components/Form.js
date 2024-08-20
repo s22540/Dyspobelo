@@ -47,12 +47,6 @@ function Form({ onReportSubmit }) {
 		});
 	};
 
-	const [typyZgloszen, setTypyZgloszen] = useState([]);
-	const [klasyZgloszen, setKlasyZgloszen] = useState([]);
-	const [policjaList, setPolicjaList] = useState([]);
-	const [strazPozarnaList, setStrazPozarnaList] = useState([]);
-	const [pogotowieList, setPogotowieList] = useState([]);
-
 	useEffect(() => {
 		const fetchData = async () => {
 			try {

@@ -6,12 +6,22 @@ const ChangePasswordAnalityk = () => {
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState("");
+
+    const resetForm = () => {
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+    };
 
     const handleChangePassword = async (e) => {
         e.preventDefault();
 
         if (newPassword !== confirmPassword) {
-            alert(t("Nowe has≥o i potwierdzenie has≥a muszπ byÊ takie same."));
+            setMessage(t("Nowe has≈Ço i potwierdzenie has≈Ça muszƒÖ byƒá takie same."));
+            setMessageType("error");
+            setTimeout(() => setMessage(""), 3000);
             return;
         }
 
@@ -31,10 +41,15 @@ const ChangePasswordAnalityk = () => {
         });
 
         if (response.ok) {
-            alert(t("Has≥o zosta≥o zmienione."));
+            setMessage(t("Has≈Ço zosta≈Ço zmienione."));
+            setMessageType("success");
+            resetForm();
         } else {
-            alert(t("Nie uda≥o siÍ zmieniÊ has≥a."));
+            setMessage(t("Nie uda≈Ço siƒô zmieniƒá has≈Ça."));
+            setMessageType("error");
         }
+
+        setTimeout(() => setMessage(""), 3000);
     };
 
     const styles = {
@@ -80,13 +95,27 @@ const ChangePasswordAnalityk = () => {
             flexDirection: "column",
             gap: "5px",
         },
+        messagePopup: {
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: messageType === "error" ? "rgba(248, 215, 218, 0.9)" : "rgba(212, 237, 218, 0.9)",
+            color: messageType === "error" ? "#721c24" : "#155724",
+            padding: "15px 30px",
+            borderRadius: "8px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+            zIndex: 9999,
+            textAlign: "center",
+            border: messageType === "error" ? "1px solid rgba(245, 198, 203, 0.9)" : "1px solid rgba(195, 230, 203, 0.9)",
+        },
     };
 
     return (
         <div style={styles.formContainer}>
             <form onSubmit={handleChangePassword} style={styles.form}>
                 <div style={styles.inputContainer}>
-                    <label style={styles.label}>{t('Current Password')}:</label>
+                    <label style={styles.label}>{t('Obecne has≈Ço')}:</label>
                     <input
                         type="password"
                         value={currentPassword}
@@ -95,7 +124,7 @@ const ChangePasswordAnalityk = () => {
                     />
                 </div>
                 <div style={styles.inputContainer}>
-                    <label style={styles.label}>{t('New Password')}:</label>
+                    <label style={styles.label}>{t('Nowe has≈Ço')}:</label>
                     <input
                         type="password"
                         value={newPassword}
@@ -104,7 +133,7 @@ const ChangePasswordAnalityk = () => {
                     />
                 </div>
                 <div style={styles.inputContainer}>
-                    <label style={styles.label}>{t('Confirm New Password')}:</label>
+                    <label style={styles.label}>{t('Potwierd≈∫ nowe has≈Ço')}:</label>
                     <input
                         type="password"
                         value={confirmPassword}
@@ -112,8 +141,13 @@ const ChangePasswordAnalityk = () => {
                         style={styles.input}
                     />
                 </div>
-                <button type="submit" style={styles.button}>{t('Submit')}</button>
+                <button type="submit" style={styles.button}>{t('Zatwierd≈∫')}</button>
             </form>
+            {message && (
+                <div style={styles.messagePopup}>
+                    {message}
+                </div>
+            )}
         </div>
     );
 };

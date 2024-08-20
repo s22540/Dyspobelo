@@ -34,12 +34,12 @@ const Layout = ({ children }) => {
 			height: "calc(100vh - 200px)",
 		},
 		"/add-announcement": {
-			width: "50%", // Default width for large screens
+			width: "50%", 
 			height: "calc(100vh - 160px)",
 			marginRight: "3rem",
 		},
 		"/show-announcement": {
-			width: "50%", // Default width for large screens
+			width: "50%", 
 			height: "calc(100vh - 160px)",
 			marginRight: "3rem",
 		},

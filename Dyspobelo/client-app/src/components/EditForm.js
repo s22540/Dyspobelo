@@ -1,7 +1,10 @@
 ﻿import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 function EditForm({ zgloszenie }) {
+    const { t } = useTranslation();
+
     const [formData, setFormData] = useState({
         id: zgloszenie?.id ?? 0,
         id_dyspozytor: zgloszenie?.id_dyspozytor ?? 0,
@@ -11,7 +14,7 @@ function EditForm({ zgloszenie }) {
         id_zgloszenie_jednostka: zgloszenie?.id_zgloszenie_jednostka ?? 0,
         ulica: zgloszenie?.ulica ?? "",
         numer_budynku: zgloszenie?.numer_budynku.toString() ?? "",
-        numer_mieszkania: zgloszenie?.numer_mieszkania.toString() ?? "",
+        numer_mieszkania: zgloszenie?.numer_mieszkania ? zgloszenie.numer_mieszkania.toString() : "",
         data_zgloszenia: zgloszenie?.data_zgloszenia ?? new Date().toISOString().substring(0, 10),
         opis_zdarzenia: zgloszenie?.opis_zdarzenia ?? "",
         imie: "",
@@ -45,7 +48,7 @@ function EditForm({ zgloszenie }) {
                     ...formData,
                     ...zgloszenie,
                     numer_budynku: zgloszenie.numer_budynku.toString(),
-                    numer_mieszkania: zgloszenie.numer_mieszkania.toString(),
+                    numer_mieszkania: zgloszenie?.numer_mieszkania ? zgloszenie.numer_mieszkania.toString() : "",
                     data_zgloszenia: new Date(zgloszenie.data_zgloszenia).toISOString().substring(0, 10),
                 });
 
@@ -120,10 +123,10 @@ function EditForm({ zgloszenie }) {
                 }
             );
 
-            alert("Update successful!");
+            alert(t("Update successful!"));
         } catch (error) {
             console.error("Failed to update:", error);
-            alert("Update failed!");
+            alert(t("Update failed!"));
         }
     };
 
@@ -167,48 +170,48 @@ function EditForm({ zgloszenie }) {
 
     return (
         <div style={styles.formContainer}>
-            <h2>Edytuj dane zgłoszenia</h2>
+            <h2>{t("Edytuj dane zgłoszenia")}</h2>
             <form onSubmit={handleSubmit} style={styles.form}>
                 <input
                     name="imie"
                     value={formData.imie}
                     onChange={handleInputChange}
-                    placeholder="Imię"
+                    placeholder={t("Imię")}
                     style={styles.input}
                 />
                 <input
                     name="nazwisko"
                     value={formData.nazwisko}
                     onChange={handleInputChange}
-                    placeholder="Nazwisko"
+                    placeholder={t("Nazwisko")}
                     style={styles.input}
                 />
                 <input
                     name="numer_kontaktowy"
                     value={formData.numer_kontaktowy}
                     onChange={handleInputChange}
-                    placeholder="Numer kontaktowy"
+                    placeholder={t("Numer kontaktowy")}
                     style={styles.input}
                 />
                 <input
                     name="ulica"
                     value={formData.ulica}
                     onChange={handleInputChange}
-                    placeholder="Ulica"
+                    placeholder={t("Ulica")}
                     style={styles.input}
                 />
                 <input
                     name="numer_budynku"
                     value={formData.numer_budynku}
                     onChange={handleInputChange}
-                    placeholder="Numer budynku"
+                    placeholder={t("Numer budynku")}
                     style={styles.input}
                 />
                 <input
                     name="numer_mieszkania"
                     value={formData.numer_mieszkania}
                     onChange={handleInputChange}
-                    placeholder="Numer mieszkania"
+                    placeholder={t("Numer mieszkania")}
                     style={styles.input}
                 />
                 <select
@@ -217,10 +220,10 @@ function EditForm({ zgloszenie }) {
                     onChange={handleInputChange}
                     style={styles.input}
                 >
-                    <option value="">Wybierz typ zgłoszenia</option>
+                    <option value="">{t("Wybierz typ zgłoszenia")}</option>
                     {typyZgloszen.map((typ) => (
                         <option key={typ.id} value={typ.id}>
-                            {typ.nazwa_typu}
+                            {t(typ.nazwa_typu)}
                         </option>
                     ))}
                 </select>
@@ -230,10 +233,10 @@ function EditForm({ zgloszenie }) {
                     onChange={handleInputChange}
                     style={styles.input}
                 >
-                    <option value="">Wybierz klasę zgłoszenia</option>
+                    <option value="">{t("Wybierz klasę zgłoszenia")}</option>
                     {klasyZgloszen.map((klasa) => (
                         <option key={klasa.id} value={klasa.id}>
-                            {klasa.klasa_zgloszenia}
+                            {t(klasa.klasa_zgloszenia)}
                         </option>
                     ))}
                 </select>
@@ -241,7 +244,7 @@ function EditForm({ zgloszenie }) {
                     name="opis_zdarzenia"
                     value={formData.opis_zdarzenia}
                     onChange={handleInputChange}
-                    placeholder="Opis zdarzenia"
+                    placeholder={t("Opis zdarzenia")}
                     style={{ ...styles.input, height: "100px" }}
                 />
                 <div style={styles.buttonContainer}>
@@ -249,7 +252,7 @@ function EditForm({ zgloszenie }) {
                         type="submit"
                         style={{ ...styles.button, ...styles.submitButton }}
                     >
-                        Zatwierdź
+                        {t("Zatwierdź")}
                     </button>
                 </div>
             </form>

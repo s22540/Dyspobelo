@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const ChangePassword = () => {
+const ChangePasswordAnalityk = () => {
     const { t } = useTranslation();
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -11,13 +11,13 @@ const ChangePassword = () => {
         e.preventDefault();
 
         if (newPassword !== confirmPassword) {
-            alert(t("Nowe has≈Ço i potwierdzenie has≈Ça muszƒÖ byƒá takie same."));
+            alert(t("Nowe has≥o i potwierdzenie has≥a muszπ byÊ takie same."));
             return;
         }
 
-        const userId = localStorage.getItem("id_dyspozytora");
+        const userId = localStorage.getItem("id_analityk");
 
-        const response = await fetch("http://localhost:5126/api/password/change-password", {
+        const response = await fetch("http://localhost:5126/api/password/change-password-analityk", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -31,9 +31,9 @@ const ChangePassword = () => {
         });
 
         if (response.ok) {
-            alert(t("Has≈Ço zosta≈Ço zmienione."));
+            alert(t("Has≥o zosta≥o zmienione."));
         } else {
-            alert(t("Nie uda≈Ço siƒô zmieniƒá has≈Ça."));
+            alert(t("Nie uda≥o siÍ zmieniÊ has≥a."));
         }
     };
 
@@ -86,7 +86,7 @@ const ChangePassword = () => {
         <div style={styles.formContainer}>
             <form onSubmit={handleChangePassword} style={styles.form}>
                 <div style={styles.inputContainer}>
-                    <label style={styles.label}>{t('Obecne has≈Ço')}:</label>
+                    <label style={styles.label}>{t('Current Password')}:</label>
                     <input
                         type="password"
                         value={currentPassword}
@@ -95,7 +95,7 @@ const ChangePassword = () => {
                     />
                 </div>
                 <div style={styles.inputContainer}>
-                    <label style={styles.label}>{t('Nowe has≈Ço')}:</label>
+                    <label style={styles.label}>{t('New Password')}:</label>
                     <input
                         type="password"
                         value={newPassword}
@@ -104,7 +104,7 @@ const ChangePassword = () => {
                     />
                 </div>
                 <div style={styles.inputContainer}>
-                    <label style={styles.label}>{t('Potwierd≈∫ nowe has≈Ço')}:</label>
+                    <label style={styles.label}>{t('Confirm New Password')}:</label>
                     <input
                         type="password"
                         value={confirmPassword}
@@ -112,10 +112,10 @@ const ChangePassword = () => {
                         style={styles.input}
                     />
                 </div>
-                <button type="submit" style={styles.button}>{t('Zatwierd≈∫')}</button>
+                <button type="submit" style={styles.button}>{t('Submit')}</button>
             </form>
         </div>
     );
 };
 
-export default ChangePassword;
+export default ChangePasswordAnalityk;

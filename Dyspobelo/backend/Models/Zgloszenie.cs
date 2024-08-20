@@ -15,8 +15,7 @@ public class Zgloszenie
     public string ulica { get; set; }
     [Required]
     public int numer_budynku { get; set; }
-    [Required]
-    public int numer_mieszkania { get; set; }
+    public int? numer_mieszkania { get; set; }
     public DateTime data_zgloszenia { get; set; }
     [Required]
     public string opis_zdarzenia { get; set; }

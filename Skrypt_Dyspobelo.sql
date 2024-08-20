@@ -52,6 +52,15 @@ zahashowane_haslo VARCHAR(1000),
 CONSTRAINT PK_dyspozytor PRIMARY KEY (id)
 );
 
+CREATE TABLE analityk(
+id INT,
+numer_analityka INT,
+imie VARCHAR(20),
+nazwisko VARCHAR(20),
+zahashowane_haslo VARCHAR(1000),
+CONSTRAINT PK_analityk PRIMARY KEY (id)
+);
+
 CREATE TABLE dyspozytor_dyzur(
 dyspozytor_id INT,
 dyzur_id_harmonogramu INT,
@@ -161,7 +170,7 @@ id_klasa_zgloszenia INT,
 id_zgloszenie_jednostka INT,
 ulica VARCHAR(50),
 numer_budynku INT NOT NULL,
-numer_mieszkania INT NOT NULL,
+numer_mieszkania INT,
 data_zgloszenia DATE,
 opis_zdarzenia VARCHAR(1000),
 CONSTRAINT PK_zgloszenie PRIMARY KEY (id),

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dyspobelo.backend.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class ApplicationDbContext : DbContext
 {
@@ -14,8 +15,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<Policja> Policja { get; set; }
     public DbSet<StrazPozarna> StrazPozarna { get; set; }
     public DbSet<Pogotowie> Pogotowie { get; set; }
-
     public DbSet<ZgloszenieJednostka> ZgloszenieJednostka { get; set; }
+    public DbSet<Analityk> Analityk { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,6 +29,13 @@ public class ApplicationDbContext : DbContext
             .WithMany()
             .HasForeignKey(z => z.id_typ_zgloszenia);
 
+        modelBuilder.Entity<Zgloszenie>()
+       .Property(z => z.numer_mieszkania)
+       .IsRequired(false);
+
+        modelBuilder.Entity<RaportZgloszenDto>().HasNoKey();
+        modelBuilder.Entity<RaportUlicDTO>().HasNoKey();
+
         modelBuilder.Entity<Zglaszajacy>().ToTable("zglaszajacy");
         modelBuilder.Entity<TypZgloszenia>().ToTable("typ_zgloszenia");
         modelBuilder.Entity<Klasa_Zgloszenia>().ToTable("klasa_zgloszenia");
@@ -35,5 +44,6 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<StrazPozarna>().ToTable("straz_pozarna");
         modelBuilder.Entity<Pogotowie>().ToTable("pogotowie");
         modelBuilder.Entity<ZgloszenieJednostka>().ToTable("zgloszenie_jednostka");
+        modelBuilder.Entity<Analityk>().ToTable("analityk");
     }
 }

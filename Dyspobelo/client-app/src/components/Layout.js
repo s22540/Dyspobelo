@@ -49,8 +49,12 @@ const Layout = ({ children }) => {
 		"/login",
 		"/settings",
 		"/edit-announcement",
-		//for debuging rn we are not parsing a map as parameter
-		"/add-announcement",
+		"/show-announcement",
+		"/login-analityk",
+		"/main-analityk",
+		"/analityk-settings",
+		"/wygeneruj-raport",
+		"/wygeneruj-raport-ulic",
 	];
 	const shouldHideMap = hideMapOnPaths.includes(location.pathname);
 	const currentPathStyle = pathStyles[location.pathname] || pathStyles["/main"];
@@ -60,9 +64,7 @@ const Layout = ({ children }) => {
 			<div style={styles.content}>{children}</div>
 			{!shouldHideMap && (
 				<div
-					className={
-						"add-announcement-map-container show-announcement-map-container"
-					}
+					className={"add-announcement-map-container"}
 					style={styles.mapContainer(currentPathStyle)}
 				>
 					<MapComponent />

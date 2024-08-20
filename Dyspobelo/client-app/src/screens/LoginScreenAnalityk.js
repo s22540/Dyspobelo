@@ -75,7 +75,7 @@ const StyledButton = styled("button", {
     cursor: "pointer",
     "&:hover": {
         backgroundColor: "#333",
-    }
+    },
 });
 
 const StyledSecondaryButton = styled("button", {
@@ -97,7 +97,7 @@ const StyledSecondaryButton = styled("button", {
     maxWidth: "300px",
 });
 
-const LoginScreen = () => {
+const LoginScreenAnalityk = () => {
     const { t } = useTranslation();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -107,12 +107,12 @@ const LoginScreen = () => {
         e.preventDefault();
 
         const loginDetails = {
-            numer_Dyspozytora: username,
+            numer_Analityka: username,
             Zahashowane_Haslo: password
         };
 
         try {
-            const response = await fetch('http://localhost:5126/api/auth/login', {
+            const response = await fetch('http://localhost:5126/api/auth/login-analityk', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(loginDetails)
@@ -120,9 +120,9 @@ const LoginScreen = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log("Login successful, id_dyspozytor received:", data);
-                localStorage.setItem('id_dyspozytora', data.id_dyspozytor);
-                navigate("/main");
+                console.log("Login successful, id_analityk received:", data);
+                localStorage.setItem('id_analityk', data.id_analityk);
+                navigate("/wygeneruj-raport");
             } else {
                 const errorText = await response.text();
                 console.error("Login failed:", errorText);
@@ -134,21 +134,21 @@ const LoginScreen = () => {
         }
     };
 
-    const handleLoginAsAnalityk = () => {
-        navigate("/login-analityk");
+    const handleBackToLogin = () => {
+        navigate("/login");
     };
 
     return (
         <StyledContainer>
             <StyledForm onSubmit={handleLogin}>
-                <StyledTitle>{t("Login dyspozytor")}</StyledTitle>
+                <StyledTitle>{t("Login analityk")}</StyledTitle>
 
                 <StyledInputContainer>
-                    <StyledLabel htmlFor="numerDyspozytora">{t("Login")}</StyledLabel>
+                    <StyledLabel htmlFor="numerAnalityka">{t("Login")}</StyledLabel>
                     <StyledInput
-                        id="numerDyspozytora"
-                        name="numerDyspozytora"
-                        placeholder={t("Numer dyspozytora")}
+                        id="numerAnalityka"
+                        name="numerAnalityka"
+                        placeholder={t("Numer analityka")}
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
@@ -160,7 +160,7 @@ const LoginScreen = () => {
                         id="password"
                         name="password"
                         type="password"
-                        placeholder={t("********")}
+                        placeholder="********"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
@@ -169,9 +169,9 @@ const LoginScreen = () => {
                 <StyledButton type="submit">{t("Zaloguj")}</StyledButton>
             </StyledForm>
 
-            <StyledSecondaryButton onClick={handleLoginAsAnalityk}>{t("Zaloguj jako analityk")}</StyledSecondaryButton>
+            <StyledSecondaryButton onClick={handleBackToLogin}>{t("Zaloguj jako dyspozytor")}</StyledSecondaryButton>
         </StyledContainer>
     );
 };
 
-export default LoginScreen;
+export default LoginScreenAnalityk;

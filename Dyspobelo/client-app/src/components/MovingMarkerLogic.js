@@ -10,9 +10,11 @@ import L from "leaflet";
 import "leaflet-routing-machine";
 import { useMap } from "react-leaflet";
 import { MarkersContext } from "../context/MarkersContext";
+import { useTranslation } from "react-i18next";
 
 const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 	const { updateMarkerPosition } = useContext(MarkersContext);
+	const { t } = useTranslation();
 	const map = useMap();
 	const markerRef = useRef(null);
 	const routingControlRef = useRef(null);
@@ -45,6 +47,9 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 		console.log("Marker or map updated:", marker, map);
 
 		if (!markerRef.current) {
+			const remarks =
+				marker.remarks === "Brak uwag" ? t("Brak uwag") : marker.remarks;
+
 			markerRef.current = L.marker(marker.position, {
 				icon: L.icon({
 					iconUrl: marker.iconUrl,
@@ -56,9 +61,9 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				.addTo(map)
 				.bindPopup(
 					`<div>
-                        <h2>Jednostka: ${marker.number}</h2>
-                        <p>Status: ${marker.status}</p>
-                        <p>Uwagi: ${marker.remarks}</p>
+                        <h2>${t("Jednostka")}: ${marker.number}</h2>
+                        <p>${t("Stan")}: ${t(marker.status)}</p>
+                        <p>${t("Uwagi")}: ${remarks}</p>
                     </div>`
 				)
 				.on("mouseover", (event) => {
@@ -109,7 +114,7 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				routingControlRef.current = null;
 			}
 		};
-	}, [map, marker, destination]);
+	}, [map, marker, destination, t]);
 
 	//getRandorms
 

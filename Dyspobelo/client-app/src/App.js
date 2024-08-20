@@ -1,4 +1,5 @@
 import "./App.css";
+import "./i18n";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import LoginScreen from "./screens/LoginScreen";
 import MainScreen from "./screens/mainScreen";
@@ -11,6 +12,10 @@ import { Provider } from "react-redux";
 import { store } from "../src/tools/store";
 import { MarkersProvider } from "./context/MarkersContext";
 import Layout from "./components/Layout";
+import LoginScreenAnalityk from "./screens/LoginScreenAnalityk";
+import AnalitykSettings from "./screens/AnalitykSettings";
+import RaportZgloszen from "./components/RaportZgloszen";
+import RaportUlic from "./components/RaportUlic";
 
 function App() {
 	return (
@@ -20,6 +25,7 @@ function App() {
 					<Layout>
 						<Routes>
 							<Route path="/login" element={<LoginScreen />} />
+							<Route path="/login-analityk" element={<LoginScreenAnalityk />} />
 							<Route path="/main/*" element={<MainScreen />} />
 							<Route path="/add-announcement/*" element={<AddAnnouncement />} />
 							<Route
@@ -39,4 +45,5 @@ function App() {
 		</Provider>
 	);
 }
+
 export default App;

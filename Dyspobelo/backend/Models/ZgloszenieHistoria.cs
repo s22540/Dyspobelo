@@ -15,7 +15,7 @@ public class ZgloszenieHistoria
     [Required]
     public int numer_budynku { get; set; }
     [Required]
-    public int numer_mieszkania { get; set; }
+    public int? numer_mieszkania { get; set; }
     public DateTime data_zgloszenia { get; set; }
     public string opis_zdarzenia { get; set; }
     public DateTime? DataHistoryzacji { get; set; }

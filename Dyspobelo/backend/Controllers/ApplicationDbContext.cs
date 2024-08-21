@@ -18,6 +18,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<ZgloszenieJednostka> ZgloszenieJednostka { get; set; }
     public DbSet<Analityk> Analityk { get; set; }
 
+    public DbSet<Komisariat> Komisariaty { get; set; } 
+    public DbSet<Remiza> Remizy { get; set; } 
+    public DbSet<Szpital> Szpitale { get; set; } 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -45,5 +48,9 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Pogotowie>().ToTable("pogotowie");
         modelBuilder.Entity<ZgloszenieJednostka>().ToTable("zgloszenie_jednostka");
         modelBuilder.Entity<Analityk>().ToTable("analityk");
+
+        modelBuilder.Entity<Komisariat>().ToTable("komisariat"); 
+        modelBuilder.Entity<Remiza>().ToTable("remiza");
+        modelBuilder.Entity<Szpital>().ToTable("szpital"); 
     }
 }

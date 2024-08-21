@@ -6,10 +6,6 @@ INSERT INTO dyspozytor (id, numer_dyspozytora, imie, nazwisko, zahashowane_haslo
 INSERT INTO analityk (Id, Numer_Analityka, Imie, Nazwisko, Zahashowane_Haslo)
 VALUES (1, 123456, 'Jan', 'Kowalski', '$2a$11$1VLNPmpoD9VYJl7V/1HtIOmlMOUyZQtbenkrjCKKF8a9XsPjqXPs2');
 
--- Wstawianie danych do tabeli dyzur
-INSERT INTO dyzur (id_harmonogramu, data_rozpoczecia_dyzuru, data_zakonczenia_dyzuru) VALUES
-(1, '2023-05-01', '2023-05-02'),
-(2, '2023-05-03', '2023-05-04');
 
 -- Wstawianie danych do tabeli zglaszajacy
 INSERT INTO zglaszajacy (id, imie, nazwisko, numer_kontaktowy) VALUES

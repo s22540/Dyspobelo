@@ -14,12 +14,10 @@ export const MarkersProvider = ({ children }) => {
 	useEffect(() => {
 		const fetchAndGeocodeMarkers = async () => {
 			try {
-				// Pobieranie danych o budynkach (komisariaty, remizy, szpitale)
 				const jednostkiResponse = await axios.get(
 					"http://localhost:5126/api/Jednostki"
 				);
 
-				// Geokodowanie adresów jednostek
 				const jednostkiMarkers = await Promise.all(
 					jednostkiResponse.data.map(async (jednostka) => {
 						const coordinates = await geocodeAddress(jednostka.adres);
@@ -34,7 +32,6 @@ export const MarkersProvider = ({ children }) => {
 					})
 				);
 
-				// Pobieranie danych o pojazdach
 				const policjaResponse = await axios.get(
 					"http://localhost:5126/api/Policja"
 				);
@@ -48,7 +45,7 @@ export const MarkersProvider = ({ children }) => {
 				const dynamicMarkers = [
 					...policjaResponse.data.map((policja) => ({
 						id: `policja-${policja.id}`,
-						position: [52.237049, 21.017532], // Przyk³adowe wspó³rzêdne
+						position: [52.237049, 21.017532], 
 						iconUrl: process.env.PUBLIC_URL + "/radiowoz.png",
 						number: policja.numer_Patrolu,
 						status: policja.status_Patrolu,
@@ -57,7 +54,7 @@ export const MarkersProvider = ({ children }) => {
 					})),
 					...strazPozarnaResponse.data.map((straz) => ({
 						id: `straz-${straz.id}`,
-						position: [52.237049, 21.017532], // Przyk³adowe wspó³rzêdne
+						position: [52.237049, 21.017532], 
 						iconUrl: process.env.PUBLIC_URL + "/wozstraz.png",
 						number: straz.numer_Wozu,
 						status: straz.status_Wozu,
@@ -66,7 +63,7 @@ export const MarkersProvider = ({ children }) => {
 					})),
 					...pogotowieResponse.data.map((pogotowie) => ({
 						id: `pogotowie-${pogotowie.id}`,
-						position: [52.237049, 21.017532], // Przyk³adowe wspó³rzêdne
+						position: [52.237049, 21.017532], 
 						iconUrl: process.env.PUBLIC_URL + "/karetka.png",
 						number: pogotowie.numer_Karetki,
 						status: pogotowie.status_Karetki,
@@ -75,7 +72,6 @@ export const MarkersProvider = ({ children }) => {
 					})),
 				];
 
-				// Po³¹czenie markerów statycznych i dynamicznych
 				const allMarkers = [...jednostkiMarkers, ...dynamicMarkers];
 
 				console.log("Fetched and geocoded markers:", allMarkers);
@@ -88,7 +84,6 @@ export const MarkersProvider = ({ children }) => {
 		fetchAndGeocodeMarkers();
 	}, []);
 
-	// Funkcja do aktualizacji pozycji markera
 	const updateMarkerPosition = (id, newPosition) => {
 		setMarkers((prevMarkers) =>
 			prevMarkers.map((marker) =>
@@ -96,8 +91,6 @@ export const MarkersProvider = ({ children }) => {
 			)
 		);
 	};
-
-	// Funkcja do wyboru markera
 	const selectMarker = (marker) => {
 		setSelectedMarker(marker);
 	};
@@ -121,7 +114,7 @@ export const MarkersProvider = ({ children }) => {
 			}
 		} catch (error) {
 			console.error("Geocoding error:", error);
-			return [52.237049, 21.017532]; // Domyœlnie Warszawa, jeœli geokodowanie nie powiedzie siê
+			return [52.237049, 21.017532];
 		}
 	};
 

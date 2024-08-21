@@ -1,14 +1,22 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
+[Table("szpital")]
 public class Szpital
 {
     [Key]
     public int Id { get; set; }
+
     [Required]
-    public required string NazwaSzpitala { get; set; }
+    [Column("nazwa_szpitala")]
+    public string NazwaSzpitala { get; set; }
+
     [Required]
-    public required string Adres { get; set; }
+    [Column("adres")]
+    public string Adres { get; set; }
+
     [Required]
-    public required string NumerKontaktowy { get; set; }
+    [Column("numer_kontaktowy")]
+    public string NumerKontaktowy { get; set; }
 }

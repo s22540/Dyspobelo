@@ -12,13 +12,14 @@ czas_wykonania TIMESTAMP
 );
 /*Czy potrzebne?*/
 CREATE TABLE log_aktywnosci (
-id_uzytkownika INT,
-typ_aktywnosci VARCHAR(20) NOT NULL,
-data_aktywnosci DATE NOT NULL,
-opis_aktywnosci VARCHAR(20) NOT NULL,
-CONSTRAINT PK_log_aktywnosci PRIMARY KEY (id_uzytkownika)
+  id_log INT AUTO_INCREMENT,
+  id_uzytkownika INT,
+  nazwa_tabeli VARCHAR(64) NOT NULL,
+  typ_aktywnosci VARCHAR(20) NOT NULL,
+  data_aktywnosci TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  opis_aktywnosci VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id_log)
 );
-
 CREATE TABLE zgloszenie_historia (
 id INT,
 id_dyspozytor INT,
@@ -28,7 +29,7 @@ id_klasa_zgloszenia INT,
 id_zgloszenie_jednostka INT,
 ulica VARCHAR(50),
 numer_budynku INT NOT NULL,
-numer_mieszkania INT NOT NULL,
+numer_mieszkania INT,
 data_zgloszenia DATE,
 opis_zdarzenia VARCHAR(1000),
 data_historyzacji DATE,
@@ -36,13 +37,6 @@ CONSTRAINT PK_zgloszenie_historia PRIMARY KEY (id)
 );
 
 /*Osoby*/
-CREATE TABLE dyzur(
-id_harmonogramu INT,
-data_rozpoczecia_dyzuru DATE,
-data_zakonczenia_dyzuru DATE,
-CONSTRAINT PK_dyzur PRIMARY KEY (id_harmonogramu)
-);
-
 CREATE TABLE dyspozytor(
 id INT,
 numer_dyspozytora INT,
@@ -59,14 +53,6 @@ imie VARCHAR(20),
 nazwisko VARCHAR(20),
 zahashowane_haslo VARCHAR(1000),
 CONSTRAINT PK_analityk PRIMARY KEY (id)
-);
-
-CREATE TABLE dyspozytor_dyzur(
-dyspozytor_id INT,
-dyzur_id_harmonogramu INT,
-CONSTRAINT PK_dyspozytor_dyzur PRIMARY KEY (dyspozytor_id,dyzur_id_harmonogramu),
-CONSTRAINT FK_dyspozytor_id FOREIGN KEY (dyspozytor_id) REFERENCES dyspozytor (id),
-CONSTRAINT FK_dyzur_id_harmonogramu FOREIGN KEY (dyzur_id_harmonogramu) REFERENCES dyzur (id_harmonogramu)
 );
 
 CREATE TABLE zglaszajacy(

@@ -15,9 +15,9 @@ BEGIN
 		DROP TABLE zgloszenie_historia_tmp;
 	END IF;
     
-    SELECT COUNT(*) FROM zgloszenie WHERE data_zgloszenia < NOW() - INTERVAL 7 DAY INTO v_record_count;
+    SELECT COUNT(*) FROM zgloszenie WHERE data_zgloszenia < NOW() - INTERVAL 1 DAY INTO v_record_count;
 	CREATE TABLE zgloszenie_historia_tmp AS SELECT * FROM zgloszenie WHERE 0=1;
-    INSERT INTO zgloszenie_historia_tmp SELECT * FROM zgloszenie WHERE data_zgloszenia < NOW() - INTERVAL 7 DAY;
+    INSERT INTO zgloszenie_historia_tmp SELECT * FROM zgloszenie WHERE data_zgloszenia < NOW() - INTERVAL 1 DAY;
     ALTER TABLE zgloszenie_historia_tmp ADD data_historyzacji DATE;
     UPDATE zgloszenie_historia_tmp SET data_historyzacji = NOW();
     SELECT COUNT(*) FROM zgloszenie_historia_tmp INTO v_record_count_tmp;
@@ -31,6 +31,19 @@ BEGIN
 END$$
 DELIMITER ;
 
+
+
+DELIMITER $$
+
+CREATE EVENT zgloszenie_hist_event
+ON SCHEDULE EVERY 1 DAY
+STARTS (TIMESTAMP(CURRENT_DATE) + INTERVAL 1 DAY)
+DO
+  CALL zgloszenie_hist_proc();
+
+$$
+
+DELIMITER ;
 
 /*Procedura do generowania raportow*/
 
@@ -75,5 +88,141 @@ BEGIN
     ORDER BY 
         LiczbaZgloszen DESC;
 END //
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE TRIGGER after_insert_zglaszajacy
+AFTER INSERT ON zglaszajacy
+FOR EACH ROW
+BEGIN
+    INSERT INTO log_aktywnosci (
+        id_uzytkownika,
+        nazwa_tabeli,
+        typ_aktywnosci,
+        opis_aktywnosci,
+        data_aktywnosci
+    ) VALUES (
+        1,
+        'zglaszajacy',
+        'Insert',
+        CONCAT('Dodano rekord o ID: ', NEW.id),
+        NOW()
+    );
+    INSERT INTO zdarzenia_systemowe (
+        nazwa_procedury,
+        opis,
+        rekordy_insertowane,
+        czas_wykonania
+    ) VALUES (
+        'after_insert_zglaszajacy',
+        'Trigger na dodanie zgłaszającego',
+        1,
+        NOW()
+    );
+END$$
+
+CREATE TRIGGER after_update_zglaszajacy
+AFTER UPDATE ON zglaszajacy
+FOR EACH ROW
+BEGIN
+    IF (NEW.imie <> OLD.imie OR NEW.nazwisko <> OLD.nazwisko OR NEW.numer_kontaktowy <> OLD.numer_kontaktowy) THEN
+        INSERT INTO log_aktywnosci (
+            id_uzytkownika,
+            nazwa_tabeli,
+            typ_aktywnosci,
+            opis_aktywnosci,
+            data_aktywnosci
+        ) VALUES (
+            1,
+            'zglaszajacy',
+            'Update',
+            CONCAT('Zaktualizowano rekord o ID: ', NEW.id),
+            NOW()
+        );
+        INSERT INTO zdarzenia_systemowe (
+            nazwa_procedury,
+            opis,
+            rekordy_insertowane,
+            czas_wykonania
+        ) VALUES (
+            'after_update_zglaszajacy',
+            'Trigger na aktualizację zgłaszającego',
+            1,
+            NOW()
+        );
+    END IF;
+END$$
+
+CREATE TRIGGER after_insert_zgloszenie
+AFTER INSERT ON zgloszenie
+FOR EACH ROW
+BEGIN
+    INSERT INTO log_aktywnosci (
+        id_uzytkownika,
+        nazwa_tabeli,
+        typ_aktywnosci,
+        opis_aktywnosci,
+        data_aktywnosci
+    ) VALUES (
+        1,
+        'zgloszenie',
+        'Insert',
+        CONCAT('Dodano zgłoszenie o ID: ', NEW.id),
+        NOW()
+    );
+    INSERT INTO zdarzenia_systemowe (
+        nazwa_procedury,
+        opis,
+        rekordy_insertowane,
+        czas_wykonania
+    ) VALUES (
+        'after_insert_zgloszenie',
+        'Trigger na dodanie zgłoszenia',
+        1,
+        NOW()
+    );
+END$$
+
+CREATE TRIGGER after_update_zgloszenie
+AFTER UPDATE ON zgloszenie
+FOR EACH ROW
+BEGIN
+   IF (
+    NEW.id_zglaszajacy <> OLD.id_zglaszajacy OR
+    NEW.id_typ_zgloszenia <> OLD.id_typ_zgloszenia OR
+    NEW.ulica <> OLD.ulica OR
+    NEW.numer_budynku <> OLD.numer_budynku OR
+    NEW.numer_mieszkania <> OLD.numer_mieszkania OR
+    NEW.opis_zdarzenia <> OLD.opis_zdarzenia
+  ) THEN
+        INSERT INTO log_aktywnosci (
+            id_uzytkownika,
+            nazwa_tabeli,
+            typ_aktywnosci,
+            opis_aktywnosci,
+            data_aktywnosci
+        ) VALUES (
+            1,
+            'zgloszenie',
+            'Update',
+            CONCAT('Zaktualizowano zgłoszenie o ID: ', NEW.id),
+            NOW()
+        );
+        INSERT INTO zdarzenia_systemowe (
+            nazwa_procedury,
+            opis,
+            rekordy_insertowane,
+            czas_wykonania
+        ) VALUES (
+            'after_update_zgloszenie',
+            'Trigger na aktualizację zgłoszenia',
+            1,
+            NOW()
+        );
+    END IF;
+END$$
 
 DELIMITER ;

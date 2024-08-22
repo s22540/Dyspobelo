@@ -18,6 +18,7 @@ import RaportZgloszen from "./components/RaportZgloszen";
 import RaportUlic from "./components/RaportUlic";
 
 function App() {
+
 	return (
 		<Provider store={store}>
 			<MarkersProvider>
@@ -27,16 +28,13 @@ function App() {
 							<Route path="/login" element={<LoginScreen />} />
 							<Route path="/login-analityk" element={<LoginScreenAnalityk />} />
 							<Route path="/main/*" element={<MainScreen />} />
-							<Route path="/add-announcement/*" element={<AddAnnouncement />} />
-							<Route
-								path="/edit-announcement/*"
-								element={<EditAnnouncement />}
-							/>
-							<Route
-								path="/show-announcement/*"
-								element={<ShowAnnouncement />}
-							/>
-							<Route path="/settings/*" element={<Settings />} />
+							<Route path="/add-announcement" element={<AddAnnouncement />} />
+							<Route path="/edit-announcement" element={<EditAnnouncement />} />
+							<Route path="/show-announcement" element={<ShowAnnouncement />} />
+							<Route path="/settings" element={<Settings />} />
+							<Route path="/analityk-settings" element={<AnalitykSettings />} />
+							<Route path="/wygeneruj-raport" element={<RaportZgloszen />} />
+							<Route path="/wygeneruj-raport-ulic" element={<RaportUlic />} />
 							<Route path="/" element={<Navigate to="/login" replace />} />
 						</Routes>
 					</Layout>

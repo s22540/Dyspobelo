@@ -15,7 +15,7 @@ export const MarkersProvider = ({ children }) => {
 		const fetchAndGeocodeMarkers = async () => {
 			try {
 				const jednostkiResponse = await axios.get(
-					"http://localhost:5126/api/Jednostki"
+					"https://dyspobeloapi.azurewebsites.net/api/Jednostki"
 				);
 
 				const jednostkiMarkers = await Promise.all(
@@ -33,13 +33,13 @@ export const MarkersProvider = ({ children }) => {
 				);
 
 				const policjaResponse = await axios.get(
-					"http://localhost:5126/api/Policja"
+					"https://dyspobeloapi.azurewebsites.net/api/Policja"
 				);
 				const strazPozarnaResponse = await axios.get(
-					"http://localhost:5126/api/StrazPozarna"
+					"https://dyspobeloapi.azurewebsites.net/api/StrazPozarna"
 				);
 				const pogotowieResponse = await axios.get(
-					"http://localhost:5126/api/Pogotowie"
+					"https://dyspobeloapi.azurewebsites.net/api/Pogotowie"
 				);
 
 				const dynamicMarkers = [

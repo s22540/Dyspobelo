@@ -10,7 +10,7 @@ const RaportUlic = () => {
     const wygenerujRaport = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:5126/api/raport/raport-ulic", {
+            const response = await fetch("https://dyspobeloapi.azurewebsites.net/api/raport/raport-ulic", {
                 method: "GET",
             });
             const data = await response.json();

@@ -18,23 +18,20 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: Set project path environment variable
-        run: echo "PROJECT_PATH=${{ github.workspace }}" >> $GITHUB_ENV
-
       - name: Restore dependencies
-        run: dotnet restore "${{ env.PROJECT_PATH }}/Dyspobelo.sln"
+        run: dotnet restore Dyspobelo.sln
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release "${{ env.PROJECT_PATH }}/Dyspobelo.sln"
+        run: dotnet build --configuration Release Dyspobelo.sln
 
       - name: dotnet publish
-        run: dotnet publish "${{ env.PROJECT_PATH }}/Dyspobelo.sln" -c Release -o ${{ env.PROJECT_PATH }}/myapp
+        run: dotnet publish Dyspobelo.sln -c Release -o myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{ env.PROJECT_PATH }}/myapp
+          path: myapp
 
   deploy:
     runs-on: windows-latest

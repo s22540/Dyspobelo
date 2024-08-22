@@ -47,9 +47,9 @@ const MapComponent = React.forwardRef((props, ref) => {
             </style>
             <MapContainer
                 ref={mapRef}
-                style={{ height: "65vh", width: "100%" }}
+                style={{ height: "60vh", width: "98%", marginLeft: "18px" }}
                 className="leaflet-container"
-                center={[52.237049, 21.017532]} 
+                center={[52.237049, 21.017532]}
                 zoom={13}
             >
                 <TileLayer

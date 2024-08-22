@@ -11,12 +11,15 @@ const EditAnnouncement = () => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "flex-start",
+            gap: "20px",
         },
         container: {
             width: "100%",
         },
         halfWidth: {
             width: "50%",
+            height: "660px",
+            boxSizing: "border-box",
         },
     };
 

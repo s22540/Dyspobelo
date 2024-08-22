@@ -33,12 +33,12 @@ const List = ({ onSelectZgloszenie }) => {
     const styles = {
         container: {
             width: "95%",
-            height: "570px",
+            height: "640px",
             padding: "0 20px 20px 20px",
             backgroundColor: "#f2f2f2",
             borderRadius: "8px",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-            overflowY: "auto",
+            overflow: "hidden", 
             position: "relative",
         },
         searchContainer: {

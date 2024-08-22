@@ -7,42 +7,47 @@ import AddAnnouncement from "./screens/AddAnnouncement";
 import EditAnnouncement from "./screens/EditAnnouncement";
 import ShowAnnouncement from "./screens/ShowAnnouncement";
 import Settings from "./screens/Settings";
+import { MapProvider } from "./context/MapContext";
 import "leaflet/dist/leaflet.css";
-import { Provider } from "react-redux";
-import { store } from "../src/tools/store";
 import { MarkersProvider } from "./context/MarkersContext";
-import Layout from "./components/Layout";
 import LoginScreenAnalityk from "./screens/LoginScreenAnalityk";
 import AnalitykSettings from "./screens/AnalitykSettings";
 import RaportZgloszen from "./components/RaportZgloszen";
 import RaportUlic from "./components/RaportUlic";
+import Layout from "./components/Layout";
 
 function App() {
 	return (
-		<Provider store={store}>
+		<MapProvider>
 			<MarkersProvider>
 				<BrowserRouter>
-					<Layout>
-						<Routes>
-							<Route path="/login" element={<LoginScreen />} />
-							<Route path="/login-analityk" element={<LoginScreenAnalityk />} />
-							<Route path="/main/*" element={<MainScreen />} />
-							<Route path="/add-announcement/*" element={<AddAnnouncement />} />
-							<Route
-								path="/edit-announcement/*"
-								element={<EditAnnouncement />}
-							/>
-							<Route
-								path="/show-announcement/*"
-								element={<ShowAnnouncement />}
-							/>
-							<Route path="/settings/*" element={<Settings />} />
-							<Route path="/" element={<Navigate to="/login" replace />} />
-						</Routes>
-					</Layout>
+					<Routes>
+						<Route path="/login" element={<LoginScreen />} />
+						<Route path="/login-analityk" element={<LoginScreenAnalityk />} />
+						<Route
+							path="/main/*"
+							element={
+								<Layout mode={"main"}>
+									<MainScreen />
+								</Layout>
+							}
+						/>
+						<Route
+							path="/add-announcement/*"
+							element={
+								<Layout mode={"add"}>
+									<AddAnnouncement />
+								</Layout>
+							}
+						/>
+						<Route path="/edit-announcement/*" element={<EditAnnouncement />} />
+						<Route path="/show-announcement/*" element={<ShowAnnouncement />} />
+						<Route path="/settings/*" element={<Settings />} />
+						<Route path="/" element={<Navigate to="/login" replace />} />
+					</Routes>
 				</BrowserRouter>
 			</MarkersProvider>
-		</Provider>
+		</MapProvider>
 	);
 }
 

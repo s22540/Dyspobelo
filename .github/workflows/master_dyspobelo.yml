@@ -19,7 +19,7 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Set project path environment variable
-        run: echo "PROJECT_PATH=$(pwd)" >> $GITHUB_ENV
+        run: echo "PROJECT_PATH=${{ github.workspace }}" >> $GITHUB_ENV
 
       - name: Restore dependencies
         run: dotnet restore "${{ env.PROJECT_PATH }}/Dyspobelo.sln"

@@ -48,7 +48,14 @@ function App() {
 							path="/show-announcement/*"
 							element={<Layout mode={"show"}></Layout>}
 						/>
-						<Route path="/settings/*" element={<Settings />} />
+						<Route
+							path="/settings/*"
+							element={
+								<Layout mode={"settings"}>
+									<Settings />
+								</Layout>
+							}
+						/>
 						<Route path="/" element={<Navigate to="/login" replace />} />
 					</Routes>
 				</BrowserRouter>

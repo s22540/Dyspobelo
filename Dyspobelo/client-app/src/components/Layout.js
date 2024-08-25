@@ -2,41 +2,49 @@ import React, { useRef, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainScreen from "../screens/mainScreen";
 import AddAnnouncement from "../screens/AddAnnouncement";
-import { useTranslation } from "react-i18next";
 import MapComponent from "./MapComponent";
 import { useMap } from "../context/MapContext";
 import Form from "../components/Form";
 import Menu from "../components/Menu";
-import List from "../components/List";
-import SimpleMap from "../components/SimpleMap";
-import EventList from "../components/EventList";
 import EditForm from "../components/EditForm";
+import List from "../components/List";
+import EventList from "../components/EventList";
+import SimpleMap from "../components/SimpleMap";
+import ChangePassword from "../components/ChangePassword";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { MarkersProvider } from "../context/MarkersContext";
 
 const Layout = ({ children, mode }) => {
 	const movingMarkerRef = useRef(null);
 	const { mapState, setMapState } = useMap();
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
+	const navigate = useNavigate();
+	const [showChangePassword, setShowChangePassword] = useState(false);
+	const [userId, setUserId] = useState(null);
+	const [userInfo, setUserInfo] = useState({ imie: "", nazwisko: "" });
+	const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
+	const [selectedZgloszenie, setSelectedZgloszenie] = useState(null);
 	const [markers, setMarkers] = useState([]);
+
+	const handleNewReport = (coordinates, vehicleId) => {
+		if (movingMarkerRef.current) {
+			movingMarkerRef.current.handleNewReport(coordinates, vehicleId);
+		}
+	};
+
 	const handleSelectEvent = (event) => {
 		setMarkers([event]);
 	};
 
-	const handleNewReport = (coordinates, vehicleId) => {
-		console.log(
-			"handleNewReport called with coordinates:",
-			coordinates,
-			"and vehicleId:",
-			vehicleId
-		);
-
-		if (movingMarkerRef.current) {
-			console.log("Calling handleNewReport on MovingMarkerLogic");
-			movingMarkerRef.current.handleNewReport(coordinates, vehicleId);
-		} else {
-			console.log("movingMarkerRef.current is null");
-		}
+	const changeLanguage = (lng) => {
+		i18n.changeLanguage(lng);
 	};
-	const [selectedZgloszenie, setSelectedZgloszenie] = useState(null);
+
+	const handleLogout = () => {
+		localStorage.removeItem("id_dyspozytora");
+		navigate("/login");
+	};
 
 	const styles = {
 		container: {
@@ -67,7 +75,10 @@ const Layout = ({ children, mode }) => {
 			height: "100%",
 			boxSizing: "border-box",
 			marginRight: mode === "add" ? "10px" : "0px",
-			display: mode === "edit" || mode === "show" ? "none" : "block",
+			display:
+				mode === "edit" || mode === "settings" || mode === "show"
+					? "none"
+					: "block",
 		},
 		editContentContainer: {
 			display: "flex",
@@ -81,18 +92,58 @@ const Layout = ({ children, mode }) => {
 			height: "660px",
 			boxSizing: "border-box",
 		},
-		showContentContainer: {
+		settingsContentContainer: {
+			width: "100%",
+			maxWidth: "800px",
+			margin: "0 auto",
+			padding: "20px",
+			backgroundColor: "#f2f2f2",
+			borderRadius: "8px",
+			boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+			fontFamily: "Arial, sans-serif",
+			marginTop: "10px",
+		},
+		button: {
+			padding: "10px 15px",
+			color: "black",
+			border: "1px solid #ccc",
+			borderRadius: "5px",
+			cursor: "pointer",
+			backgroundColor: "#e0e0e0",
+			width: "100%",
+			boxSizing: "border-box",
+			marginBottom: "10px",
 			display: "flex",
 			justifyContent: "space-between",
-			alignItems: "flex-start",
-			gap: "20px",
-			width: "100%",
-			height: "100%", // Make sure the content takes full height
+			alignItems: "center",
 		},
-		showHalfWidth: {
-			width: "50%",
-			height: "100%", // Ensure the map and list take full height
-			boxSizing: "border-box",
+		dropdownMenu: {
+			backgroundColor: "#fff",
+			boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+			borderRadius: "8px",
+			padding: "10px",
+			marginTop: "10px",
+		},
+		dropdownItem: {
+			padding: "10px",
+			cursor: "pointer",
+		},
+		userInfoList: {
+			listStyleType: "none",
+			padding: "0",
+			margin: "10px 0",
+		},
+		userInfoItem: {
+			padding: "10px",
+			borderBottom: "1px solid #ccc",
+			display: "flex",
+			justifyContent: "space-between",
+		},
+		logoutLink: {
+			color: "red",
+			cursor: "pointer",
+			padding: "10px",
+			borderBottom: "1px solid #ccc",
 		},
 	};
 
@@ -112,27 +163,74 @@ const Layout = ({ children, mode }) => {
 						<div style={styles.halfWidth}>
 							<List
 								onSelectZgloszenie={setSelectedZgloszenie}
-								placeholder={"Wyszukaj zgłoszenie"}
+								placeholder={t("Wyszukaj zgłoszenie")}
 							/>
 						</div>
 						<div style={styles.halfWidth}>
 							{selectedZgloszenie && (
 								<EditForm
 									zgloszenie={selectedZgloszenie}
-									title={"Edytuj zgłoszenie"}
+									title={t("Edytuj zgłoszenie")}
 								/>
 							)}
 						</div>
 					</div>
 				)}
 				{mode === "show" && (
-					<div style={styles.showContentContainer}>
-						<div style={styles.showHalfWidth}>
+					<div style={styles.editContentContainer}>
+						<div style={styles.halfWidth}>
 							<EventList onSelectEvent={handleSelectEvent} />
 						</div>
-						<div style={styles.showHalfWidth}>
+						<div style={styles.halfWidth}>
 							<SimpleMap markers={markers} />
 						</div>
+					</div>
+				)}
+				{mode === "settings" && (
+					<div style={styles.settingsContentContainer}>
+						<button
+							style={styles.button}
+							onClick={() => setShowChangePassword(!showChangePassword)}
+						>
+							{t("Zmień hasło")}
+							<span>▼</span>
+						</button>
+						{showChangePassword && <ChangePassword />}
+						<div
+							style={styles.button}
+							onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
+						>
+							{t("Język")} <span>▼</span>
+						</div>
+						{showLanguageDropdown && (
+							<div style={styles.dropdownMenu}>
+								<div
+									style={styles.dropdownItem}
+									onClick={() => changeLanguage("en")}
+								>
+									English
+								</div>
+								<div
+									style={styles.dropdownItem}
+									onClick={() => changeLanguage("pl")}
+								>
+									Polski
+								</div>
+							</div>
+						)}
+						<ul style={styles.userInfoList}>
+							<li style={styles.userInfoItem}>
+								{t("Użytkownik")}
+								<span>
+									{userInfo.imie && userInfo.nazwisko
+										? `${userInfo.imie} ${userInfo.nazwisko}`
+										: t("Użytkownik")}
+								</span>
+							</li>
+							<li style={styles.logoutLink} onClick={handleLogout}>
+								{t("Wyloguj")}
+							</li>
+						</ul>
 					</div>
 				)}
 				<div style={styles.mapContainer}>

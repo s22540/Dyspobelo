@@ -122,6 +122,13 @@ function EditForm({ zgloszenie, onReportSubmit }) {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
+		const today = new Date().toISOString().substring(0, 10);
+		if (formData.data_zgloszenia !== today) {
+			setMessage("Tylko zgłoszenia z dnia dzisiejszego mogą być edytowane.");
+			setMessageType("error");
+			return;
+		}
+
 		try {
 			const coordinates = await geocodeAddress();
 
@@ -182,7 +189,7 @@ function EditForm({ zgloszenie, onReportSubmit }) {
 
 		setTimeout(() => {
 			setMessage("");
-		}, 3000);
+		}, 300);
 	};
 
 	const styles = {

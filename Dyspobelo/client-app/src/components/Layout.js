@@ -8,6 +8,8 @@ import { useMap } from "../context/MapContext";
 import Form from "../components/Form";
 import Menu from "../components/Menu";
 import List from "../components/List";
+import SimpleMap from "../components/SimpleMap";
+import EventList from "../components/EventList";
 import EditForm from "../components/EditForm";
 
 const Layout = ({ children, mode }) => {
@@ -65,7 +67,7 @@ const Layout = ({ children, mode }) => {
 			height: "100%",
 			boxSizing: "border-box",
 			marginRight: mode === "add" ? "10px" : "0px",
-			display: mode === "edit" ? "none" : "block",
+			display: mode === "edit" || mode === "show" ? "none" : "block",
 		},
 		editContentContainer: {
 			display: "flex",
@@ -77,6 +79,19 @@ const Layout = ({ children, mode }) => {
 		halfWidth: {
 			width: "50%",
 			height: "660px",
+			boxSizing: "border-box",
+		},
+		showContentContainer: {
+			display: "flex",
+			justifyContent: "space-between",
+			alignItems: "flex-start",
+			gap: "20px",
+			width: "100%",
+			height: "100%", // Make sure the content takes full height
+		},
+		showHalfWidth: {
+			width: "50%",
+			height: "100%", // Ensure the map and list take full height
 			boxSizing: "border-box",
 		},
 	};
@@ -97,16 +112,26 @@ const Layout = ({ children, mode }) => {
 						<div style={styles.halfWidth}>
 							<List
 								onSelectZgloszenie={setSelectedZgloszenie}
-								placeholder={t("Wyszukaj zgłoszenie")}
+								placeholder={"Wyszukaj zgłoszenie"}
 							/>
 						</div>
 						<div style={styles.halfWidth}>
 							{selectedZgloszenie && (
 								<EditForm
 									zgloszenie={selectedZgloszenie}
-									title={t("Edytuj zgłoszenie")}
+									title={"Edytuj zgłoszenie"}
 								/>
 							)}
+						</div>
+					</div>
+				)}
+				{mode === "show" && (
+					<div style={styles.showContentContainer}>
+						<div style={styles.showHalfWidth}>
+							<EventList onSelectEvent={handleSelectEvent} />
+						</div>
+						<div style={styles.showHalfWidth}>
+							<SimpleMap markers={markers} />
 						</div>
 					</div>
 				)}

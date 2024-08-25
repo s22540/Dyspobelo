@@ -4,6 +4,8 @@ import MainScreen from "../screens/mainScreen";
 import AddAnnouncement from "../screens/AddAnnouncement";
 import MapComponent from "./MapComponent";
 import { useMap } from "../context/MapContext";
+import Form from "../components/Form";
+import Menu from "../components/Menu";
 
 const Layout = ({ children, mode }) => {
 	const movingMarkerRef = useRef(null);
@@ -28,45 +30,57 @@ const Layout = ({ children, mode }) => {
 	const styles = {
 		container: {
 			display: "flex",
-			flexDirection: mode === "main" ? "column" : "row",
+			flexDirection: "column",
 			width: "100%",
 			height: "100vh",
 		},
-		menu: {
+		menuContainer: {
+			width: "100%",
 			flexShrink: 0,
+		},
+		mainContent: {
+			display: "flex",
+			width: "100%",
+			height: "100%",
+			flexGrow: 1,
+		},
+		formContainer: {
+			width: "50%",
+			height: "100%",
+			padding: "0px",
+			margin: "0 30px",
+			boxSizing: "border-box",
 		},
 		mapContainer: {
 			width: mode === "main" ? "100%" : "50%",
-			height: mode === "main" ? "calc(100% - 50px)" : "100vh",
+			height: "100%",
 			boxSizing: "border-box",
-		},
-		content: {
-			width: mode === "main" ? "100%" : "50%",
-			padding: mode === "main" ? 0 : "20px",
-			boxSizing: "border-box",
+			marginRight: mode === "add" ? "10px" : "0px",
 		},
 	};
 
 	return (
 		<div style={styles.container}>
-			{mode === "main" && <div style={styles.menu}>{children}</div>}
-			<div style={styles.mapContainer}>
-				<MapComponent
-					center={mapState.center}
-					zoom={mapState.zoom}
-					markers={mapState.markers}
-					routes={mapState.routes}
-					setMapState={setMapState}
-					ref={movingMarkerRef}
-				/>
+			<div style={styles.menuContainer}>
+				<Menu />
 			</div>
-			{mode !== "main" && (
-				<div style={styles.content}>
-					{children
-						? React.cloneElement(children, { onReportSubmit: handleNewReport })
-						: null}
+			<div style={styles.mainContent}>
+				{mode === "add" && (
+					<div style={styles.formContainer}>
+						<Form onReportSubmit={handleNewReport} />
+					</div>
+				)}
+				<div style={styles.mapContainer}>
+					<MapComponent
+						center={mapState.center}
+						zoom={mapState.zoom}
+						markers={mapState.markers}
+						routes={mapState.routes}
+						setMapState={setMapState}
+						ref={movingMarkerRef}
+					/>
 				</div>
-			)}
+			</div>
 		</div>
 	);
 };

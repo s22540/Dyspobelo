@@ -45,7 +45,7 @@ export const MarkersProvider = ({ children }) => {
 				const dynamicMarkers = [
 					...policjaResponse.data.map((policja) => ({
 						id: `policja-${policja.id}`,
-						position: [52.237049, 21.017532], 
+						position: [52.31334657982878, 20.963226080840816], 
 						iconUrl: process.env.PUBLIC_URL + "/radiowoz.png",
 						number: policja.numer_Patrolu,
 						status: policja.status_Patrolu,
@@ -54,7 +54,7 @@ export const MarkersProvider = ({ children }) => {
 					})),
 					...strazPozarnaResponse.data.map((straz) => ({
 						id: `straz-${straz.id}`,
-						position: [52.237049, 21.017532], 
+						position: [52.23502490562511, 20.913809239927748], 
 						iconUrl: process.env.PUBLIC_URL + "/wozstraz.png",
 						number: straz.numer_Wozu,
 						status: straz.status_Wozu,
@@ -63,7 +63,7 @@ export const MarkersProvider = ({ children }) => {
 					})),
 					...pogotowieResponse.data.map((pogotowie) => ({
 						id: `pogotowie-${pogotowie.id}`,
-						position: [52.237049, 21.017532], 
+						position: [52.28741134469457, 20.951918268687976], 
 						iconUrl: process.env.PUBLIC_URL + "/karetka.png",
 						number: pogotowie.numer_Karetki,
 						status: pogotowie.status_Karetki,
@@ -99,10 +99,12 @@ export const MarkersProvider = ({ children }) => {
 		try {
 			const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
 				params: {
-					q: address,
+					street: address,
 					format: "json",
 					addressdetails: 1,
 					limit: 1,
+					city: "Warszawa",
+					country: "Poland"
 				},
 			});
 

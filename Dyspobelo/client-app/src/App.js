@@ -40,7 +40,10 @@ function App() {
 								</Layout>
 							}
 						/>
-						<Route path="/edit-announcement/*" element={<EditAnnouncement />} />
+						<Route
+							path="/edit-announcement/*"
+							element={<Layout mode={"edit"} />}
+						/>
 						<Route path="/show-announcement/*" element={<ShowAnnouncement />} />
 						<Route path="/settings/*" element={<Settings />} />
 						<Route path="/" element={<Navigate to="/login" replace />} />

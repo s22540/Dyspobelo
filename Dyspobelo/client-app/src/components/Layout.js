@@ -1,15 +1,23 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainScreen from "../screens/mainScreen";
 import AddAnnouncement from "../screens/AddAnnouncement";
+import { useTranslation } from "react-i18next";
 import MapComponent from "./MapComponent";
 import { useMap } from "../context/MapContext";
 import Form from "../components/Form";
 import Menu from "../components/Menu";
+import List from "../components/List";
+import EditForm from "../components/EditForm";
 
 const Layout = ({ children, mode }) => {
 	const movingMarkerRef = useRef(null);
 	const { mapState, setMapState } = useMap();
+	const { t } = useTranslation();
+	const [markers, setMarkers] = useState([]);
+	const handleSelectEvent = (event) => {
+		setMarkers([event]);
+	};
 
 	const handleNewReport = (coordinates, vehicleId) => {
 		console.log(
@@ -26,6 +34,7 @@ const Layout = ({ children, mode }) => {
 			console.log("movingMarkerRef.current is null");
 		}
 	};
+	const [selectedZgloszenie, setSelectedZgloszenie] = useState(null);
 
 	const styles = {
 		container: {
@@ -56,6 +65,19 @@ const Layout = ({ children, mode }) => {
 			height: "100%",
 			boxSizing: "border-box",
 			marginRight: mode === "add" ? "10px" : "0px",
+			display: mode === "edit" ? "none" : "block",
+		},
+		editContentContainer: {
+			display: "flex",
+			justifyContent: "space-between",
+			alignItems: "flex-start",
+			gap: "20px",
+			width: "100%",
+		},
+		halfWidth: {
+			width: "50%",
+			height: "660px",
+			boxSizing: "border-box",
 		},
 	};
 
@@ -68,6 +90,24 @@ const Layout = ({ children, mode }) => {
 				{mode === "add" && (
 					<div style={styles.formContainer}>
 						<Form onReportSubmit={handleNewReport} />
+					</div>
+				)}
+				{mode === "edit" && (
+					<div style={styles.editContentContainer}>
+						<div style={styles.halfWidth}>
+							<List
+								onSelectZgloszenie={setSelectedZgloszenie}
+								placeholder={t("Wyszukaj zgłoszenie")}
+							/>
+						</div>
+						<div style={styles.halfWidth}>
+							{selectedZgloszenie && (
+								<EditForm
+									zgloszenie={selectedZgloszenie}
+									title={t("Edytuj zgłoszenie")}
+								/>
+							)}
+						</div>
 					</div>
 				)}
 				<div style={styles.mapContainer}>

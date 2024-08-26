@@ -19,7 +19,7 @@ const AnalitykSettings = () => {
 
             if (storedUserId) {
                 try {
-                    const response = await fetch(`http://localhost:5126/api/user/analityk/${storedUserId}`);
+                    const response = await fetch(`https://dyspobeloapi.azurewebsites.net/api/User/analityk/${storedUserId}`);
                     if (response.ok) {
                         const data = await response.json();
                         setUserInfo({ imie: data.imie, nazwisko: data.nazwisko });

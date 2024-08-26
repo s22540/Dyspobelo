@@ -10,7 +10,7 @@ const EventList = ({ onSelectEvent }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://localhost:5126/api/Zgloszenia");
+                const response = await axios.get("https://dyspobeloapi.azurewebsites.net/api/Zgloszenia");
                 setEvents(response.data);
             } catch (error) {
                 console.error("Error fetching data:", error);

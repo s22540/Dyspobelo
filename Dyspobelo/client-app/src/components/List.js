@@ -11,7 +11,7 @@ const List = ({ onSelectZgloszenie }) => {
 		const fetchData = async () => {
 			try {
 				const response = await axios.get(
-					"http://localhost:5126/api/Zgloszenia"
+					"https://dyspobeloapi.azurewebsites.net/api/Zgloszenia"
 				);
 				setZgloszenia(response.data);
 			} catch (error) {

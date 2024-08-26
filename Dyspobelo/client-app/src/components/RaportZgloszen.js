@@ -10,7 +10,7 @@ const RaportZgloszen = () => {
     const wygenerujRaport = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:5126/api/raport/raport-zgloszen", {
+            const response = await fetch("https://dyspobeloapi.azurewebsites.net/api/Raport/raport-zgloszen", {
                 method: "GET",
             });
             const data = await response.json();

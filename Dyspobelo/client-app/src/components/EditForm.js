@@ -34,12 +34,12 @@ function EditForm({ zgloszenie, onReportSubmit }) {
 		const fetchData = async () => {
 			try {
 				const typyResponse = await axios.get(
-					"http://localhost:5126/api/TypyZgloszenia"
+					"https://dyspobeloapi.azurewebsites.net/api/TypyZgloszenia"
 				);
 				setTypyZgloszen(typyResponse.data);
 
 				const klasyResponse = await axios.get(
-					"http://localhost:5126/api/KlasyZgloszenia"
+					"https://dyspobeloapi.azurewebsites.net/api/KlasyZgloszenia"
 				);
 				setKlasyZgloszen(klasyResponse.data);
 			} catch (error) {
@@ -67,7 +67,7 @@ function EditForm({ zgloszenie, onReportSubmit }) {
 
 				try {
 					const zglaszajacyResponse = await axios.get(
-						`http://localhost:5126/api/Zglaszajacy/${zgloszenie.id_zglaszajacy}`
+						`https://dyspobeloapi.azurewebsites.net/api/Zglaszajacy/${zgloszenie.id_zglaszajacy}`
 					);
 					const zglaszajacyData = zglaszajacyResponse.data;
 					setFormData((prevState) => ({
@@ -148,7 +148,7 @@ function EditForm({ zgloszenie, onReportSubmit }) {
 			};
 
 			await axios.put(
-				`http://localhost:5126/api/Zglaszajacy/${zgloszenie.id_zglaszajacy}`,
+				`https://dyspobeloapi.azurewebsites.net/api/Zglaszajacy/${zgloszenie.id_zglaszajacy}`,
 				zglaszajacyPayload,
 				{
 					headers: {
@@ -170,7 +170,7 @@ function EditForm({ zgloszenie, onReportSubmit }) {
 			};
 
 			await axios.put(
-				`http://localhost:5126/api/Zgloszenia/${formData.id}`,
+				`https://dyspobeloapi.azurewebsites.net/api/Zgloszenia/${formData.id}`,
 				zgloszeniePayload,
 				{
 					headers: {

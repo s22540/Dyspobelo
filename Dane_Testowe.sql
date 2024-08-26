@@ -24,15 +24,15 @@ INSERT INTO typ_zgloszenia (id, nazwa_typu, czy_powraca) VALUES
 
 -- Wstawianie danych do tabeli komisariat
 INSERT INTO komisariat (id, nazwa_komisariatu, adres, numer_kontaktowy) VALUES
-(1, 'Komisariat Centrum', 'Ul. Centralna 5', '22-22-22-22');
+(1, 'Komisariat Centrum', 'Myśliborska 65', '22-22-22-22');
 
 -- Wstawianie danych do tabeli remiza
 INSERT INTO remiza (id, nazwa_remizy, adres, numer_kontaktowy) VALUES
-(1, 'Remiza Główna', 'Ul. Pożarnicza 10', '23-23-23-23');
+(1, 'Remiza Główna', 'Powstańców Śląskich 67', '23-23-23-23');
 
 -- Wstawianie danych do tabeli szpital
 INSERT INTO szpital (id, nazwa_szpitala, adres, numer_kontaktowy) VALUES
-(1, 'Szpital Miejski', 'Ul. Zdrowotna 20', '24-24-24-24');
+(1, 'Szpital Miejski', 'Cegłowska 80', '24-24-24-24');
 
 -- Wstawianie danych do tabeli policja
 INSERT INTO policja (id, numer_patrolu, status_patrolu, obsluzone_zgloszenia, uwagi, komisariat_id) VALUES

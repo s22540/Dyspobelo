@@ -27,7 +27,7 @@ const ChangePasswordAnalityk = () => {
 
         const userId = localStorage.getItem("id_analityk");
 
-        const response = await fetch("http://localhost:5126/api/password/change-password-analityk", {
+        const response = await fetch("https://dyspobeloapi.azurewebsites.net/api/password/change-password-analityk", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -7,8 +7,8 @@ import AddAnnouncement from "./screens/AddAnnouncement";
 import EditAnnouncement from "./screens/EditAnnouncement";
 import ShowAnnouncement from "./screens/ShowAnnouncement";
 import Settings from "./screens/Settings";
-import { MapProvider } from "./context/MapContext";
 import "leaflet/dist/leaflet.css";
+import { MapProvider } from "./context/MapContext";
 import { MarkersProvider } from "./context/MarkersContext";
 import LoginScreenAnalityk from "./screens/LoginScreenAnalityk";
 import AnalitykSettings from "./screens/AnalitykSettings";
@@ -57,6 +57,9 @@ function App() {
 							}
 						/>
 						<Route path="/" element={<Navigate to="/login" replace />} />
+						<Route path="/analityk-settings" element={<AnalitykSettings />} />
+						<Route path="/wygeneruj-raport" element={<RaportZgloszen />} />
+						<Route path="/wygeneruj-raport-ulic" element={<RaportUlic />} />
 					</Routes>
 				</BrowserRouter>
 			</MarkersProvider>

@@ -51,25 +51,25 @@ function Form({ onReportSubmit }) {
 		const fetchData = async () => {
 			try {
 				const typyResponse = await fetch(
-					"http://localhost:5126/api/TypyZgloszenia"
+					"https://dyspobeloapi.azurewebsites.net/api/TypyZgloszenia"
 				);
 				const typyData = await typyResponse.json();
 				setTypyZgloszen(typyData);
 
 				const klasyResponse = await fetch(
-					"http://localhost:5126/api/KlasyZgloszenia"
+					"https://dyspobeloapi.azurewebsites.net/api/KlasyZgloszenia"
 				);
 				const klasyData = await klasyResponse.json();
 				setKlasyZgloszen(klasyData);
 
 				const policjaResponse = await fetch(
-					"http://localhost:5126/api/Policja"
+					"https://dyspobeloapi.azurewebsites.net/api/Policja"
 				);
 				const policjaData = await policjaResponse.json();
 				setPolicjaList(policjaData.filter((p) => p.status_Patrolu === "A"));
 
 				const strazPozarnaResponse = await fetch(
-					"http://localhost:5126/api/StrazPozarna"
+					"https://dyspobeloapi.azurewebsites.net/api/StrazPozarna"
 				);
 				const strazPozarnaData = await strazPozarnaResponse.json();
 				setStrazPozarnaList(
@@ -77,7 +77,7 @@ function Form({ onReportSubmit }) {
 				);
 
 				const pogotowieResponse = await fetch(
-					"http://localhost:5126/api/Pogotowie"
+					"https://dyspobeloapi.azurewebsites.net/api/Pogotowie"
 				);
 				const pogotowieData = await pogotowieResponse.json();
 				setPogotowieList(pogotowieData.filter((p) => p.status_Karetki === "A"));
@@ -150,7 +150,7 @@ function Form({ onReportSubmit }) {
 				}
 
 				const zglaszajacyResponse = await fetch(
-					"http://localhost:5126/api/Zglaszajacy",
+					"https://dyspobeloapi.azurewebsites.net/api/Zglaszajacy",
 					{
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
@@ -194,18 +194,21 @@ function Form({ onReportSubmit }) {
 					},
 				};
 
-				const response = await fetch("http://localhost:5126/api/Zgloszenia", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(zgloszenieData),
-				});
+				const response = await fetch(
+					"https://dyspobeloapi.azurewebsites.net/api/Zgloszenia",
+					{
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(zgloszenieData),
+					}
+				);
 
 				if (!response.ok) throw new Error("Failed to submit the form");
 				const responseData = await response.json();
 				console.log("Submitted zgłoszenie:", responseData);
 
 				await fetch(
-					`http://localhost:5126/api/Zglaszajacy/${zglaszajacyData.id}`,
+					`https://dyspobeloapi.azurewebsites.net/api/Zglaszajacy/${zglaszajacyData.id}`,
 					{
 						method: "PUT",
 						headers: { "Content-Type": "application/json" },

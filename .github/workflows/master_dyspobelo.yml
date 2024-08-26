@@ -19,19 +19,19 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Restore dependencies
-        run: dotnet restore ./Dyspobelo.sln
+        run: dotnet restore Dyspobelo.sln
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release ./Dyspobelo.sln
+        run: dotnet build --configuration Release Dyspobelo.sln
 
       - name: dotnet publish
-        run: dotnet publish ./Dyspobelo/Dyspobelo.csproj -c Release -o ./myapp
+        run: dotnet publish Dyspobelo.sln -c Release -o myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ./myapp
+          path: myapp
 
   deploy:
     runs-on: windows-latest
@@ -51,9 +51,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_56DEAABFCDE943D79F97D58F66A3627D }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_183AB26FFAD14EAD928E3C0C13DD6EAD }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_666A295A7BF64642B9AF06BEC8C68E14 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C5EFB701DF3C47298C2BE285DAD1546C }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_45FAFA93075045BA88D6BAF2F96DFA13 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_60A0AD4FBCC241C8B561E4986978FA2F }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -61,4 +61,4 @@ jobs:
         with:
           app-name: 'Dyspobelo'
           slot-name: 'Production'
-          package: ./myapp
+          package: .

@@ -106,6 +106,11 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 	};
 
 	const initializeRoute = (start, end, marker, routingControlRef, map) => {
+		if (routingControlRef.current) {
+			map.removeControl(routingControlRef.current);
+			routingControlRef.current = null;
+		}
+
 		routingControlRef.current = L.Routing.control({
 			waypoints: [L.latLng(start[0], start[1]), L.latLng(end[0], end[1])],
 			router: L.Routing.mapbox(
@@ -152,6 +157,9 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 						map
 					);
 					setDestination(null);
+				} else {
+					const newEnd = getRandomCoordinates([lat, lng]);
+					initializeRoute([lat, lng], newEnd, marker, routingControlRef, map);
 				}
 			}
 		}, 1000);

@@ -5,34 +5,34 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
-
 	const { t, i18n } = useTranslation();
 	const navigate = useNavigate();
 	const [showChangePassword, setShowChangePassword] = useState(false);
 	const [userId, setUserId] = useState(null);
-	const [userInfo, setUserInfo] = useState({ imie: '', nazwisko: '' });
+	const [userInfo, setUserInfo] = useState({ imie: "", nazwisko: "" });
 	const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
-			const storedUserId = localStorage.getItem('id_dyspozytora');
+			const storedUserId = localStorage.getItem("id_dyspozytora");
 			setUserId(storedUserId);
 
-            if (storedUserId) {
-                try {
-					const response = await fetch(`https://dyspobeloapi.azurewebsites.net/api/User/${storedUserId}`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        setUserInfo({ imie: data.imie, nazwisko: data.nazwisko });
-                    } else {
-                        console.error("Nie udało się pobrać danych użytkownika");
-                    }
-                } catch (error) {
-                    console.error("Błąd podczas pobierania danych użytkownika:", error);
-                }
-            }
-        };
-
+			if (storedUserId) {
+				try {
+					const response = await fetch(
+						`https://dyspobeloapi.azurewebsites.net/api/User/${storedUserId}`
+					);
+					if (response.ok) {
+						const data = await response.json();
+						setUserInfo({ imie: data.imie, nazwisko: data.nazwisko });
+					} else {
+						console.error("Nie udało się pobrać danych użytkownika");
+					}
+				} catch (error) {
+					console.error("Błąd podczas pobierania danych użytkownika:", error);
+				}
+			}
+		};
 
 		fetchUserData();
 	}, []);
@@ -42,8 +42,8 @@ const Settings = () => {
 	};
 
 	const handleLogout = () => {
-		localStorage.removeItem('id_dyspozytora');
-		navigate('/login');
+		localStorage.removeItem("id_dyspozytora");
+		navigate("/login");
 	};
 
 	const styles = {
@@ -106,39 +106,61 @@ const Settings = () => {
 			borderBottom: "1px solid #ccc",
 			display: "flex",
 			justifyContent: "space-between",
-		}
+		},
 	};
 
-    return (
-        <div>
-            <div>
-                <Menu />
-            </div>
-            <div style={styles.container}>
-                <button style={styles.button} onClick={() => setShowChangePassword(!showChangePassword)}>
-                    {t('Zmień hasło')}
-                    <span>▼</span>
-                </button>
-                {showChangePassword && <ChangePassword />}
-                <div style={styles.button} onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}>
-                    {t('Język')} <span>▼</span>
-                </div>
-                {showLanguageDropdown && (
-                    <div style={styles.dropdownMenu}>
-                        <div style={styles.dropdownItem} onClick={() => changeLanguage('en')}>English</div>
-                        <div style={styles.dropdownItem} onClick={() => changeLanguage('pl')}>Polski</div>
-                    </div>
-                )}
-                <ul style={styles.userInfoList}>
-                    <li style={styles.userInfoItem}>
-                        {t('Użytkownik')}
-                        <span>{userInfo.imie && userInfo.nazwisko ? `${userInfo.imie} ${userInfo.nazwisko}` : t('Użytkownik')}</span>
-                    </li>
-                    <li style={styles.logoutLink} onClick={handleLogout}>{t('Wyloguj')}</li>
-                </ul>
-            </div>
-        </div>
-    );
+	return (
+		<div>
+			<div>
+				<Menu />
+			</div>
+			<div style={styles.container}>
+				<button
+					style={styles.button}
+					onClick={() => setShowChangePassword(!showChangePassword)}
+				>
+					{t("Zmień hasło")}
+					<span>▼</span>
+				</button>
+				{showChangePassword && <ChangePassword />}
+				<div
+					style={styles.button}
+					onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
+				>
+					{t("Język")} <span>▼</span>
+				</div>
+				{showLanguageDropdown && (
+					<div style={styles.dropdownMenu}>
+						<div
+							style={styles.dropdownItem}
+							onClick={() => changeLanguage("en")}
+						>
+							English
+						</div>
+						<div
+							style={styles.dropdownItem}
+							onClick={() => changeLanguage("pl")}
+						>
+							Polski
+						</div>
+					</div>
+				)}
+				<ul style={styles.userInfoList}>
+					<li style={styles.userInfoItem}>
+						{t("Użytkownik")}
+						<span>
+							{userInfo.imie && userInfo.nazwisko
+								? `${userInfo.imie} ${userInfo.nazwisko}`
+								: t("Użytkownik")}
+						</span>
+					</li>
+					<li style={styles.logoutLink} onClick={handleLogout}>
+						{t("Wyloguj")}
+					</li>
+				</ul>
+			</div>
+		</div>
+	);
 };
 
 export default Settings;

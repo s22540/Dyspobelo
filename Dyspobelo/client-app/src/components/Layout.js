@@ -27,9 +27,12 @@ const Layout = ({ children, mode }) => {
 	const [selectedZgloszenie, setSelectedZgloszenie] = useState(null);
 	const [markers, setMarkers] = useState([]);
 
-	const handleNewReport = (coordinates, vehicleId) => {
-		if (movingMarkerRef.current) {
-			movingMarkerRef.current.handleNewReport(coordinates, vehicleId);
+	const handleNewReport = (coordinates, vehicleIds) => {
+		if (movingMarkerRef.current && vehicleIds.length > 0) {
+			vehicleIds.forEach(vehicleId => {
+				console.log(`Invoking handleNewReport for vehicleId: ${vehicleId}`);
+				movingMarkerRef.current.handleNewReport(coordinates, vehicleId);
+			});
 		}
 	};
 

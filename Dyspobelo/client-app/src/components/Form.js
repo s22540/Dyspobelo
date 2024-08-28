@@ -110,20 +110,23 @@ function Form({ onReportSubmit }) {
 			const coordinates = await geocodeAddress();
 
 			if (coordinates) {
-				let selectedVehicleId = "";
+				//Zmienione na tablicę
+				const selectedVehicleIds = [];
 
 				if (formData.policja_id) {
-					selectedVehicleId = `policja-${formData.policja_id}`;
-				} else if (formData.straz_pozarna_id) {
-					selectedVehicleId = `straz-${formData.straz_pozarna_id}`;
-				} else if (formData.pogotowie_id) {
-					selectedVehicleId = `pogotowie-${formData.pogotowie_id}`;
+					selectedVehicleIds.push(`policja-${formData.policja_id}`);
+				}
+				if (formData.straz_pozarna_id) {
+					selectedVehicleIds.push(`straz-${formData.straz_pozarna_id}`);
+				}
+				if (formData.pogotowie_id) {
+					selectedVehicleIds.push(`pogotowie-${formData.pogotowie_id}`);
 				}
 
-				console.log(`Selected Vehicle ID: ${selectedVehicleId}`);
+				console.log(`Selected Vehicle ID: ${selectedVehicleIds}`);
 
-				if (selectedVehicleId) {
-					onReportSubmit(coordinates, selectedVehicleId);
+				if (selectedVehicleIds.length > 0) {
+					onReportSubmit(coordinates, selectedVehicleIds);
 				}
 
 				const zglaszajacyResponse = await fetch(

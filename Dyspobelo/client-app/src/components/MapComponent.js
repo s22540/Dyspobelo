@@ -7,10 +7,12 @@ import L from "leaflet";
 import { useMap } from "../context/MapContext";
 
 const MapComponent = React.forwardRef((props, ref) => {
-	const { markers } = useContext(MarkersContext);
+	const { markers, selectedVehicleId } = useContext(MarkersContext); // Z markerscontext pobierane s¹ pojazdy
 	const mapRef = useRef(null);
-	const markerLogicRef = useRef(null);
 	const { mapState, updateMarkerPosition } = useMap();
+
+	// Tablica dla  markerów pojazdów
+	const dynamicMarkerRefs = useRef({});
 
 	useEffect(() => {
 		if (mapRef.current) {
@@ -32,8 +34,9 @@ const MapComponent = React.forwardRef((props, ref) => {
 
 	React.useImperativeHandle(ref, () => ({
 		handleNewReport: (coordinates, vehicleId) => {
-			if (markerLogicRef.current) {
-				markerLogicRef.current.handleNewReport(coordinates, vehicleId);
+			const markerRef = dynamicMarkerRefs.current[vehicleId];
+			if (markerRef && markerRef.current) {
+				markerRef.current.handleNewReport(coordinates, vehicleId);
 			}
 		},
 	}));
@@ -84,13 +87,20 @@ const MapComponent = React.forwardRef((props, ref) => {
 
 				{markers
 					.filter((marker) => marker.type === "dynamic")
-					.map((marker) => (
-						<MovingMarkerLogic
-							key={marker.id}
-							ref={markerLogicRef}
-							marker={marker}
-						/>
-					))}
+					.map((marker) => {
+						// Tu jest ref dla ka¿dego dynamic markera
+						if (!dynamicMarkerRefs.current[marker.id]) {
+							dynamicMarkerRefs.current[marker.id] = React.createRef();
+						}
+						return (
+							<MovingMarkerLogic
+								key={marker.id}
+								ref={dynamicMarkerRefs.current[marker.id]} // odwo³anie do tablicy z góry
+								marker={marker}
+								shouldMove={marker.id === selectedVehicleId} // przekazanie pojazdu
+							/>
+						);
+					})}
 			</MapContainer>
 		</div>
 	);

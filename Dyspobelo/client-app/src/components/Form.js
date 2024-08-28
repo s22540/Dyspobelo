@@ -398,7 +398,9 @@ function Form({ onReportSubmit }) {
 					style={styles.input}
 				>
 					<option value="">{t("Wybierz jednostkę policji")}</option>
-					{policjaData.map((p) => (
+					{policjaData
+						.filter((p) => p.status_Patrolu === 'A')
+						.map((p) => (
 						<option key={p.id} value={p.id}>
 							{p.numer_Patrolu} - {p.status_Patrolu}
 						</option>
@@ -411,7 +413,9 @@ function Form({ onReportSubmit }) {
 					style={styles.input}
 				>
 					<option value="">{t("Wybierz jednostkę straży pożarnej")}</option>
-					{strazPozarnaData.map((s) => (
+					{strazPozarnaData
+						.filter((s) => s.status_Wozu === 'A')
+						.map((s) => (
 						<option key={s.id} value={s.id}>
 							{s.numer_Wozu} - {s.status_Wozu}
 						</option>
@@ -424,7 +428,9 @@ function Form({ onReportSubmit }) {
 					style={styles.input}
 				>
 					<option value="">{t("Wybierz jednostkę pogotowia")}</option>
-					{pogotowieData.map((p) => (
+					{pogotowieData
+						.filter((p) => p.status_Karetki === 'A')
+						.map((p) => (
 						<option key={p.id} value={p.id}>
 							{p.numer_Karetki} - {p.status_Karetki}
 						</option>

@@ -172,7 +172,7 @@ const Layout = ({ children, mode }) => {
 						<div style={styles.halfWidth}>
 							{selectedZgloszenie && (
 								<EditForm
-									onReportSubmit={handleNewReport}
+									//onReportSubmit={handleNewReport}
 									zgloszenie={selectedZgloszenie}
 									title={t("Edytuj zgłoszenie")}
 								/>

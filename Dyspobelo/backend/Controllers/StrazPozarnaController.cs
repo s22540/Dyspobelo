@@ -21,5 +21,20 @@ namespace backend.Controllers
         {
             return await _context.StrazPozarna.ToListAsync();
         }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateStrazPozarnaStatus(int id, [FromBody] char newStatus)
+        {
+            var strazPozarna = await _context.StrazPozarna.FindAsync(id);
+            if (strazPozarna == null)
+            {
+                return NotFound();
+            }
+
+            strazPozarna.Status_Wozu = newStatus;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

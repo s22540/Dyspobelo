@@ -45,23 +45,10 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				.addTo(map)
 				.bindPopup(
 					`<div>
-                        <h2>${t("Jednostka")}: ${marker.number}</h2>
-                        <p>${t("Stan")}: ${t(marker.status)}</p>
-                        <p>${t("Uwagi")}: ${remarks}</p>
-                    </div>`
-				)
-				.on("mouseover", (event) => {
-					const leafletMarker = event.target;
-					if (!leafletMarker.getPopup().isOpen()) {
-						leafletMarker.openPopup();
-					}
-				})
-				.on("mouseout", (event) => {
-					const leafletMarker = event.target;
-					if (leafletMarker.getPopup().isOpen()) {
-						leafletMarker.closePopup();
-					}
-				});
+                <h2>${t("Jednostka")}: ${marker.number}</h2>
+                <p>${t("Stan")}: ${t(marker.status)}</p>
+                <p>${t("Uwagi")}: ${remarks}</p>
+            </div>`);
 		} else {
 			markerRef.current.setLatLng(marker.position);
 		}

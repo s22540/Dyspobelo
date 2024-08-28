@@ -74,6 +74,28 @@ function Form({ onReportSubmit }) {
 		}));
 	};
 
+	const updateVehicleStatus = async (vehicleId, newStatus) => {
+		const [type, id] = vehicleId.split("-");
+		let url;
+
+		if (type === "policja") {
+			url = `https://dyspobeloapi.azurewebsites.net/api/Policja/${id}`;
+		} else if (type === "straz") {
+			url = `https://dyspobeloapi.azurewebsites.net/api/StrazPozarna/${id}`;
+		} else if (type === "pogotowie") {
+			url = `https://dyspobeloapi.azurewebsites.net/api/Pogotowie/${id}`;
+		}
+
+		try {
+			await axios.patch(url, `"${newStatus}"`, {
+				headers: { "Content-Type": "application/json" },
+			});
+			console.log(`Status of ${vehicleId} updated to ${newStatus}`);
+		} catch (error) {
+			console.error(`Failed to update status for ${vehicleId}:`, error);
+		}
+	};
+
 	const geocodeAddress = async () => {
 		const city = "Warszawa";
 		const country = "Polska";
@@ -127,6 +149,10 @@ function Form({ onReportSubmit }) {
 
 				if (selectedVehicleIds.length > 0) {
 					onReportSubmit(coordinates, selectedVehicleIds);
+
+					for (const vehicleId of selectedVehicleIds) {
+						await updateVehicleStatus(vehicleId, "Z");
+					}
 				}
 
 				const zglaszajacyResponse = await fetch(

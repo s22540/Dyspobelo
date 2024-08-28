@@ -21,5 +21,20 @@ namespace backend.Controllers
         {
             return await _context.Pogotowie.ToListAsync();
         }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdatePogotowieStatus(int id, [FromBody] char newStatus)
+        {
+            var pogotowie = await _context.Pogotowie.FindAsync(id);
+            if (pogotowie == null)
+            {
+                return NotFound();
+            }
+
+            pogotowie.Status_Karetki = newStatus;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

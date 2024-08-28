@@ -1,11 +1,11 @@
 ﻿import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import L from "leaflet";
-import "leaflet-control-geocoder";
+import { useMarkers } from "../context/MarkersContext";
 import axios from "axios";
 
 function Form({ onReportSubmit }) {
 	const { t } = useTranslation();
+	const { policjaData, strazPozarnaData, pogotowieData } = useMarkers();
 
 	const [formData, setFormData] = useState({
 		imie: "",
@@ -24,9 +24,6 @@ function Form({ onReportSubmit }) {
 
 	const [typyZgloszen, setTypyZgloszen] = useState([]);
 	const [klasyZgloszen, setKlasyZgloszen] = useState([]);
-	const [policjaList, setPolicjaList] = useState([]);
-	const [strazPozarnaList, setStrazPozarnaList] = useState([]);
-	const [pogotowieList, setPogotowieList] = useState([]);
 	const [message, setMessage] = useState("");
 	const [messageType, setMessageType] = useState("");
 
@@ -48,7 +45,7 @@ function Form({ onReportSubmit }) {
 	};
 
 	useEffect(() => {
-		const fetchData = async () => {
+		const fetchTypyIKlasyZgloszen = async () => {
 			try {
 				const typyResponse = await fetch(
 					"https://dyspobeloapi.azurewebsites.net/api/TypyZgloszenia"
@@ -61,32 +58,12 @@ function Form({ onReportSubmit }) {
 				);
 				const klasyData = await klasyResponse.json();
 				setKlasyZgloszen(klasyData);
-
-				const policjaResponse = await fetch(
-					"https://dyspobeloapi.azurewebsites.net/api/Policja"
-				);
-				const policjaData = await policjaResponse.json();
-				setPolicjaList(policjaData.filter((p) => p.status_Patrolu === "A"));
-
-				const strazPozarnaResponse = await fetch(
-					"https://dyspobeloapi.azurewebsites.net/api/StrazPozarna"
-				);
-				const strazPozarnaData = await strazPozarnaResponse.json();
-				setStrazPozarnaList(
-					strazPozarnaData.filter((s) => s.status_Wozu === "A")
-				);
-
-				const pogotowieResponse = await fetch(
-					"https://dyspobeloapi.azurewebsites.net/api/Pogotowie"
-				);
-				const pogotowieData = await pogotowieResponse.json();
-				setPogotowieList(pogotowieData.filter((p) => p.status_Karetki === "A"));
 			} catch (error) {
 				console.error("Error loading data:", error);
 			}
 		};
 
-		fetchData();
+		fetchTypyIKlasyZgloszen();
 	}, []);
 
 	const handleInputChange = (e) => {
@@ -392,7 +369,7 @@ function Form({ onReportSubmit }) {
 					style={styles.input}
 				>
 					<option value="">{t("Wybierz jednostkę policji")}</option>
-					{policjaList.map((p) => (
+					{policjaData.map((p) => (
 						<option key={p.id} value={p.id}>
 							{p.numer_Patrolu} - {p.status_Patrolu}
 						</option>
@@ -405,7 +382,7 @@ function Form({ onReportSubmit }) {
 					style={styles.input}
 				>
 					<option value="">{t("Wybierz jednostkę straży pożarnej")}</option>
-					{strazPozarnaList.map((s) => (
+					{strazPozarnaData.map((s) => (
 						<option key={s.id} value={s.id}>
 							{s.numer_Wozu} - {s.status_Wozu}
 						</option>
@@ -418,7 +395,7 @@ function Form({ onReportSubmit }) {
 					style={styles.input}
 				>
 					<option value="">{t("Wybierz jednostkę pogotowia")}</option>
-					{pogotowieList.map((p) => (
+					{pogotowieData.map((p) => (
 						<option key={p.id} value={p.id}>
 							{p.numer_Karetki} - {p.status_Karetki}
 						</option>

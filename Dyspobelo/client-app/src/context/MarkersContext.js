@@ -11,13 +11,17 @@ export const MarkersProvider = ({ children }) => {
 	const [markers, setMarkers] = useState([]);
 	const [selectedMarker, setSelectedMarker] = useState(null);
 
+	// Tablice na dane pojazdów
+	const [policjaData, setPolicjaData] = useState([]);
+	const [strazPozarnaData, setStrazPozarnaData] = useState([]);
+	const [pogotowieData, setPogotowieData] = useState([]);
+
 	useEffect(() => {
-		const fetchAndGeocodeMarkers = async () => {
+		const fetchData = async () => {
 			try {
 				const jednostkiResponse = await axios.get(
 					"https://dyspobeloapi.azurewebsites.net/api/Jednostki"
 				);
-
 				const jednostkiMarkers = await Promise.all(
 					jednostkiResponse.data.map(async (jednostka) => {
 						const coordinates = await geocodeAddress(jednostka.adres);
@@ -42,10 +46,16 @@ export const MarkersProvider = ({ children }) => {
 					"https://dyspobeloapi.azurewebsites.net/api/Pogotowie"
 				);
 
+				// Ustawianie danych pojazdów
+				setPolicjaData(policjaResponse.data);
+				setStrazPozarnaData(strazPozarnaResponse.data);
+				setPogotowieData(pogotowieResponse.data);
+
+				// Tworzenie markerów
 				const dynamicMarkers = [
 					...policjaResponse.data.map((policja) => ({
 						id: `policja-${policja.id}`,
-						position: [52.31334657982878, 20.963226080840816], 
+						position: [52.31334657982878, 20.963226080840816],
 						iconUrl: process.env.PUBLIC_URL + "/radiowoz.png",
 						number: policja.numer_Patrolu,
 						status: policja.status_Patrolu,
@@ -54,7 +64,7 @@ export const MarkersProvider = ({ children }) => {
 					})),
 					...strazPozarnaResponse.data.map((straz) => ({
 						id: `straz-${straz.id}`,
-						position: [52.23502490562511, 20.913809239927748], 
+						position: [52.23502490562511, 20.913809239927748],
 						iconUrl: process.env.PUBLIC_URL + "/wozstraz.png",
 						number: straz.numer_Wozu,
 						status: straz.status_Wozu,
@@ -63,7 +73,7 @@ export const MarkersProvider = ({ children }) => {
 					})),
 					...pogotowieResponse.data.map((pogotowie) => ({
 						id: `pogotowie-${pogotowie.id}`,
-						position: [52.28741134469457, 20.951918268687976], 
+						position: [52.28741134469457, 20.951918268687976],
 						iconUrl: process.env.PUBLIC_URL + "/karetka.png",
 						number: pogotowie.numer_Karetki,
 						status: pogotowie.status_Karetki,
@@ -74,14 +84,14 @@ export const MarkersProvider = ({ children }) => {
 
 				const allMarkers = [...jednostkiMarkers, ...dynamicMarkers];
 
-				console.log("Fetched and geocoded markers:", allMarkers);
+				console.log("Markers created:", allMarkers);
 				setMarkers(allMarkers);
 			} catch (error) {
-				console.error("Failed to fetch and geocode markers:", error);
+				console.error("Failed to fetch data:", error);
 			}
 		};
 
-		fetchAndGeocodeMarkers();
+		fetchData();
 	}, []);
 
 	const updateMarkerPosition = (id, newPosition) => {
@@ -91,6 +101,7 @@ export const MarkersProvider = ({ children }) => {
 			)
 		);
 	};
+
 	const selectMarker = (marker) => {
 		setSelectedMarker(marker);
 	};
@@ -135,7 +146,15 @@ export const MarkersProvider = ({ children }) => {
 
 	return (
 		<MarkersContext.Provider
-			value={{ markers, updateMarkerPosition, selectMarker, selectedMarker }}
+			value={{
+				markers,
+				updateMarkerPosition,
+				selectMarker,
+				selectedMarker,
+				policjaData,
+				strazPozarnaData,
+				pogotowieData
+			}}
 		>
 			{children}
 		</MarkersContext.Provider>

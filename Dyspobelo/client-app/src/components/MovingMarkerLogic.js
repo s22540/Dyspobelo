@@ -13,6 +13,28 @@ import { MarkersContext } from "../context/MarkersContext";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 
+export const updateVehicleStatus = async (vehicleId, newStatus) => {
+	const [type, id] = vehicleId.split("-");
+	let url;
+
+	if (type === "policja") {
+		url = `https://dyspobeloapi.azurewebsites.net/api/Policja/${id}`;
+	} else if (type === "straz") {
+		url = `https://dyspobeloapi.azurewebsites.net/api/StrazPozarna/${id}`;
+	} else if (type === "pogotowie") {
+		url = `https://dyspobeloapi.azurewebsites.net/api/Pogotowie/${id}`;
+	}
+
+	try {
+		await axios.patch(url, `"${newStatus}"`, {
+			headers: { "Content-Type": "application/json" },
+		});
+		console.log(`Status of ${vehicleId} updated to ${newStatus}`);
+	} catch (error) {
+		console.error(`Failed to update status for ${vehicleId}:`, error);
+	}
+};
+
 const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 	const { updateMarkerPosition } = useContext(MarkersContext);
 	const { t } = useTranslation();
@@ -129,6 +151,7 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 			((40075000 * Math.cos((center[0] * Math.PI) / 180)) / 360);
 		return [center[0] + latOffset, center[1] + lngOffset];
 	};
+
 
 	const initializeRoute = (start, end, marker, routingControlRef, map) => {
 		if (routingControlRef.current) {

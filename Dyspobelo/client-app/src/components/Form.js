@@ -45,6 +45,7 @@ function Form({ onReportSubmit }) {
 	};
 
 	useEffect(() => {
+		fetchVehicleData();
 		const fetchTypyIKlasyZgloszen = async () => {
 			try {
 				const typyResponse = await fetch(

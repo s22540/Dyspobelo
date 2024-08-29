@@ -61,7 +61,7 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				routingControlRef,
 				map
 			);
-		} else {
+		} else if (marker.status === 'A') {
 			const end = getRandomCoordinates(lastKnownPosition.current);
 			initializeRoute(
 				lastKnownPosition.current,

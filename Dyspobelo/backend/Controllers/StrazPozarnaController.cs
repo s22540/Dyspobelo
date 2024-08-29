@@ -22,6 +22,17 @@ namespace backend.Controllers
             return await _context.StrazPozarna.ToListAsync();
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<StrazPozarna>> GetStrazPozarnaById(int id)
+        {
+            var strazPozarna = await _context.StrazPozarna.FindAsync(id);
+            if (strazPozarna == null)
+            {
+                return NotFound();
+            }
+            return strazPozarna;
+        }
+
         [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateStrazPozarnaStatus(int id, [FromBody] char newStatus)
         {

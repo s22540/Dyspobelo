@@ -22,6 +22,17 @@ namespace backend.Controllers
             return await _context.Policja.ToListAsync();
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Policja>> GetPolicjaById(int id)
+        {
+            var policja = await _context.Policja.FindAsync(id);
+            if (policja == null)
+            {
+                return NotFound();
+            }
+            return policja;
+        }
+
         [HttpPatch("{id}")]
         public async Task<IActionResult> UpdatePolicjaStatus(int id, [FromBody] char newStatus)
         {

@@ -4,10 +4,10 @@ const MapContext = createContext();
 
 export const MapProvider = ({ children }) => {
 	const [mapState, setMapState] = useState({
-		center: [52.237049, 21.017532],
-		zoom: 13,
-		markers: [], // Add markers to state
-		routes: [], // Add routes to state if needed
+		//center: [52.237049, 21.017532],
+		//zoom: 13,
+		markers: [],
+		routes: [],
 	});
 
 	const updateMarkerPosition = (id, newPosition) => {

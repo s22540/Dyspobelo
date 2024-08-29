@@ -11,6 +11,7 @@ import "leaflet-routing-machine";
 import { useMap } from "react-leaflet";
 import { MarkersContext } from "../context/MarkersContext";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 
 const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 	const { updateMarkerPosition } = useContext(MarkersContext);
@@ -20,9 +21,10 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 	const routingControlRef = useRef(null);
 	const [destination, setDestination] = useState(null);
 	const lastKnownPosition = useRef(marker.position);
+	const [currentStatus, setCurrentStatus] = useState(marker.status);
 
 	useImperativeHandle(ref, () => ({
-		handleNewReport: (coordinates, vehicleId) => {
+		handleNewReport: (coordinates) => {
 			setDestination(coordinates);
 		},
 	}));
@@ -31,8 +33,7 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 		if (!marker || !map) return;
 
 		if (!markerRef.current) {
-			const remarks =
-				marker.remarks === "Brak uwag" ? t("Brak uwag") : marker.remarks;
+			const remarks = marker.remarks === "Brak uwag" ? t("Brak uwag") : marker.remarks;
 
 			markerRef.current = L.marker(marker.position, {
 				icon: L.icon({
@@ -45,13 +46,27 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				.addTo(map)
 				.bindPopup(
 					`<div>
-                <h2>${t("Jednostka")}: ${marker.number}</h2>
-                <p>${t("Stan")}: ${t(marker.status)}</p>
-                <p>${t("Uwagi")}: ${remarks}</p>
-            </div>`);
+						<h2>${t("Jednostka")}: ${marker.number}</h2>
+						<p>${t("Stan")}: ${t(currentStatus)}</p>
+						<p>${t("Uwagi")}: ${remarks}</p>
+					</div>`
+				);
 		} else {
 			markerRef.current.setLatLng(marker.position);
+			markerRef.current.setPopupContent(
+				`<div>
+					<h2>${t("Jednostka")}: ${marker.number}</h2>
+					<p>${t("Stan")}: ${t(currentStatus)}</p>
+					<p>${t("Uwagi")}: ${marker.remarks}</p>
+				</div>`
+			);
 		}
+
+		const intervalId = setInterval(() => {
+			fetchVehicleStatus(marker.id).then((status) => {
+				setCurrentStatus(status);
+			});
+		}, 5000); // sprawdzenie co 5 sekund
 
 		if (destination) {
 			initializeRoute(
@@ -61,7 +76,7 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				routingControlRef,
 				map
 			);
-		} else if (marker.status === 'A') {
+		} else if (currentStatus === 'A') {
 			const end = getRandomCoordinates(lastKnownPosition.current);
 			initializeRoute(
 				lastKnownPosition.current,
@@ -73,6 +88,7 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 		}
 
 		return () => {
+			clearInterval(intervalId);
 			if (markerRef.current) {
 				markerRef.current.remove();
 				markerRef.current = null;
@@ -82,7 +98,29 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				routingControlRef.current = null;
 			}
 		};
-	}, [map, marker, destination, t]);
+	}, [map, marker, destination, currentStatus, t]);
+
+	// pobieramy stan pojazdów tylko dla tego ¿eby widaæ by³o zmianê statusów pojazdu
+	const fetchVehicleStatus = async (vehicleId) => {
+		const [type, id] = vehicleId.split("-");
+		let url;
+
+		if (type === "policja") {
+			url = `https://dyspobeloapi.azurewebsites.net/api/Policja/${id}`;
+		} else if (type === "straz") {
+			url = `https://dyspobeloapi.azurewebsites.net/api/StrazPozarna/${id}`;
+		} else if (type === "pogotowie") {
+			url = `https://dyspobeloapi.azurewebsites.net/api/Pogotowie/${id}`;
+		}
+
+		try {
+			const response = await axios.get(url);
+			return response.data.status_Patrolu || response.data.status_Wozu || response.data.status_Karetki;
+		} catch (error) {
+			console.error(`Failed to fetch status for ${vehicleId}:`, error);
+			return null;
+		}
+	};
 
 	const getRandomCoordinates = (center, range = 500) => {
 		const latOffset = ((Math.random() - 0.5) * range) / 111320;
@@ -144,7 +182,7 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 						map
 					);
 					setDestination(null);
-				} else {
+				} else if (currentStatus === 'A') {
 					const newEnd = getRandomCoordinates([lat, lng]);
 					initializeRoute([lat, lng], newEnd, marker, routingControlRef, map);
 				}

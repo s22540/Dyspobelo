@@ -5,7 +5,7 @@ import axios from "axios";
 
 function Form({ onReportSubmit }) {
 	const { t } = useTranslation();
-	const { policjaData, strazPozarnaData, pogotowieData } = useMarkers();
+	const { policjaData, strazPozarnaData, pogotowieData, fetchVehicleData } = useMarkers();
 
 	const [formData, setFormData] = useState({
 		imie: "",
@@ -153,6 +153,7 @@ function Form({ onReportSubmit }) {
 					for (const vehicleId of selectedVehicleIds) {
 						await updateVehicleStatus(vehicleId, "Z");
 					}
+					await fetchVehicleData();
 				}
 
 				const zglaszajacyResponse = await fetch(

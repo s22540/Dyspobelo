@@ -22,6 +22,17 @@ namespace backend.Controllers
             return await _context.Pogotowie.ToListAsync();
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Pogotowie>> GetPogotowieById(int id)
+        {
+            var pogotowie = await _context.Pogotowie.FindAsync(id);
+            if (pogotowie == null)
+            {
+                return NotFound();
+            }
+            return pogotowie;
+        }
+
         [HttpPatch("{id}")]
         public async Task<IActionResult> UpdatePogotowieStatus(int id, [FromBody] char newStatus)
         {

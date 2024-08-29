@@ -144,6 +144,26 @@ export const MarkersProvider = ({ children }) => {
 		}
 	};
 
+	const fetchVehicleData = async () => {
+		try {
+			const policjaResponse = await axios.get(
+				"https://dyspobeloapi.azurewebsites.net/api/Policja"
+			);
+			const strazPozarnaResponse = await axios.get(
+				"https://dyspobeloapi.azurewebsites.net/api/StrazPozarna"
+			);
+			const pogotowieResponse = await axios.get(
+				"https://dyspobeloapi.azurewebsites.net/api/Pogotowie"
+			);
+
+			setPolicjaData(policjaResponse.data);
+			setStrazPozarnaData(strazPozarnaResponse.data);
+			setPogotowieData(pogotowieResponse.data);
+		} catch (error) {
+			console.error("Failed to fetch vehicle data:", error);
+		}
+	};
+
 	return (
 		<MarkersContext.Provider
 			value={{
@@ -153,7 +173,8 @@ export const MarkersProvider = ({ children }) => {
 				selectedMarker,
 				policjaData,
 				strazPozarnaData,
-				pogotowieData
+				pogotowieData,
+				fetchVehicleData
 			}}
 		>
 			{children}

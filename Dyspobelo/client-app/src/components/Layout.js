@@ -1,7 +1,4 @@
-import React, { useRef, useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import MainScreen from "../screens/mainScreen";
-import AddAnnouncement from "../screens/AddAnnouncement";
+import React, { useRef, useState, useEffect } from "react";
 import MapComponent from "./MapComponent";
 import { useMap } from "../context/MapContext";
 import Form from "../components/Form";
@@ -13,7 +10,6 @@ import SimpleMap from "../components/SimpleMap";
 import ChangePassword from "../components/ChangePassword";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { MarkersProvider } from "../context/MarkersContext";
 
 const Layout = ({ children, mode }) => {
 	const movingMarkerRef = useRef(null);
@@ -29,7 +25,7 @@ const Layout = ({ children, mode }) => {
 
 	const handleNewReport = (coordinates, vehicleIds) => {
 		if (movingMarkerRef.current && vehicleIds.length > 0) {
-			vehicleIds.forEach(vehicleId => {
+			vehicleIds.forEach((vehicleId) => {
 				console.log(`Invoking handleNewReport for vehicleId: ${vehicleId}`);
 				movingMarkerRef.current.handleNewReport(coordinates, vehicleId);
 			});
@@ -46,8 +42,37 @@ const Layout = ({ children, mode }) => {
 
 	const handleLogout = () => {
 		localStorage.removeItem("id_dyspozytora");
+		setUserId(null);
+		setUserInfo({ imie: "", nazwisko: "" });
+		setMarkers([]);
 		navigate("/login");
+		window.location.reload();
 	};
+
+	useEffect(() => {
+		const fetchUserData = async () => {
+			const storedUserId = localStorage.getItem("id_dyspozytora");
+			setUserId(storedUserId);
+
+			if (storedUserId) {
+				try {
+					const response = await fetch(
+						`https://dyspobeloapi.azurewebsites.net/api/User/${storedUserId}`
+					);
+					if (response.ok) {
+						const data = await response.json();
+						setUserInfo({ imie: data.imie, nazwisko: data.nazwisko });
+					} else {
+						console.error("Nie udało się pobrać danych użytkownika");
+					}
+				} catch (error) {
+					console.error("Błąd podczas pobierania danych użytkownika:", error);
+				}
+			}
+		};
+
+		fetchUserData();
+	}, []);
 
 	const styles = {
 		container: {
@@ -172,7 +197,6 @@ const Layout = ({ children, mode }) => {
 						<div style={styles.halfWidth}>
 							{selectedZgloszenie && (
 								<EditForm
-									//onReportSubmit={handleNewReport}
 									zgloszenie={selectedZgloszenie}
 									title={t("Edytuj zgłoszenie")}
 								/>

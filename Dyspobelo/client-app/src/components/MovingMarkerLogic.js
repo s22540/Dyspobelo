@@ -152,14 +152,22 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 			addWaypoints: false,
 			fitSelectedRoutes: false,
 			lineOptions: {
-				styles: [{ color: "blue", opacity: currentStatus === "Z" ? 1.0 : 0.0, weight: 4 }],
+				styles: [
+					{
+						color: "blue",
+						opacity: currentStatus === "Z" ? 1.0 : 0.0,
+						weight: 4,
+					},
+				],
 			},
 			createMarker: () => null,
 		})
 			.on("routesfound", (e) => {
 				const routes = e.routes[0].coordinates;
 				if (currentStatus === "Z") {
-					debugPolylineRef.current = L.polyline(routes, { color: "red" }).addTo(map);
+					debugPolylineRef.current = L.polyline(routes, { color: "red" }).addTo(
+						map
+					);
 				}
 
 				animateMarker(routes);
@@ -183,7 +191,7 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 			} else {
 				clearInterval(interval);
 				if (currentStatus === "Z") {
-					console.log(`Pojazd ${marker.id} dotar³ na miejsce zg³oszenia.`);
+					console.log(`Pojazd ${marker.id} dotarï¿½ na miejsce zgï¿½oszenia.`);
 					setDestination(null);
 					updateVehicleStatus(marker.id, "A");
 					setCurrentStatus("A");

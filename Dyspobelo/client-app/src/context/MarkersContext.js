@@ -22,19 +22,35 @@ export const MarkersProvider = ({ children }) => {
 				const jednostkiResponse = await axios.get(
 					"https://dyspobeloapi.azurewebsites.net/api/Jednostki"
 				);
-				const jednostkiMarkers = await Promise.all(
-					jednostkiResponse.data.map(async (jednostka) => {
-						const coordinates = await geocodeAddress(jednostka.adres);
-						return {
-							id: `${jednostka.typ}-${jednostka.id}`,
-							position: coordinates,
-							iconUrl: getIconUrl(jednostka.typ),
-							name: jednostka.nazwa,
-							contact: jednostka.numerKontaktowy,
-							type: "static",
-						};
-					})
-				);
+
+				const jednostkiMarkers = jednostkiResponse.data.map((jednostka, index) => {
+					let coordinates;
+
+					if (index === 0 && jednostka.typ === "Komisariat") {
+						coordinates = [52.31334657982878, 20.963226080840816]; 
+					} else if (index === 1 && jednostka.typ === "Komisariat") {
+						coordinates = [52.22519945, 21.017917906858642]; 
+					} else if (index === 2 && jednostka.typ === "Remiza") {
+						coordinates = [52.23502490562511, 20.913809239927748]; 
+					} else if (index === 3 && jednostka.typ === "Remiza") {
+						coordinates = [52.18142625, 21.193853501357168]; 
+					} else if (index === 4 && jednostka.typ === "Szpital") {
+						coordinates = [52.28741134469457, 20.951918268687976]; 
+					} else if (index === 5 && jednostka.typ === "Szpital") {
+						coordinates = [52.25036766045743, 21.089327690488297]; 
+					} else {
+						coordinates = [52.237049, 21.017532];
+					}
+
+					return {
+						id: `${jednostka.typ}-${index}`,
+						position: coordinates,
+						iconUrl: getIconUrl(jednostka.typ),
+						name: jednostka.nazwa,
+						contact: jednostka.numerKontaktowy,
+						type: "static",
+					};
+				});
 
 				const policjaResponse = await axios.get(
 					"https://dyspobeloapi.azurewebsites.net/api/Policja"
@@ -55,7 +71,10 @@ export const MarkersProvider = ({ children }) => {
 				const dynamicMarkers = [
 					...policjaResponse.data.map((policja) => ({
 						id: `policja-${policja.id}`,
-						position: [52.31334657982878, 20.963226080840816],
+						position:
+							policja.id === 1
+								? [52.31334657982878, 20.963226080840816]
+								: [52.22519945, 21.017917906858642],
 						iconUrl: process.env.PUBLIC_URL + "/radiowoz.png",
 						number: policja.numer_Patrolu,
 						status: policja.status_Patrolu,
@@ -64,7 +83,10 @@ export const MarkersProvider = ({ children }) => {
 					})),
 					...strazPozarnaResponse.data.map((straz) => ({
 						id: `straz-${straz.id}`,
-						position: [52.23502490562511, 20.913809239927748],
+						position:
+							straz.id === 1
+								? [52.23502490562511, 20.913809239927748]
+								: [52.18142625, 21.193853501357168],
 						iconUrl: process.env.PUBLIC_URL + "/wozstraz.png",
 						number: straz.numer_Wozu,
 						status: straz.status_Wozu,
@@ -73,7 +95,10 @@ export const MarkersProvider = ({ children }) => {
 					})),
 					...pogotowieResponse.data.map((pogotowie) => ({
 						id: `pogotowie-${pogotowie.id}`,
-						position: [52.28741134469457, 20.951918268687976],
+						position:
+							pogotowie.id === 1
+								? [52.28741134469457, 20.951918268687976]
+								: [52.25036766045743, 21.089327690488297],
 						iconUrl: process.env.PUBLIC_URL + "/karetka.png",
 						number: pogotowie.numer_Karetki,
 						status: pogotowie.status_Karetki,

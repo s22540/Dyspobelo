@@ -45,7 +45,7 @@ const Layout = ({ children, mode }) => {
 		setUserId(null);
 		setUserInfo({ imie: "", nazwisko: "" });
 		setMarkers([]);
-		navigate("/login");
+		navigate("/");
 		window.location.reload();
 	};
 

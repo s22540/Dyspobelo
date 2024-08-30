@@ -121,16 +121,8 @@ function EditForm({ zgloszenie, onReportSubmit }) {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
-		const today = new Date().toISOString().substring(0, 10);
-		if (formData.data_zgloszenia !== today) {
-			setMessage("Tylko zgłoszenia z dnia dzisiejszego mogą być edytowane.");
-			setMessageType("error");
-			return;
-		}
-
 		try {
-			const coordinates = await geocodeAddress();
+			/*const coordinates = await geocodeAddress();
 
 			if (coordinates) {
 				let selectedVehicleId = `edit-${formData.id}`;
@@ -138,7 +130,7 @@ function EditForm({ zgloszenie, onReportSubmit }) {
 				if (selectedVehicleId) {
 					onReportSubmit(coordinates, selectedVehicleId);
 				}
-			}
+			}*/
 
 			const zglaszajacyPayload = {
 				id: zgloszenie.id_zglaszajacy,

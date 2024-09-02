@@ -5,14 +5,19 @@ import { useTranslation } from "react-i18next";
 const RaportZgloszen = () => {
     const [raport, setRaport] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: "ascending" });
+    const [filters, setFilters] = useState({ typZgloszenia: "", rok: "", miesiac: "", liczbaZgloszen: "" });
     const { t } = useTranslation();
 
     const wygenerujRaport = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://dyspobeloapi.azurewebsites.net/api/Raport/raport-zgloszen", {
-                method: "GET",
-            });
+            const response = await fetch(
+                "https://dyspobeloapi.azurewebsites.net/api/Raport/raport-zgloszen",
+                {
+                    method: "GET",
+                }
+            );
             const data = await response.json();
             setRaport(data);
         } catch (error) {
@@ -28,6 +33,79 @@ const RaportZgloszen = () => {
             t("Lipiec"), t("Sierpień"), t("Wrzesień"), t("Październik"), t("Listopad"), t("Grudzień")
         ];
         return months[monthNumber - 1];
+    };
+
+    const sortData = (key) => {
+        let direction = "ascending";
+        if (sortConfig.key === key && sortConfig.direction === "ascending") {
+            direction = "descending";
+        }
+        setSortConfig({ key, direction });
+
+        setRaport((prevRaport) => {
+            return [...prevRaport].sort((a, b) => {
+                if (a[key] < b[key]) {
+                    return direction === "ascending" ? -1 : 1;
+                }
+                if (a[key] > b[key]) {
+                    return direction === "ascending" ? 1 : -1;
+                }
+                return 0;
+            });
+        });
+    };
+
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
+    };
+
+    const applyNumberFilter = (value, filter) => {
+        if (!filter) return true;
+
+        const conditions = filter.split(" ").map(cond => cond.trim());
+        let match = true;
+
+        conditions.forEach(cond => {
+            if (cond.startsWith(">")) {
+                const number = parseFloat(cond.slice(1));
+                if (isNaN(number) || value <= number) {
+                    match = false;
+                }
+            } else if (cond.startsWith("<")) {
+                const number = parseFloat(cond.slice(1));
+                if (isNaN(number) || value >= number) {
+                    match = false;
+                }
+            } else if (cond.startsWith("=")) {
+                const number = parseFloat(cond.slice(1));
+                if (isNaN(number) || value !== number) {
+                    match = false;
+                }
+            } else {
+                const number = parseFloat(cond);
+                if (!isNaN(number) && value !== number) {
+                    match = false;
+                }
+            }
+        });
+
+        return match;
+    };
+
+    const filteredRaport = raport
+        ? raport.filter(
+            (item) =>
+                item.typZgloszenia.toLowerCase().includes(filters.typZgloszenia.toLowerCase()) &&
+                item.rok.toString().includes(filters.rok) &&
+                getMonthName(item.miesiac).toLowerCase().includes(filters.miesiac.toLowerCase()) &&
+                applyNumberFilter(item.liczbaZgloszen, filters.liczbaZgloszen)
+        )
+        : [];
+
+    const getSortIcon = (key) => {
+        if (sortConfig.key !== key) return "↕️";
+        return sortConfig.direction === "ascending" ? "▲" : "▼";
     };
 
     const styles = {
@@ -59,10 +137,29 @@ const RaportZgloszen = () => {
             padding: "8px",
             backgroundColor: "#f2f2f2",
             textAlign: "left",
+            cursor: "pointer",
         },
         td: {
             border: "1px solid #ddd",
             padding: "8px",
+        },
+        filterContainer: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            marginBottom: "10px",
+        },
+        filterInput: {
+            padding: "8px",
+            width: "100%",
+            marginBottom: "10px",
+            border: "1px solid #ddd",
+            borderRadius: "5px",
+            boxSizing: "border-box",
+        },
+        sortIcon: {
+            marginLeft: "5px",
+            fontSize: "0.8em",
         },
     };
 
@@ -89,17 +186,55 @@ const RaportZgloszen = () => {
                 {raport && (
                     <div style={styles.raportContainer}>
                         <h2>{t("Raport")}</h2>
+                        <div style={styles.filterContainer}>
+                            <input
+                                name="typZgloszenia"
+                                value={filters.typZgloszenia}
+                                onChange={handleFilterChange}
+                                placeholder={t("Filtruj po typie zgłoszenia")}
+                                style={styles.filterInput}
+                            />
+                            <input
+                                name="rok"
+                                value={filters.rok}
+                                onChange={handleFilterChange}
+                                placeholder={t("Filtruj po roku")}
+                                style={styles.filterInput}
+                            />
+                            <input
+                                name="miesiac"
+                                value={filters.miesiac}
+                                onChange={handleFilterChange}
+                                placeholder={t("Filtruj po miesiącu")}
+                                style={styles.filterInput}
+                            />
+                            <input
+                                name="liczbaZgloszen"
+                                value={filters.liczbaZgloszen}
+                                onChange={handleFilterChange}
+                                placeholder={t("Filtruj przedziałami zgłoszeń (np. >10 <50) lub po prostu po liczbie (np. 20)")}
+                                style={styles.filterInput}
+                            />
+                        </div>
                         <table style={styles.table}>
                             <thead>
                                 <tr>
-                                    <th style={styles.th}>{t("Typ zgłoszenia")}</th>
-                                    <th style={styles.th}>{t("Rok")}</th>
-                                    <th style={styles.th}>{t("Miesiąc")}</th>
-                                    <th style={styles.th}>{t("Liczba zgłoszeń")}</th>
+                                    <th style={styles.th} onClick={() => sortData("typZgloszenia")}>
+                                        {t("Typ zgłoszenia")} <span style={styles.sortIcon}>{getSortIcon("typZgloszenia")}</span>
+                                    </th>
+                                    <th style={styles.th} onClick={() => sortData("rok")}>
+                                        {t("Rok")} <span style={styles.sortIcon}>{getSortIcon("rok")}</span>
+                                    </th>
+                                    <th style={styles.th} onClick={() => sortData("miesiac")}>
+                                        {t("Miesiąc")} <span style={styles.sortIcon}>{getSortIcon("miesiac")}</span>
+                                    </th>
+                                    <th style={styles.th} onClick={() => sortData("liczbaZgloszen")}>
+                                        {t("Liczba zgłoszeń")} <span style={styles.sortIcon}>{getSortIcon("liczbaZgloszen")}</span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {raport.map((item, index) => (
+                                {filteredRaport.map((item, index) => (
                                     <tr key={index}>
                                         <td style={styles.td}>{translateReportType(item.typZgloszenia)}</td>
                                         <td style={styles.td}>{item.rok}</td>

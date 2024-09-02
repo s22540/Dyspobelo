@@ -109,103 +109,108 @@ function Form({ onReportSubmit }) {
 
 		try {
 			console.log("Submitting form data:", formData);
+
 			const coordinates = await geocodeAddress();
 
-			if (coordinates) {
-				//Zmienione na tablicę
-				const selectedVehicleIds = [];
+			if (!coordinates) {
+				setMessage("Wprowadź poprawny adres.");
+				setMessageType("error");
 
-				if (formData.policja_id) {
-					selectedVehicleIds.push(`policja-${formData.policja_id}`);
-				}
-				if (formData.straz_pozarna_id) {
-					selectedVehicleIds.push(`straz-${formData.straz_pozarna_id}`);
-				}
-				if (formData.pogotowie_id) {
-					selectedVehicleIds.push(`pogotowie-${formData.pogotowie_id}`);
-				}
+				setTimeout(() => {
+				setMessage("");
+				setMessageType("");
+			  }, 3000);
 
-				console.log(`Selected Vehicle ID: ${selectedVehicleIds}`);
-
-				if (selectedVehicleIds.length > 0) {
-					onReportSubmit(coordinates, selectedVehicleIds);
-
-					for (const vehicleId of selectedVehicleIds) {
-						await updateVehicleStatus(vehicleId, "Z");
-					}
-					await fetchVehicleData();
-				}
-
-				const zglaszajacyResponse = await fetch(
-					"https://dyspobeloapi.azurewebsites.net/api/Zglaszajacy",
-					{
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify({
-							imie: formData.imie,
-							nazwisko: formData.nazwisko,
-							numer_kontaktowy: formData.numerKontaktowy,
-						}),
-					}
-				);
-
-				if (!zglaszajacyResponse.ok)
-					throw new Error("Błąd tworzenia zgłaszającego");
-				const zglaszajacyData = await zglaszajacyResponse.json();
-				console.log("Created zgłaszający:", zglaszajacyData);
-
-				const zgloszenieData = {
-					id_dyspozytor: parseInt(localStorage.getItem("id_dyspozytora")),
-					id_zglaszajacy: zglaszajacyData.id,
-					id_typ_zgloszenia: parseInt(formData.id_typ_zgloszenia),
-					id_klasa_zgloszenia: parseInt(formData.id_klasa_zgloszenia),
-					ulica: formData.ulica,
-					numer_budynku: parseInt(formData.numerBudynku),
-					numer_mieszkania: parseInt(formData.numerMieszkania),
-					opis_zdarzenia: formData.opis_zdarzenia,
-					data_zgloszenia: new Date().toISOString(),
-					jednostka: {
-						policja_id: formData.policja_id
-							? parseInt(formData.policja_id)
-							: null,
-						straz_pozarna_id: formData.straz_pozarna_id
-							? parseInt(formData.straz_pozarna_id)
-							: null,
-						pogotowie_id: formData.pogotowie_id
-							? parseInt(formData.pogotowie_id)
-							: null,
-					},
-					koordynaty: {
-						lat: coordinates[0],
-						lon: coordinates[1],
-					},
-				};
-
-				const response = await fetch(
-					"https://dyspobeloapi.azurewebsites.net/api/Zgloszenia",
-					{
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify(zgloszenieData),
-					}
-				);
-
-				if (!response.ok) throw new Error("Failed to submit the form");
-				const responseData = await response.json();
-				console.log("Submitted zgłoszenie:", responseData);
-
-				await fetch(
-					`https://dyspobeloapi.azurewebsites.net/api/Zglaszajacy/${zglaszajacyData.id}`,
-					{
-						method: "PUT",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify({ id_zgloszenia: responseData.id }),
-					}
-				);
-
-				console.log("Updated zgłaszający with zgłoszenie ID");
+				return;
 			}
 
+			const selectedVehicleIds = [];
+
+			if (formData.policja_id) {
+				selectedVehicleIds.push(`policja-${formData.policja_id}`);
+			}
+			if (formData.straz_pozarna_id) {
+				selectedVehicleIds.push(`straz-${formData.straz_pozarna_id}`);
+			}
+			if (formData.pogotowie_id) {
+				selectedVehicleIds.push(`pogotowie-${formData.pogotowie_id}`);
+			}
+
+			console.log(`Selected Vehicle ID: ${selectedVehicleIds}`);
+
+			if (selectedVehicleIds.length > 0) {
+				onReportSubmit(coordinates, selectedVehicleIds);
+
+				for (const vehicleId of selectedVehicleIds) {
+					await updateVehicleStatus(vehicleId, "Z");
+				}
+				await fetchVehicleData();
+			}
+
+			const zglaszajacyResponse = await fetch(
+				"https://dyspobeloapi.azurewebsites.net/api/Zglaszajacy",
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						imie: formData.imie,
+						nazwisko: formData.nazwisko,
+						numer_kontaktowy: formData.numerKontaktowy,
+					}),
+				}
+			);
+
+			if (!zglaszajacyResponse.ok)
+				throw new Error("Błąd tworzenia zgłaszającego");
+			const zglaszajacyData = await zglaszajacyResponse.json();
+			console.log("Created zgłaszający:", zglaszajacyData);
+
+			const zgloszenieData = {
+				id_dyspozytor: parseInt(localStorage.getItem("id_dyspozytora")),
+				id_zglaszajacy: zglaszajacyData.id,
+				id_typ_zgloszenia: parseInt(formData.id_typ_zgloszenia),
+				id_klasa_zgloszenia: parseInt(formData.id_klasa_zgloszenia),
+				ulica: formData.ulica,
+				numer_budynku: parseInt(formData.numerBudynku),
+				numer_mieszkania: parseInt(formData.numerMieszkania),
+				opis_zdarzenia: formData.opis_zdarzenia,
+				data_zgloszenia: new Date().toISOString(),
+				jednostka: {
+					policja_id: formData.policja_id ? parseInt(formData.policja_id) : null,
+					straz_pozarna_id: formData.straz_pozarna_id
+						? parseInt(formData.straz_pozarna_id)
+						: null,
+					pogotowie_id: formData.pogotowie_id ? parseInt(formData.pogotowie_id) : null,
+				},
+				koordynaty: {
+					lat: coordinates[0],
+					lon: coordinates[1],
+				},
+			};
+
+			const response = await fetch(
+				"https://dyspobeloapi.azurewebsites.net/api/Zgloszenia",
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(zgloszenieData),
+				}
+			);
+
+			if (!response.ok) throw new Error("Failed to submit the form");
+			const responseData = await response.json();
+			console.log("Submitted zgłoszenie:", responseData);
+
+			await fetch(
+				`https://dyspobeloapi.azurewebsites.net/api/Zglaszajacy/${zglaszajacyData.id}`,
+				{
+					method: "PUT",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ id_zgloszenia: responseData.id }),
+				}
+			);
+
+			console.log("Updated zgłaszający with zgłoszenie ID");
 			resetForm();
 			setMessage("Zgłoszenie zostało pomyślnie dodane!");
 			setMessageType("success");
@@ -219,6 +224,7 @@ function Form({ onReportSubmit }) {
 			setMessage("");
 		}, 3000);
 	};
+
 
 	const styles = {
 		formContainer: {

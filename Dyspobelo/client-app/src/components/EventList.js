@@ -6,6 +6,7 @@ const EventList = ({ onSelectEvent }) => {
     const { t } = useTranslation();
     const [events, setEvents] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedZgloszenieId, setSelectedZgloszenieId] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -122,10 +123,18 @@ const EventList = ({ onSelectEvent }) => {
                     style={{
                         ...styles.item,
                         ...(hoveredItem === index && styles.itemHover),
+                        ...(selectedZgloszenieId === event.id && {
+                            backgroundColor: "#a2a2a2",
+                            border: "1px solid #000000"
+                        }),
                     }}
                     onMouseEnter={() => setHoveredItem(index)}
                     onMouseLeave={() => setHoveredItem(null)}
-                    onClick={() => geocodeAddress(event)}
+                    onClick={() => {
+                        geocodeAddress(event);
+                        setSelectedZgloszenieId(event.id);
+                    }}
+
                 >
                     <div>
                         <strong>{t("ID")}:</strong> {event.id}

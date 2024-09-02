@@ -10,6 +10,7 @@ import SimpleMap from "../components/SimpleMap";
 import ChangePassword from "../components/ChangePassword";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Layout = ({ children, mode }) => {
 	const movingMarkerRef = useRef(null);
@@ -22,6 +23,7 @@ const Layout = ({ children, mode }) => {
 	const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
 	const [selectedZgloszenie, setSelectedZgloszenie] = useState(null);
 	const [markers, setMarkers] = useState([]);
+	const [zgloszenia, setZgloszenia] = useState([]);
 
 	const handleNewReport = (coordinates, vehicleIds) => {
 		if (movingMarkerRef.current && vehicleIds.length > 0) {
@@ -29,6 +31,19 @@ const Layout = ({ children, mode }) => {
 				console.log(`Invoking handleNewReport for vehicleId: ${vehicleId}`);
 				movingMarkerRef.current.handleNewReport(coordinates, vehicleId);
 			});
+		}
+	};
+
+	const handleUpdate = () => {  
+		fetchZgloszenia();
+	};
+
+	const fetchZgloszenia = async () => {  
+		try {
+			const response = await axios.get("https://dyspobeloapi.azurewebsites.net/api/Zgloszenia");
+			setZgloszenia(response.data);
+		} catch (error) {
+			console.error("Error fetching data:", error);
 		}
 	};
 
@@ -72,6 +87,7 @@ const Layout = ({ children, mode }) => {
 		};
 
 		fetchUserData();
+		fetchZgloszenia();
 	}, []);
 
 	const styles = {
@@ -191,6 +207,7 @@ const Layout = ({ children, mode }) => {
 						<div style={styles.halfWidth}>
 							<List
 								onSelectZgloszenie={setSelectedZgloszenie}
+								zgloszenia={zgloszenia}
 								placeholder={t("Wyszukaj zgłoszenie")}
 							/>
 						</div>
@@ -199,6 +216,7 @@ const Layout = ({ children, mode }) => {
 								<EditForm
 									zgloszenie={selectedZgloszenie}
 									title={t("Edytuj zgłoszenie")}
+									onUpdate={handleUpdate}
 								/>
 							)}
 						</div>

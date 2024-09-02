@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 const List = ({ onSelectZgloszenie, zgloszenia }) => {
     const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedZgloszenieId, setSelectedZgloszenieId] = useState(null);
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
@@ -78,10 +79,17 @@ const List = ({ onSelectZgloszenie, zgloszenia }) => {
                     style={{
                         ...styles.item,
                         ...(hoveredItem === index && styles.itemHover),
+                        ...(selectedZgloszenieId === zgloszenie.id && {
+                            backgroundColor: "#a2a2a2",
+                            border: "1px solid #000000"
+                        }),
                     }}
                     onMouseEnter={() => setHoveredItem(index)}
                     onMouseLeave={() => setHoveredItem(null)}
-                    onClick={() => onSelectZgloszenie(zgloszenie)}
+                    onClick={() => {
+                        onSelectZgloszenie(zgloszenie);
+                        setSelectedZgloszenieId(zgloszenie.id);
+                    }}
                 >
                     <div>
                         <strong>{t("Zgłoszenie ID")}:</strong> {zgloszenie.id}

@@ -71,7 +71,7 @@ function EditForm({ zgloszenie, onReportSubmit, onUpdate }) {
         }
     };
 
-    // typy i klasy zgłoszeń
+    // typy i klasy zgłoszen
     const fetchReferenceData = async () => {
         try {
             const typyResponse = await axios.get(

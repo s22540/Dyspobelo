@@ -89,6 +89,7 @@ function EditForm({ zgloszenie, onReportSubmit, onUpdate }) {
     };
 
     useEffect(() => {
+        onUpdate();
         fetchReferenceData();
         fetchZglaszajacyData();
         fetchZgloszenieData();

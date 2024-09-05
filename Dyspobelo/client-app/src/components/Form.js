@@ -106,14 +106,34 @@ function Form({ onReportSubmit }) {
 	};
 
 	const validateForm = () => {
-		const { imie, nazwisko, numerKontaktowy, opis_zdarzenia } = formData;
+		const {
+			imie,
+			nazwisko,
+			numerKontaktowy,
+			opis_zdarzenia,
+			ulica,
+			numerBudynku,
+			id_typ_zgloszenia,
+			id_klasa_zgloszenia,
+			policja_id,
+			straz_pozarna_id,
+			pogotowie_id,
+		} = formData;
 		let errors = [];
 
-		if (!imie) errors.push(t("Pole Imię jest wymagane."));
-		if (!nazwisko) errors.push(t("Pole Nazwisko jest wymagane."));
+		if (!imie) errors.push(t("Pole imię jest wymagane."));
+		if (!nazwisko) errors.push(t("Pole nazwisko jest wymagane."));
 		if (!numerKontaktowy)
-			errors.push(t("Pole Numer kontaktowy jest wymagane."));
-		if (!opis_zdarzenia) errors.push(t("Pole Opis zdarzenia jest wymagane."));
+			errors.push(t("Pole numer kontaktowy jest wymagane."));
+		if (!opis_zdarzenia) errors.push(t("Pole opis zdarzenia jest wymagane."));
+		if (!ulica) errors.push(t("Pole ulica jest wymagane."));
+		if (!numerBudynku) errors.push(t("Pole numer budynku jest wymagane."));
+		if (!id_typ_zgloszenia)
+			errors.push(t("Wybierz odpowiedni typ zgłoszenia."));
+		if (!id_klasa_zgloszenia)
+			errors.push(t("Wybierz odpowiednią klase zgłoszenia."));
+		if (!policja_id && !straz_pozarna_id && !pogotowie_id)
+			errors.push(t("Przydziel przynajmniej jedną jednostkę."));
 
 		if (errors.length > 0) {
 			setMessage(errors.join("\n"));

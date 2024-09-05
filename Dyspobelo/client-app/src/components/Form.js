@@ -5,7 +5,8 @@ import axios from "axios";
 import { updateVehicleStatus } from "../components/MovingMarkerLogic";
 function Form({ onReportSubmit }) {
 	const { t } = useTranslation();
-	const { policjaData, strazPozarnaData, pogotowieData, fetchVehicleData } = useMarkers();
+	const { policjaData, strazPozarnaData, pogotowieData, fetchVehicleData } =
+		useMarkers();
 
 	const [formData, setFormData] = useState({
 		imie: "",
@@ -26,6 +27,7 @@ function Form({ onReportSubmit }) {
 	const [klasyZgloszen, setKlasyZgloszen] = useState([]);
 	const [message, setMessage] = useState("");
 	const [messageType, setMessageType] = useState("");
+	const [errors, setErrors] = useState("");
 
 	const resetForm = () => {
 		setFormData({
@@ -75,7 +77,6 @@ function Form({ onReportSubmit }) {
 		}));
 	};
 
-
 	const geocodeAddress = async () => {
 		const city = "Warszawa";
 		const country = "Polska";
@@ -104,8 +105,37 @@ function Form({ onReportSubmit }) {
 		}
 	};
 
+	const validateForm = () => {
+		const { imie, nazwisko, numerKontaktowy, opis_zdarzenia } = formData;
+		let errors = [];
+
+		if (!imie) errors.push(t("Pole Imię jest wymagane."));
+		if (!nazwisko) errors.push(t("Pole Nazwisko jest wymagane."));
+		if (!numerKontaktowy)
+			errors.push(t("Pole Numer kontaktowy jest wymagane."));
+		if (!opis_zdarzenia) errors.push(t("Pole Opis zdarzenia jest wymagane."));
+
+		if (errors.length > 0) {
+			setMessage(errors.join("\n"));
+			setMessageType("error");
+
+			setTimeout(() => {
+				setMessage("");
+				setMessageType("");
+			}, 3000);
+
+			return false;
+		}
+
+		return true;
+	};
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+
+		if (!validateForm()) {
+			return;
+		}
 
 		try {
 			console.log("Submitting form data:", formData);
@@ -117,9 +147,9 @@ function Form({ onReportSubmit }) {
 				setMessageType("error");
 
 				setTimeout(() => {
-				setMessage("");
-				setMessageType("");
-			  }, 3000);
+					setMessage("");
+					setMessageType("");
+				}, 3000);
 
 				return;
 			}
@@ -176,11 +206,15 @@ function Form({ onReportSubmit }) {
 				opis_zdarzenia: formData.opis_zdarzenia,
 				data_zgloszenia: new Date().toISOString(),
 				jednostka: {
-					policja_id: formData.policja_id ? parseInt(formData.policja_id) : null,
+					policja_id: formData.policja_id
+						? parseInt(formData.policja_id)
+						: null,
 					straz_pozarna_id: formData.straz_pozarna_id
 						? parseInt(formData.straz_pozarna_id)
 						: null,
-					pogotowie_id: formData.pogotowie_id ? parseInt(formData.pogotowie_id) : null,
+					pogotowie_id: formData.pogotowie_id
+						? parseInt(formData.pogotowie_id)
+						: null,
 				},
 				koordynaty: {
 					lat: coordinates[0],
@@ -224,7 +258,6 @@ function Form({ onReportSubmit }) {
 			setMessage("");
 		}, 3000);
 	};
-
 
 	const styles = {
 		formContainer: {
@@ -308,6 +341,7 @@ function Form({ onReportSubmit }) {
 					placeholder={t("Imię")}
 					style={styles.input}
 				/>
+
 				<input
 					name="nazwisko"
 					value={formData.nazwisko}
@@ -315,6 +349,7 @@ function Form({ onReportSubmit }) {
 					placeholder={t("Nazwisko")}
 					style={styles.input}
 				/>
+
 				<input
 					name="numerKontaktowy"
 					value={formData.numerKontaktowy}
@@ -322,6 +357,7 @@ function Form({ onReportSubmit }) {
 					placeholder={t("Numer kontaktowy")}
 					style={styles.input}
 				/>
+
 				<input
 					name="ulica"
 					value={formData.ulica}
@@ -378,6 +414,7 @@ function Form({ onReportSubmit }) {
 					placeholder={t("Opis zdarzenia")}
 					style={styles.textarea}
 				/>
+
 				<select
 					name="policja_id"
 					value={formData.policja_id}
@@ -386,12 +423,12 @@ function Form({ onReportSubmit }) {
 				>
 					<option value="">{t("Wybierz jednostkę policji")}</option>
 					{policjaData
-						.filter((p) => p.status_Patrolu === 'A')
+						.filter((p) => p.status_Patrolu === "A")
 						.map((p) => (
-						<option key={p.id} value={p.id}>
-							{p.numer_Patrolu} - {p.status_Patrolu}
-						</option>
-					))}
+							<option key={p.id} value={p.id}>
+								{p.numer_Patrolu} - {p.status_Patrolu}
+							</option>
+						))}
 				</select>
 				<select
 					name="straz_pozarna_id"
@@ -401,12 +438,12 @@ function Form({ onReportSubmit }) {
 				>
 					<option value="">{t("Wybierz jednostkę straży pożarnej")}</option>
 					{strazPozarnaData
-						.filter((s) => s.status_Wozu === 'A')
+						.filter((s) => s.status_Wozu === "A")
 						.map((s) => (
-						<option key={s.id} value={s.id}>
-							{s.numer_Wozu} - {s.status_Wozu}
-						</option>
-					))}
+							<option key={s.id} value={s.id}>
+								{s.numer_Wozu} - {s.status_Wozu}
+							</option>
+						))}
 				</select>
 				<select
 					name="pogotowie_id"
@@ -416,12 +453,12 @@ function Form({ onReportSubmit }) {
 				>
 					<option value="">{t("Wybierz jednostkę pogotowia")}</option>
 					{pogotowieData
-						.filter((p) => p.status_Karetki === 'A')
+						.filter((p) => p.status_Karetki === "A")
 						.map((p) => (
-						<option key={p.id} value={p.id}>
-							{p.numer_Karetki} - {p.status_Karetki}
-						</option>
-					))}
+							<option key={p.id} value={p.id}>
+								{p.numer_Karetki} - {p.status_Karetki}
+							</option>
+						))}
 				</select>
 				<div style={styles.buttonContainer}>
 					<button
@@ -439,7 +476,13 @@ function Form({ onReportSubmit }) {
 					</button>
 				</div>
 			</form>
-			{message && <div style={styles.messagePopup}>{message}</div>}
+			{message && (
+				<div style={styles.messagePopup}>
+					{message.split("\n").map((msg, index) => (
+						<div key={index}>{msg}</div>
+					))}
+				</div>
+			)}
 		</div>
 	);
 }

@@ -155,7 +155,7 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				styles: [
 					{
 						color: "blue",
-						opacity: currentStatus === "Z" ? 1.0 : 0.0,
+						opacity: currentStatus === "Z" ? 0.0 : 0.0,
 						weight: 4,
 					},
 				],
@@ -164,12 +164,6 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 		})
 			.on("routesfound", (e) => {
 				const routes = e.routes[0].coordinates;
-				if (currentStatus === "Z") {
-					debugPolylineRef.current = L.polyline(routes, { color: "red" }).addTo(
-						map
-					);
-				}
-
 				animateMarker(routes);
 			})
 			.on("routingerror", (err) => {

@@ -12,6 +12,9 @@ import { useMap } from "react-leaflet";
 import { MarkersContext } from "../context/MarkersContext";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
+import EventEmitter from "eventemitter3";
+
+const emitter = new EventEmitter();
 
 export const updateVehicleStatus = async (vehicleId, newStatus) => {
 	if (!vehicleId || typeof vehicleId !== "string") {
@@ -35,9 +38,50 @@ export const updateVehicleStatus = async (vehicleId, newStatus) => {
 			headers: { "Content-Type": "application/json" },
 		});
 		console.log(`Status of ${vehicleId} updated to ${newStatus}`);
+		emitter.emit(
+			"log",
+			`Status pojazdu ${vehicleId} zaktualizowano na: ${newStatus}`
+		);
 	} catch (error) {
 		console.error(`Failed to update status for ${vehicleId}:`, error);
+		emitter.emit(
+			"log",
+			`Nie udało się zaktualizować statusu dla: ${vehicleId}:`,
+			error
+		);
 	}
+};
+
+export const LogDisplay = () => {
+	const [logs, setLogs] = useState([]);
+
+	useEffect(() => {
+		const handleNewLog = (message) => {
+			setLogs((prevLogs) => [...prevLogs, message]);
+		};
+
+		emitter.on("log", handleNewLog);
+
+		return () => {
+			emitter.off("log", handleNewLog);
+		};
+	}, []);
+
+	return (
+		<div
+			style={{
+				height: "150px",
+				width: "100%",
+				backgroundColor: "#f0f0f0",
+				marginTop: "20px",
+				padding: "10px",
+			}}
+		>
+			{logs.map((log, index) => (
+				<div key={index}>{log}</div>
+			))}
+		</div>
+	);
 };
 
 const fetchVehicleStatus = async (vehicleId) => {
@@ -65,7 +109,10 @@ const fetchVehicleStatus = async (vehicleId) => {
 
 	try {
 		const response = await axios.get(url);
-		const updatedStatus = response.data.status_Patrolu || response.data.status_Wozu || response.data.status_Karetki;
+		const updatedStatus =
+			response.data.status_Patrolu ||
+			response.data.status_Wozu ||
+			response.data.status_Karetki;
 		return updatedStatus;
 	} catch (error) {
 		return null;
@@ -234,6 +281,10 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				clearInterval(interval);
 				if (currentStatus === "Z") {
 					console.log(`Pojazd ${marker.id} dotarł na miejsce zgłoszenia.`);
+					emitter.emit(
+						"log",
+						`Pojazd ${marker.id} dotarł na miejsce zgłoszenia.`
+					);
 					setDestination(null);
 					updateVehicleStatus(marker.id, "A");
 					setCurrentStatus("A");
@@ -261,7 +312,6 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				markerRef.current.setLatLng([lat, lng]);
 				updateMarkerPosition(marker.id, [lat, lng]);
 
-
 				remainingRoute = remainingRoute.slice(1);
 				polyline.setLatLngs(remainingRoute);
 
@@ -270,8 +320,13 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				clearInterval(interval);
 				if (currentStatus === "Z") {
 					console.log(`Pojazd ${marker.id} dotarł na miejsce zgłoszenia.`);
+					emitter.emit(
+						"log",
+						`Pojazd ${marker.id} dotarł na miejsce zgłoszenia.`
+					);
 					setDestination(null);
 					updateVehicleStatus(marker.id, "A");
+					emitter.emit("log", `Pojazd ${marker.id} zmienił status na Aktywny.`);
 					setCurrentStatus("A");
 
 					const newEnd = getRandomCoordinates(lastKnownPosition.current);

@@ -10,6 +10,7 @@ import SimpleMap from "../components/SimpleMap";
 import ChangePassword from "../components/ChangePassword";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { LogDisplay } from "./MovingMarkerLogic";
 import axios from "axios";
 
 const Layout = ({ children, mode }) => {
@@ -34,13 +35,15 @@ const Layout = ({ children, mode }) => {
 		}
 	};
 
-	const handleUpdate = () => {  
+	const handleUpdate = () => {
 		fetchZgloszenia();
 	};
 
-	const fetchZgloszenia = async () => {  
+	const fetchZgloszenia = async () => {
 		try {
-			const response = await axios.get("https://dyspobeloapi.azurewebsites.net/api/Zgloszenia");
+			const response = await axios.get(
+				"https://dyspobeloapi.azurewebsites.net/api/Zgloszenia"
+			);
 			setZgloszenia(response.data);
 		} catch (error) {
 			console.error("Error fetching data:", error);
@@ -288,6 +291,9 @@ const Layout = ({ children, mode }) => {
 						setMapState={setMapState}
 						ref={movingMarkerRef}
 					/>
+					<div>
+						<LogDisplay />
+					</div>
 				</div>
 			</div>
 		</div>

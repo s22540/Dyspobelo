@@ -12,6 +12,9 @@ import { useMap } from "react-leaflet";
 import { MarkersContext } from "../context/MarkersContext";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
+import EventEmitter from "eventemitter3";
+
+const emitter = new EventEmitter();
 
 export const updateVehicleStatus = async (vehicleId, newStatus) => {
 	if (!vehicleId || typeof vehicleId !== "string") {
@@ -34,10 +37,42 @@ export const updateVehicleStatus = async (vehicleId, newStatus) => {
 		await axios.patch(url, newStatus, {
 			headers: { "Content-Type": "application/json" },
 		});
-		console.log(`Status of ${vehicleId} updated to ${newStatus}`);
+		emitter.emit("log", `Status of ${vehicleId} updated to ${newStatus}`);
 	} catch (error) {
-		console.error(`Failed to update status for ${vehicleId}:`, error);
+		emitter.emit("log", `Failed to update status for ${vehicleId}: ${error}`);
 	}
+};
+
+export const LogDisplay = () => {
+	const [logs, setLogs] = useState([]);
+
+	useEffect(() => {
+		const handleNewLog = (message) => {
+			setLogs((prevLogs) => [...prevLogs, message]);
+		};
+
+		emitter.on("log", handleNewLog);
+
+		return () => {
+			emitter.off("log", handleNewLog);
+		};
+	}, []);
+
+	return (
+		<div
+			style={{
+				height: "150px",
+				overflowY: "auto",
+				backgroundColor: "#f0f0f0",
+				marginTop: "20px",
+				padding: "10px",
+			}}
+		>
+			{logs.map((log, index) => (
+				<div key={index}>{log}</div>
+			))}
+		</div>
+	);
 };
 
 const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
@@ -185,7 +220,10 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 			} else {
 				clearInterval(interval);
 				if (currentStatus === "Z") {
-					console.log(`Pojazd ${marker.id} dotar� na miejsce zg�oszenia.`);
+					emitter.emit(
+						"log",
+						`Pojazd ${marker.id} dotarł na miejsce zgłoszenia.`
+					);
 					setDestination(null);
 					updateVehicleStatus(marker.id, "A");
 					setCurrentStatus("A");

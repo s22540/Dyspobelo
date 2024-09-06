@@ -40,6 +40,38 @@ export const updateVehicleStatus = async (vehicleId, newStatus) => {
 	}
 };
 
+const fetchVehicleStatus = async (vehicleId) => {
+	if (!vehicleId || typeof vehicleId !== "string") {
+		console.error("Invalid vehicleId:", vehicleId);
+		return;
+	}
+
+	const [type, id] = vehicleId.split("-");
+	let url;
+
+	switch (type) {
+		case "policja":
+			url = `https://dyspobeloapi.azurewebsites.net/api/Policja/${id}`;
+			break;
+		case "straz":
+			url = `https://dyspobeloapi.azurewebsites.net/api/StrazPozarna/${id}`;
+			break;
+		case "pogotowie":
+			url = `https://dyspobeloapi.azurewebsites.net/api/Pogotowie/${id}`;
+			break;
+		default:
+			return;
+	}
+
+	try {
+		const response = await axios.get(url);
+		const updatedStatus = response.data.status_Patrolu || response.data.status_Wozu || response.data.status_Karetki;
+		return updatedStatus;
+	} catch (error) {
+		return null;
+	}
+};
+
 const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 	const { updateMarkerPosition } = useContext(MarkersContext);
 	const { t } = useTranslation();
@@ -53,9 +85,10 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 
 	useImperativeHandle(ref, () => ({
 		handleNewReport: (coordinates) => {
+			clearRouting();
 			setDestination(coordinates);
 			setCurrentStatus("Z");
-			initializeRoute(lastKnownPosition.current, coordinates);
+			initializeRoute(lastKnownPosition.current, coordinates, true);
 		},
 	}));
 
@@ -85,6 +118,13 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 	useEffect(() => {
 		if (!marker || !map) return;
 
+		const intervalIdFetch = setInterval(async () => {
+			const updatedStatus = await fetchVehicleStatus(marker.id);
+			if (updatedStatus) {
+				setCurrentStatus(updatedStatus);
+			}
+		}, 5000);
+
 		if (!markerRef.current) {
 			markerRef.current = L.marker(marker.position, {
 				icon: L.icon({
@@ -113,16 +153,19 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 
 		const intervalId = setInterval(() => {
 			if (currentStatus === "Z" && destination) {
-				initializeRoute(lastKnownPosition.current, destination);
+				initializeRoute(lastKnownPosition.current, destination, false);
+				map.invalidateSize();
 			} else if (currentStatus === "A") {
 				const newEnd = getRandomCoordinates(lastKnownPosition.current);
 				setDestination(newEnd);
-				initializeRoute(lastKnownPosition.current, newEnd);
+				initializeRoute(lastKnownPosition.current, newEnd, false);
+				map.invalidateSize();
 			}
 		}, 2000);
 
 		return () => {
 			clearInterval(intervalId);
+			clearInterval(intervalIdFetch);
 			if (markerRef.current) {
 				markerRef.current.remove();
 				markerRef.current = null;
@@ -139,9 +182,8 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 		return [center[0] + latOffset, center[1] + lngOffset];
 	};
 
-	const initializeRoute = (start, end) => {
+	const initializeRoute = async (start, end, report) => {
 		clearRouting();
-
 		routingControlRef.current = L.Routing.control({
 			waypoints: [L.latLng(start), L.latLng(end)],
 			router: L.Routing.mapbox(
@@ -155,7 +197,7 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 				styles: [
 					{
 						color: "blue",
-						opacity: currentStatus === "Z" ? 0.0 : 0.0,
+						opacity: report === true ? 0.0 : 0.0,
 						weight: 4,
 					},
 				],
@@ -164,13 +206,19 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 		})
 			.on("routesfound", (e) => {
 				const routes = e.routes[0].coordinates;
-				animateMarker(routes);
+				if (report === true) {
+					animateIncidentMarker(routes);
+				} else {
+					animateMarker(routes);
+				}
 			})
 			.on("routingerror", (err) => {
 				console.error("Routing error occurred:", err);
 				setDestination(null);
 			})
 			.addTo(map);
+
+		map.invalidateSize();
 	};
 
 	const animateMarker = (route) => {
@@ -185,10 +233,47 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 			} else {
 				clearInterval(interval);
 				if (currentStatus === "Z") {
-					console.log(`Pojazd ${marker.id} dotar� na miejsce zg�oszenia.`);
+					console.log(`Pojazd ${marker.id} dotarł na miejsce zgłoszenia.`);
 					setDestination(null);
 					updateVehicleStatus(marker.id, "A");
 					setCurrentStatus("A");
+					const newEnd = getRandomCoordinates(lastKnownPosition.current);
+					setDestination(newEnd);
+				}
+			}
+		}, 1000);
+	};
+
+	const animateIncidentMarker = (route) => {
+		let i = 0;
+		let remainingRoute = [...route];
+
+		let polyline = L.polyline(route, {
+			color: "red",
+			weight: 2,
+			opacity: 0.8,
+		}).addTo(map);
+
+		const interval = setInterval(() => {
+			if (i < route.length) {
+				const { lat, lng } = route[i];
+				lastKnownPosition.current = [lat, lng];
+				markerRef.current.setLatLng([lat, lng]);
+				updateMarkerPosition(marker.id, [lat, lng]);
+
+
+				remainingRoute = remainingRoute.slice(1);
+				polyline.setLatLngs(remainingRoute);
+
+				i++;
+			} else {
+				clearInterval(interval);
+				if (currentStatus === "Z") {
+					console.log(`Pojazd ${marker.id} dotarł na miejsce zgłoszenia.`);
+					setDestination(null);
+					updateVehicleStatus(marker.id, "A");
+					setCurrentStatus("A");
+
 					const newEnd = getRandomCoordinates(lastKnownPosition.current);
 					setDestination(newEnd);
 				}

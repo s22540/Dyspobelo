@@ -74,7 +74,10 @@ export const LogDisplay = () => {
 				width: "100%",
 				backgroundColor: "#f0f0f0",
 				marginTop: "20px",
+				marginRight: "10px",
+				marginLeft: "10px",
 				padding: "10px",
+				overflowY: "scroll",
 			}}
 		>
 			{logs.map((log, index) => (

@@ -72,7 +72,7 @@ export const MarkersProvider = ({ children }) => {
 					...policjaResponse.data.map((policja) => ({
 						id: `policja-${policja.id}`,
 						position:
-							policja.id === 1
+							policja.komisariat_Id === 1
 								? [52.31334657982878, 20.963226080840816]
 								: [52.22519945, 21.017917906858642],
 						iconUrl: process.env.PUBLIC_URL + "/radiowoz.png",
@@ -84,7 +84,7 @@ export const MarkersProvider = ({ children }) => {
 					...strazPozarnaResponse.data.map((straz) => ({
 						id: `straz-${straz.id}`,
 						position:
-							straz.id === 1
+							straz.remiza_Id === 1
 								? [52.23502490562511, 20.913809239927748]
 								: [52.18142625, 21.193853501357168],
 						iconUrl: process.env.PUBLIC_URL + "/wozstraz.png",
@@ -96,7 +96,7 @@ export const MarkersProvider = ({ children }) => {
 					...pogotowieResponse.data.map((pogotowie) => ({
 						id: `pogotowie-${pogotowie.id}`,
 						position:
-							pogotowie.id === 1
+							pogotowie.szpital_Id === 1
 								? [52.28741134469457, 20.951918268687976]
 								: [52.25036766045743, 21.089327690488297],
 						iconUrl: process.env.PUBLIC_URL + "/karetka.png",

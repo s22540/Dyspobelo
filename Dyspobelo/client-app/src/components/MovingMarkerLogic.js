@@ -245,9 +245,15 @@ const MovingMarkerLogic = forwardRef(({ marker }, ref) => {
 					{
 						color: "blue",
 						opacity: report === true ? 0.0 : 0.0,
-						weight: 4,
+						weight: 0,
+						addWaypoints: false,
 					},
 				],
+				missingRouteStyles: [
+					{
+						color: "transparent"
+					}
+				]
 			},
 			createMarker: () => null,
 		})

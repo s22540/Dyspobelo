@@ -65,21 +65,18 @@ const RaportUlic = () => {
             const number2 = match[4] ? parseFloat(match[4]) : null;
 
             if (operator1 && operator2) {
-                // Przedział np. ">10 <50"
                 if (operator1.includes(">") && operator2.includes("<")) {
                     return value > number1 && value < number2;
                 } else if (operator1.includes("<") && operator2.includes(">")) {
                     return value < number1 && value > number2;
                 }
             } else if (operator1) {
-                // Pojedynczy operator np. ">10"
                 if (operator1 === ">" && value > number1) return true;
                 if (operator1 === ">=" && value >= number1) return true;
                 if (operator1 === "<" && value < number1) return true;
                 if (operator1 === "<=" && value <= number1) return true;
                 if (operator1 === "=" && value === number1) return true;
             } else {
-                // Brak operatora, tylko liczba
                 return value === number1;
             }
         }

@@ -9,8 +9,8 @@ public class Dyspozytor
 
     public string Zahashowane_Haslo { get; set; }
 
-    public string? Imie { get; set; } // Dodane
-    public string? Nazwisko { get; set; } // Dodane
+    public string? Imie { get; set; } 
+    public string? Nazwisko { get; set; }
 
     //public ICollection<DyspozytorDyzur> DyspozytorDyzury { get; set; }
 }
